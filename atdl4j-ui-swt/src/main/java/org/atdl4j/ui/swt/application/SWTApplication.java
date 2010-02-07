@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -59,6 +60,13 @@ public class SWTApplication {
 	private static Map<StrategyT, StrategyUI> strategyUI;
 	private static StrategyT selectedStrategy;
 	
+	// 2/2/2010 John Shields
+	// TODO move this to a config file
+	private static boolean showStrategyDescription = true;
+	private static boolean showTimezoneSelector = false;
+	
+	private static Composite descPanel;
+	private static Text strategyDescription;
 	private static Text outputFixMessageText;
 	private static Text inputFixMessageText;
 	private static Button cxlReplaceModeButton;
@@ -124,29 +132,18 @@ public class SWTApplication {
 			}
 		});
 
-		/*
-		Label tzLabel = new Label(headerComposite, SWT.NONE);
-		tzLabel.setText("Timezone:");
-		// dropDownList
-		Combo tzDropDown = new Combo(headerComposite, SWT.READ_ONLY | SWT.BORDER);
-		GridData tzData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-		tzData.horizontalSpan = 2;
-		tzDropDown.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,	false));
-		String tzs ="";
-		for (String tz : TimeZone.getAvailableIDs())
-		{
-			tzs += tz + "|" + TimeZone.getTimeZone(tz).getDisplayName() + "|" + TimeZone.getTimeZone(tz).getRawOffset() + "*\n";
-		}
-		
-		for (String tz : TimeZone.getAvailableIDs())
-		{
-			tzDropDown.add(tz);
-		}
-	
-		Text tzText = new Text(headerComposite, SWT.BORDER);
-		tzText.setText(tzs);*/
-		
-		
+	if (showTimezoneSelector)
+	{
+
+	    Label tzLabel = new Label(headerComposite, SWT.NONE);
+	    tzLabel.setText("Timezone:");
+	    // dropDownList
+	    Combo tzDropDown = new Combo(headerComposite, SWT.READ_ONLY | SWT.BORDER);
+	    GridData tzData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+	    tzData.horizontalSpan = 2;
+	    tzDropDown.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		    false));
+	}
 		
 		// Strategy selector dropdown
 		Composite dropdownComposite = new Composite(shell, SWT.NONE);
@@ -158,7 +155,7 @@ public class SWTApplication {
 		strategiesDropDownLabel.setText("Strategy");
 		// dropDownList
 		strategiesDropDown = new Combo(dropdownComposite, SWT.READ_ONLY | SWT.BORDER);
-		strategiesDropDown.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,	false));
+		strategiesDropDown.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		// tooltip
 		strategiesDropDown.setToolTipText("Select a Strategy");
 		// action listener
@@ -178,7 +175,32 @@ public class SWTApplication {
 //				}
 				selectDropDownStrategy( index );
 			}
-		});		
+		});
+		
+		if (showStrategyDescription)
+		{
+        		//descPanel = new Composite(shell, SWT.NONE);
+        		strategyDescription = new Text(shell, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+        		strategyDescription.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+        		strategyDescription.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+        		
+        		
+        		GridData descData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        		descData.grabExcessHorizontalSpace = true;
+        		descData.heightHint = 40;
+        		strategyDescription.setLayoutData(descData);
+        		
+        		
+        		
+        		// strategyDescription.
+        		/*
+        		FillLayout descLayout = new FillLayout(SWT.VERTICAL);
+        		descPanel.setLayout(descLayout);
+        		
+        		//descData.heightHint = 100;
+        		descPanel.setLayoutData(descData);
+        		//strategyDescription.setLayoutData(descData);*/
+		}
 		
 		// Main strategies panel
 		strategiesPanel = new Composite(shell, SWT.NONE);
@@ -603,8 +625,6 @@ public class SWTApplication {
 			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
 			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
 		}
-		strategiesPanel.layout();
-		shell.pack();
 		if (strategies != null) {
 // 2/1/2010 Scott Atwell - CANNOT DO THIS as startegies.getStrategy() List contains ALL defined strategies (UNFILTERED) and thus NOT 1-for-1
 //			selectedStrategy = strategies.getStrategy().get(index);
@@ -619,7 +639,12 @@ public class SWTApplication {
 					break;
 				}
 			}
+			if (showStrategyDescription) strategyDescription.setText("");
 		}
+		strategiesPanel.layout();
+		shell.pack();
+		// Strategy description must be updated after packing
+		if (showStrategyDescription) strategyDescription.setText(selectedStrategy.getDescription());
 	}
 
 //TODO 1/16/2010 Scott Atwell added
