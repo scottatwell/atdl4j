@@ -23,4 +23,7 @@ public interface StrategyUI {
 //TODO Scott Atwell added 1/14/2010
 	public Map<String, ControlUI<?>> getControls();
 	
+// Scott Atwell added 2/7/2010
+   public void setCxlReplaceMode(boolean cxlReplaceMode);
+
 }

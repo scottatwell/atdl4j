@@ -7,13 +7,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.log4j.Logger;
+import org.atdl4j.atdl.core.StrategiesT;
+import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.config.InputAndFilterData;
+import org.atdl4j.data.FIXMessageParser;
+import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.ui.StrategiesUI;
+import org.atdl4j.ui.StrategiesUIFactory;
+import org.atdl4j.ui.StrategyUI;
+import org.atdl4j.ui.swt.config.SWTAtdl4jConfig;
+import org.atdl4j.ui.swt.test.DebugMouseTrackListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,52 +42,55 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.apache.log4j.Logger;
-import org.atdl4j.data.FIXMessageParser;
-import org.atdl4j.data.InputAndFilterData;
-import org.atdl4j.data.exception.ValidationException;
-import org.atdl4j.data.validation.AbstractOperatorValidationRule;
-import org.atdl4j.ui.StrategiesUIFactory;
-import org.atdl4j.ui.StrategyUI;
-import org.atdl4j.ui.impl.AbstractStrategyUI;
-import org.atdl4j.ui.swt.impl.SWTFactory;
-import org.atdl4j.ui.swt.impl.SWTStrategiesUI;
-import org.atdl4j.ui.swt.impl.SWTStrategiesUIFactory;
-import org.atdl4j.ui.swt.impl.SWTStrategyUI;
-import org.atdl4j.ui.swt.test.DebugMouseTrackListener;
-import org.atdl4j.ui.swt.widget.RadioButtonListWidget;
-import org.atdl4j.atdl.core.StrategiesT;
-import org.atdl4j.atdl.core.StrategyT;
+
 
 public class SWTApplication {
 
-	private static final Logger logger = Logger.getLogger(SWTApplication.class);
+//	private static final Logger logger = Logger.getLogger(SWTApplication.class);
+	private final Logger logger = Logger.getLogger(SWTApplication.class);
 	
-	private static Combo strategiesDropDown;
-	private static Composite strategiesPanel;
-	private static Shell shell;
+//	private static Combo strategiesDropDown;
+//	private static Composite strategiesPanel;
+//	private static Shell shell;
+	private Combo strategiesDropDown;
+	private Composite strategiesPanel;
+	private Shell shell;
 
-	private static StrategiesT strategies;
-	private static Map<StrategyT, StrategyUI> strategyUI;
-	private static StrategyT selectedStrategy;
+//	private static StrategiesT strategies;
+//	private static Map<StrategyT, StrategyUI> strategyUI;
+//	private static StrategyT selectedStrategy;
 	
 	// 2/2/2010 John Shields
 	// TODO move this to a config file
-	private static boolean showStrategyDescription = true;
-	private static boolean showTimezoneSelector = false;
+//	private static boolean showStrategyDescription = true;
+//	private static boolean showTimezoneSelector = false;
 	
-	private static Composite descPanel;
-	private static Text strategyDescription;
-	private static Text outputFixMessageText;
-	private static Text inputFixMessageText;
-	private static Button cxlReplaceModeButton;
+//	private static Composite descPanel;
+//	private static Text strategyDescription;
+//	private static Text outputFixMessageText;
+//	private static Text inputFixMessageText;
+//	private static Button cxlReplaceModeButton;
+	private Composite descPanel;
+	private Text strategyDescription;
+	private Text outputFixMessageText;
+	private Text inputFixMessageText;
+	private Button cxlReplaceModeButton;
 // 1/20/2010 Scott Atwell	
-	private static Button debugModeButton;
+//	private static Button debugModeButton;
+	private Button debugModeButton;
 
 // 1/17/2010 Scott Atwell Added 
-	private static InputAndFilterData inputAndFilterData = new InputAndFilterData();	
+//	private static InputAndFilterData inputAndFilterData = new InputAndFilterData();	
+
+//TODO 2/7/2010 This one controls SWT vs. Swing	
+	private Atdl4jConfig atdl4jConfig = new SWTAtdl4jConfig();
 	
 	public static void main(String[] args) {
+		SWTApplication tempSWTApplication = new SWTApplication();
+		tempSWTApplication.mainLine(args);
+	}
+	
+	public void mainLine(String[] args) {
 		Display display = new Display();
 		shell = new Shell(display);
 		GridLayout shellLayout = new GridLayout(1, true);
@@ -104,6 +118,7 @@ public class SWTApplication {
 					try {
 						parse(filepath);
 					} catch (JAXBException e1) {
+						logger.warn("parse() Exception", e1);
 						MessageBox messageBox = new MessageBox(shell, SWT.OK
 								| SWT.ICON_ERROR);
 						// e1.getMessage() is null if there is a JAXB parse error 
@@ -117,22 +132,30 @@ public class SWTApplication {
 						}
 						messageBox.setMessage(msg);
 						messageBox.open();
-					} catch (IOException e1) {
+//					} catch (IOException e1) {
+//						logger.warn("parse() Exception", e1);
+//						MessageBox messageBox = new MessageBox(shell, SWT.OK
+//								| SWT.ICON_ERROR);
+//						messageBox.setMessage(e1.getMessage());
+//						messageBox.open();
+//					} catch (NumberFormatException e1) {
+//						logger.warn("parse() Exception", e1);
+//						MessageBox messageBox = new MessageBox(shell, SWT.OK
+//								| SWT.ICON_ERROR);
+//						messageBox.setMessage("NumberFormatExeception: " + e1.getMessage());
+//						messageBox.open();
+					} catch ( Exception e1) {
+						logger.warn("parse() Exception", e1);
 						MessageBox messageBox = new MessageBox(shell, SWT.OK
 								| SWT.ICON_ERROR);
-						messageBox.setMessage(e1.getMessage());
-						messageBox.open();
-					} catch (NumberFormatException e1) {
-						MessageBox messageBox = new MessageBox(shell, SWT.OK
-								| SWT.ICON_ERROR);
-						messageBox.setMessage("NumberFormatExeception: " + e1.getMessage());
+						messageBox.setMessage("Parse/UI Build Exception: " + e1.getMessage());
 						messageBox.open();
 					}
 				}
 			}
 		});
 
-	if (showTimezoneSelector)
+	if (getAtdl4jConfig().isShowTimezoneSelector())
 	{
 
 	    Label tzLabel = new Label(headerComposite, SWT.NONE);
@@ -177,7 +200,7 @@ public class SWTApplication {
 			}
 		});
 		
-		if (showStrategyDescription)
+		if (getAtdl4jConfig().isShowStrategyDescription())
 		{
         		//descPanel = new Composite(shell, SWT.NONE);
         		strategyDescription = new Text(shell, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
@@ -209,17 +232,23 @@ public class SWTApplication {
 		strategiesPanel.setLayout(strategiesLayout);
 		strategiesPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
+		if ( getAtdl4jConfig().getInputAndFilterData() == null )
+		{
+			getAtdl4jConfig().setInputAndFilterData(  new InputAndFilterData() );
+			getAtdl4jConfig().getInputAndFilterData().init();
+		}
+		
 		// Load in a file if passed into the app arguments
 		if (args.length > 0) {
 			try {
 //TODO 1/18/2010 Scott Atwell added BELOW
-				getInputAndFilterData().init();
+//				getAtdl4jConfig().getInputAndFilterData().init();
 				
 				if (args.length >= 2)
 				{
 					// -- InputCxlReplaceMode = args[1] (eg "true" or "false")
 					logger.info("args[1]: " + args[1] + " Boolean.parseBoolean() as inputCxlReplaceMode");
-					getInputAndFilterData().setInputCxlReplaceMode( Boolean.parseBoolean( args[1] ) );
+					getAtdl4jConfig().getInputAndFilterData().setInputCxlReplaceMode( Boolean.parseBoolean( args[1] ) );
 				}
 				
 				if ( args.length >= 3)
@@ -241,7 +270,7 @@ public class SWTApplication {
 						}
 						
 						logger.info("InputHiddenFieldNameValueMap: " + tempInputHiddenFieldNameValueMap);
-						getInputAndFilterData().addMapToInputHiddenFieldNameValueMap( tempInputHiddenFieldNameValueMap );
+						getAtdl4jConfig().getInputAndFilterData().addMapToInputHiddenFieldNameValueMap( tempInputHiddenFieldNameValueMap );
 					}
 				}
 //TODO 1/18/2010 Scott Atwell added ABOVE
@@ -249,11 +278,14 @@ public class SWTApplication {
 				
 				parse(args[0]);
 			} catch (JAXBException e1) {
+				logger.warn( "parse() Exception", e1);
 				MessageBox messageBox = new MessageBox(shell, SWT.OK
 						| SWT.ICON_ERROR);
 				messageBox.setMessage(e1.getMessage());
 				messageBox.open();
-			} catch (IOException e1) {
+// 2/7/2010			} catch (IOException e1) {
+			} catch (Exception e1) {
+				logger.warn( "parse() Exception", e1);
 				MessageBox messageBox = new MessageBox(shell, SWT.OK
 						| SWT.ICON_ERROR);
 				messageBox.setMessage(e1.getMessage());
@@ -299,19 +331,20 @@ public class SWTApplication {
 		cxlReplaceModeButton.setText("Cxl Replace Mode");
 		
 //TODO 1/18/2010 Scott Atwell added
-		if ( getInputAndFilterData() != null )
+		if ( getAtdl4jConfig().getInputAndFilterData() != null )
 		{
-			cxlReplaceModeButton.setSelection( getInputAndFilterData().getInputCxlReplaceMode() );
+			cxlReplaceModeButton.setSelection( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );
 		}
 		
 		cxlReplaceModeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (strategyUI != null)
+				if (getAtdl4jConfig().getStrategyUIMap() != null)
 				{
-					for (StrategyUI strategy : strategyUI.values())
+					for (StrategyUI strategy : getAtdl4jConfig().getStrategyUIMap().values())
 					{
-						((SWTStrategyUI)strategy).setCxlReplaceMode(cxlReplaceModeButton.getSelection());
+// 2/7/2010 Scott Atwell						((SWTStrategyUI)strategy).setCxlReplaceMode(cxlReplaceModeButton.getSelection());
+						strategy.setCxlReplaceMode(cxlReplaceModeButton.getSelection());
 					}
 				}
 			}
@@ -370,15 +403,16 @@ public class SWTApplication {
 		display.dispose();
 	}
 
-	protected static void validateStrategy() {
-		if (selectedStrategy == null)
+//	protected static void validateStrategy() {
+	protected void validateStrategy() {
+		if (getAtdl4jConfig().getSelectedStrategy() == null)
 		{
 			outputFixMessageText.setText("Please select a strategy");
 			return;
 		}
-		logger.info("Validating strategy " + selectedStrategy.getName());
+		logger.info("Validating strategy " + getAtdl4jConfig().getSelectedStrategy().getName());
 		try {
-			StrategyUI ui = strategyUI.get(selectedStrategy);
+			StrategyUI ui = getAtdl4jConfig().getStrategyUIMap().get(getAtdl4jConfig().getSelectedStrategy());
 			ui.validate();
 			outputFixMessageText.setText(ui.getFIXMessage());
 
@@ -405,29 +439,30 @@ public class SWTApplication {
 		}
 	}
 	
-	protected static void loadFixMessage() {
+//	protected static void loadFixMessage() {
+	protected void loadFixMessage() {
 		//TODO 1/16/2010 Scott Atwell replaced BELOW	
 		logger.info("Loading FIX string " + inputFixMessageText.getText());
 		try {
-			if ( ( getInputAndFilterData() != null ) &&
-				  ( getInputAndFilterData().getInputSelectStrategyName() != null ) )
+			if ( ( getAtdl4jConfig().getInputAndFilterData() != null ) &&
+				  ( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() != null ) )
 			{
-				logger.info("getInputAndFilterData().getInputSelectStrategyName(): " + getInputAndFilterData().getInputSelectStrategyName());			
-				logger.info("Invoking selectDropDownStrategy: " + getInputAndFilterData().getInputSelectStrategyName() );							
-				selectDropDownStrategy( getInputAndFilterData().getInputSelectStrategyName() );
+				logger.info("getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName(): " + getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName());			
+				logger.info("Invoking selectDropDownStrategy: " + getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );							
+				selectDropDownStrategy( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );
 			}
 			else  // Match getWireValue() and then use getUiRep() if avail, otherwise getName()
 			{
-				if ( ( strategies != null ) && ( strategies.getStrategyIdentifierTag() != null ) )
+				if ( ( getAtdl4jConfig().getStrategies() != null ) && ( getAtdl4jConfig().getStrategies().getStrategyIdentifierTag() != null ) )
 				{
-					String strategyWireValue = FIXMessageParser.extractFieldValueFromFIXMessage( inputFixMessageText.getText(), strategies.getStrategyIdentifierTag().intValue() );
+					String strategyWireValue = FIXMessageParser.extractFieldValueFromFIXMessage( inputFixMessageText.getText(), getAtdl4jConfig().getStrategies().getStrategyIdentifierTag().intValue() );
 					
 	logger.info("strategyWireValue: " + strategyWireValue);			
 					if ( strategyWireValue != null )
 					{
-						if ( strategies.getStrategy() != null )
+						if ( getAtdl4jConfig().getStrategies().getStrategy() != null )
 						{
-							for ( StrategyT tempStrategy : strategies.getStrategy() )
+							for ( StrategyT tempStrategy : getAtdl4jConfig().getStrategies().getStrategy() )
 							{
 								if ( strategyWireValue.equals( tempStrategy.getWireValue() ) )
 								{
@@ -449,18 +484,18 @@ public class SWTApplication {
 				}
 			}
 
-			if (selectedStrategy == null)
+			if (getAtdl4jConfig().getSelectedStrategy() == null)
 			{
 				outputFixMessageText.setText("Please select a strategy");
 				return;
 			}
 // 1/16/2010 Scott Atwell		logger.info("Loading FIX string " + inputFixMessageText.getText());
 // 1/16/2010 Scott Atwell		try {
-			StrategyUI ui = strategyUI.get(selectedStrategy);
+			StrategyUI ui = getAtdl4jConfig().getStrategyUIMap().get(getAtdl4jConfig().getSelectedStrategy());
 //TODO 1/19/2010 Scott Atwell BEFORE			ui.setFIXMessage(inputFixMessageText.getText());
 //TODO 1/19/2010 Scott Atwell BEFORE			outputFixMessageText.setText("FIX string loaded successfully!");
 //TODO 1/19/2010 Scott Atwell AFTER - BELOW
-			// -- Note available strategies may be filtered due to SecurityTypes, Markets, or Region/Country rules --  
+			// -- Note available getAtdl4jConfig().getStrategies() may be filtered due to SecurityTypes, Markets, or Region/Country rules --  
 			if ( ui != null )
 			{
 				ui.setFIXMessage(inputFixMessageText.getText());
@@ -468,7 +503,7 @@ public class SWTApplication {
 			}
 			else
 			{
-				outputFixMessageText.setText( selectedStrategy.getName() + " is not available.");
+				outputFixMessageText.setText( getAtdl4jConfig().getSelectedStrategy().getName() + " is not available.");
 			}
 //TODO 1/19/2010 Scott Atwell AFTER - ABOVE			
 		} catch (ValidationException ex) {
@@ -494,8 +529,10 @@ public class SWTApplication {
 		}
 	}
 	
-	protected static void parse(String filepath) throws JAXBException,
-			IOException, NumberFormatException {
+//	protected static void parse(String filepath) throws JAXBException,
+	protected void parse(String filepath) throws JAXBException,
+// 2/7/2010 Scott Atwell			IOException, NumberFormatException {
+		IOException, NumberFormatException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		
 		// remove all dropdown items
 		strategiesDropDown.removeAll();
@@ -509,22 +546,29 @@ public class SWTApplication {
 			// try to parse as URL
 			URL url = new URL(filepath);
 			JAXBElement<?> element = (JAXBElement<?>)um.unmarshal(url);
-			strategies = (StrategiesT)element.getValue();
+			getAtdl4jConfig().setStrategies( (StrategiesT)element.getValue() );
 		} catch (MalformedURLException e) {
 			// try to parse as file
 			File file = new File(filepath);		
 			JAXBElement<?> element = (JAXBElement<?>)um.unmarshal(file);
-			strategies = (StrategiesT)element.getValue();
+			getAtdl4jConfig().setStrategies( (StrategiesT)element.getValue() );
 		}
+
+//TODO-SWT Reference		
+// 2/7/2010 this worked		StrategiesUIFactory factory = new SWTStrategiesUIFactory();
+// 2/7/2010 Scott Atwell		SWTStrategiesUI strategiesUI = (SWTStrategiesUI) factory.create(strategies);
+// 2/7/2010 this worked		StrategiesUI<?> strategiesUI = factory.create(strategies);
+		// -- this throws ClassNotFoundException, IllegalAccessException, InstantiationException -- 
+// 2/7/2010 this worked		StrategiesUIFactory factory = ((Class<StrategiesUIFactory>) Class.forName( "org.atdl4j.ui.swt.impl.SWTStrategiesUIFactory" ) ).newInstance();
+		// -- this throws ClassNotFoundException, IllegalAccessException, InstantiationException -- 
+		StrategiesUIFactory factory = getAtdl4jConfig().getStrategiesUIFactory();
+		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies());
+		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
 		
-		StrategiesUIFactory factory = new SWTStrategiesUIFactory();
-		SWTStrategiesUI strategiesUI = (SWTStrategiesUI) factory.create(strategies);
-		strategyUI = new HashMap<StrategyT, StrategyUI>();
-		
-		for (StrategyT strategy : strategies.getStrategy()) {
+		for (StrategyT strategy : getAtdl4jConfig().getStrategies().getStrategy()) {
 
 //TODO 1/18/2010 Scott Atwell Added BELOW
-			if ( getInputAndFilterData().isStrategySupported( strategy ) == false)
+			if ( getAtdl4jConfig().getInputAndFilterData().isStrategySupported( strategy ) == false)
 			{
 				logger.info("Excluding strategy: " + strategy.getName() + " as inputAndFilterData.isStrategySupported() returned false." );
 				continue; // skip it 
@@ -534,12 +578,15 @@ public class SWTApplication {
 			// create composite
 			Composite strategyParent = new Composite(strategiesPanel, SWT.NONE);
 			strategyParent.setLayout(new FillLayout());
-			SWTStrategyUI ui;
+// 2/7/2010 Scott Atwell			SWTStrategyUI ui;
+// COULDN'T PULL THIS OFF			
+			StrategyUI ui;
+
 			
 			// build strategy and catch strategy-specific errors
 			try {
 //TODO 1/17/2010 Scott Atwell				ui = strategiesUI.createUI(strategy, strategyParent);	
-				ui = strategiesUI.createUI(strategy, strategyParent, inputAndFilterData.getInputHiddenFieldNameValueMap());	
+				ui = strategiesUI.createUI(strategy, strategyParent, getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap());	
 			} catch (JAXBException e1) {
 				MessageBox messageBox = new MessageBox(shell, SWT.OK
 						| SWT.ICON_ERROR);
@@ -568,10 +615,10 @@ public class SWTApplication {
 			
 			// create dropdown item for strategy
 			strategiesDropDown.add(getStrategyName(strategy));
-			strategyUI.put(strategy, ui);
+			getAtdl4jConfig().getStrategyUIMap().put(strategy, ui);
 			
 //TODO Scott Atwell 1/17/2010 Added BEGIN
-			ui.setCxlReplaceMode( inputAndFilterData.getInputCxlReplaceMode() );
+			ui.setCxlReplaceMode( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );
 //TODO Scott Atwell 1/17/2010 Added END
 		}
 
@@ -589,13 +636,14 @@ public class SWTApplication {
 			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != 0) ? 0 : -1;
 		}
 		strategiesPanel.layout();
-		if (strategies != null) {
-			selectedStrategy = strategies.getStrategy().get(0);
+		if (getAtdl4jConfig().getStrategies() != null) {
+			getAtdl4jConfig().setSelectedStrategy( getAtdl4jConfig().getStrategies().getStrategy().get(0) );
 		}
 		shell.pack();
 	}
 
-	private static String getStrategyName(StrategyT strategy) {
+//	private static String getStrategyName(StrategyT strategy) {
+	private String getStrategyName(StrategyT strategy) {
 		if (strategy.getUiRep() != null) {
 			return strategy.getUiRep();
 		} else {
@@ -603,7 +651,8 @@ public class SWTApplication {
 		}
 	}
 
-	public static void addDebugMouseTrackListener(Control control) {
+//	public static void addDebugMouseTrackListener(Control control) {
+	public void addDebugMouseTrackListener(Control control) {
 		if (!(control.getClass().equals(Composite.class) || 
 		      control.getClass().equals(Group.class))) {
 			control.addMouseTrackListener(new DebugMouseTrackListener(control));
@@ -617,7 +666,9 @@ public class SWTApplication {
 	}
 
 	//TODO 1/16/2010 Scott Atwell added
-	public static void selectDropDownStrategy(int index) {
+//	public static void selectDropDownStrategy(int index) {
+//	public static void selectDropDownStrategy(int index) {
+	public void selectDropDownStrategy(int index) {
 		strategiesDropDown.select( index );
 		
 		// below moved from and called by strategiesDropDown.widgetSelected(SelectionEvent event)
@@ -625,32 +676,32 @@ public class SWTApplication {
 			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
 			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
 		}
-		if (strategies != null) {
+		if (getAtdl4jConfig().getStrategies() != null) {
 // 2/1/2010 Scott Atwell - CANNOT DO THIS as startegies.getStrategy() List contains ALL defined strategies (UNFILTERED) and thus NOT 1-for-1
 //			selectedStrategy = strategies.getStrategy().get(index);
 			String tempSelectedDropDownName = strategiesDropDown.getItem( index );
-			selectedStrategy = null; 
-			for ( StrategyT tempStrategy : strategies.getStrategy() )
+			getAtdl4jConfig().setSelectedStrategy( null ); 
+			for ( StrategyT tempStrategy : getAtdl4jConfig().getStrategies().getStrategy() )
 			{
 				if ( ( ( tempStrategy.getUiRep() != null ) && ( tempStrategy.getUiRep().equals( tempSelectedDropDownName ) ) ) ||
 					  ( ( tempStrategy.getUiRep() == null ) && ( tempStrategy.getName().equals( tempSelectedDropDownName ) ) ) )
 				{
-					selectedStrategy = tempStrategy;
+					getAtdl4jConfig().setSelectedStrategy( tempStrategy );
 					break;
 				}
 			}
-			if (showStrategyDescription) strategyDescription.setText("");
+			if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText("");
 		}
 		strategiesPanel.layout();
 		shell.pack();
 		// Strategy description must be updated after packing
-		if (showStrategyDescription) strategyDescription.setText(selectedStrategy.getDescription());
+		if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
 	}
 
 //TODO 1/16/2010 Scott Atwell added
 //TODO !!!! may have issue with "either or" logic for uiRep vs. name attributes (and fact dropdown will list uiRep) @see getStrategyName()
-	// public static void selectDropDownStrategy(StrategyT strategy) {
-	public static void selectDropDownStrategy(String strategyName) {
+// public static void selectDropDownStrategy(StrategyT strategy) {
+	public void selectDropDownStrategy(String strategyName) {
 		for (int i = 0; i < strategiesDropDown.getItemCount(); i++) {
 			if ( strategyName.equals( strategiesDropDown.getItem( i ) ) ) {
 				selectDropDownStrategy( i );
@@ -660,7 +711,8 @@ public class SWTApplication {
 	}
 
 //TODO 1/20/2010 Scott Atwell added	
-	private static void applyLoggingLevel()
+//	private static void applyLoggingLevel()
+	private void applyLoggingLevel()
 	{
 		org.apache.log4j.Level tempLevel = org.apache.log4j.Level.INFO; 
 		if ( debugModeButton.getSelection() )
@@ -683,19 +735,20 @@ public class SWTApplication {
 	}
 
 	/**
-	 * @return the inputAndFilterData
+	 * @param atdl4jConfig the atdl4jConfig to set
 	 */
-	public static InputAndFilterData getInputAndFilterData()
+	public void setAtdl4jConfig(Atdl4jConfig atdl4jConfig)
 	{
-		return inputAndFilterData;
+		this.atdl4jConfig = atdl4jConfig;
 	}
 
 	/**
-	 * @param aInputAndFilterData the inputAndFilterData to set
+	 * @return the atdl4jConfig
 	 */
-	public static void setInputAndFilterData(InputAndFilterData aInputAndFilterData)
+	public Atdl4jConfig getAtdl4jConfig()
 	{
-		inputAndFilterData = aInputAndFilterData;
+		return atdl4jConfig;
 	}
+
 	
 }

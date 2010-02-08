@@ -2,7 +2,7 @@
  * Created on Jan 19, 2010
  *
  */
-package org.atdl4j.data;
+package org.atdl4j.config;
 
 import java.util.HashMap;
 import java.util.Map;

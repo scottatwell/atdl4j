@@ -51,4 +51,8 @@ public SWTStrategyUI createUI(StrategyT strategy, Composite parent, Map<String, 
 		//}	
 	}
 
+public SWTStrategyUI createUI(StrategyT strategy, Object parent, Map<String, String> inputHiddenFieldNameValueMap)
+			throws JAXBException {
+	return createUI( strategy, (Composite) parent, inputHiddenFieldNameValueMap);
+}
 }
