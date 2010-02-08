@@ -4,12 +4,14 @@
  */
 package org.atdl4j.config;
 
+import java.util.List;
 import java.util.Map;
 
 import org.atdl4j.atdl.core.StrategiesT;
 import org.atdl4j.atdl.core.StrategyT;
 import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
+import org.atdl4j.ui.app.StrategySelectionUI;
 
 /**
  * 
@@ -28,6 +30,9 @@ public interface Atdl4jConfig
 	public StrategiesUIFactory getStrategiesUIFactory() 
 		throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 
+	public StrategySelectionUI getStrategySelectionUI() 
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException;
+	
 	public InputAndFilterData getInputAndFilterData();
 	public void setInputAndFilterData(InputAndFilterData inputAndFilterData);
 	
@@ -45,5 +50,7 @@ public interface Atdl4jConfig
 
 	public void setShowTimezoneSelector(boolean showTimezoneSelector);
 	public boolean isShowTimezoneSelector();
+	
+	public List<StrategyT> getStrategiesFilteredStrategyList();
 
 }

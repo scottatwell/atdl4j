@@ -4,12 +4,16 @@
  */
 package org.atdl4j.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.atdl4j.atdl.core.StrategiesT;
 import org.atdl4j.atdl.core.StrategyT;
 import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
+import org.atdl4j.ui.app.StrategySelectionUI;
 
 /**
  * Typical setup (for class named XXX):
@@ -30,8 +34,13 @@ import org.atdl4j.ui.StrategyUI;
 public abstract class AbstractAtdl4jConfig
 	implements Atdl4jConfig
 {
+	private final Logger logger = Logger.getLogger(AbstractAtdl4jConfig.class);
+	
 	private String classNameStrategiesUIFactory;
 	private StrategiesUIFactory strategiesUIFactory;
+	
+	private String classNameStrategySelectionUI;
+	private StrategySelectionUI strategySelectionUI;
 	
 	private InputAndFilterData inputAndFilterData;
 	
@@ -43,6 +52,8 @@ public abstract class AbstractAtdl4jConfig
 	private StrategyT selectedStrategy;
 	
 
+	abstract protected String getDefaultClassNameStrategiesUIFactory();
+	abstract protected String getDefaultClassNameStrategySelectionUI();
 	
 	/**
 	 * 
@@ -50,6 +61,7 @@ public abstract class AbstractAtdl4jConfig
 	public AbstractAtdl4jConfig()
 	{
 		setClassNameStrategiesUIFactory( getDefaultClassNameStrategiesUIFactory() );
+		setClassNameStrategySelectionUI( getDefaultClassNameStrategySelectionUI() );
 	}
 	
 	/**
@@ -69,8 +81,6 @@ public abstract class AbstractAtdl4jConfig
 		return classNameStrategiesUIFactory;
 	}
 	
-	abstract protected String getDefaultClassNameStrategiesUIFactory();
-
 	/**
 	 * @param strategiesUIFactory the strategiesUIFactory to set
 	 */
@@ -90,6 +100,7 @@ public abstract class AbstractAtdl4jConfig
 	{
 		if ( ( strategiesUIFactory == null ) && ( getClassNameStrategiesUIFactory() != null ) )
 		{
+			logger.debug( "getStrategiesUIFactory() loading class named: " + getClassNameStrategiesUIFactory() );
 			return ((Class<StrategiesUIFactory>) Class.forName( getClassNameStrategiesUIFactory() ) ).newInstance();
 		}
 		
@@ -191,5 +202,75 @@ public abstract class AbstractAtdl4jConfig
 	{
 		return showTimezoneSelector;
 	}
-	
+
+	public List<StrategyT> getStrategiesFilteredStrategyList()
+	{
+		if ( ( getStrategies() == null ) && ( getStrategies().getStrategy() != null ) )
+		{
+			return null;
+		}
+		
+		if ( getInputAndFilterData() == null )
+		{
+			return getStrategies().getStrategy();
+		}
+		
+		List<StrategyT> tempFilteredList = new ArrayList<StrategyT>();
+		
+		for ( StrategyT strategy : getStrategies().getStrategy() ) 
+		{
+			if ( !getInputAndFilterData().isStrategySupported( strategy ) )
+			{
+				logger.info("Excluding strategy: " + strategy.getName() + " as inputAndFilterData.isStrategySupported() returned false." );
+				continue; // skip it 
+			}
+			
+			tempFilteredList.add( strategy );
+		}
+		
+		return tempFilteredList;
+	}
+
+	/**
+	 * @param classNameStrategySelectionUI the classNameStrategySelectionUI to set
+	 */
+	public void setClassNameStrategySelectionUI(String classNameStrategySelectionUI)
+	{
+		this.classNameStrategySelectionUI = classNameStrategySelectionUI;
+	}
+
+	/**
+	 * @return the classNameStrategySelectionUI
+	 */
+	public String getClassNameStrategySelectionUI()
+	{
+		return classNameStrategySelectionUI;
+	}
+
+	/**
+	 * @param strategySelectionUI the strategySelectionUI to set
+	 */
+	public void setStrategySelectionUI(StrategySelectionUI strategySelectionUI)
+	{
+		this.strategySelectionUI = strategySelectionUI;
+	}
+
+	/**
+	 * @return the StrategySelectionUI
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	public StrategySelectionUI getStrategySelectionUI() 
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		if ( ( strategySelectionUI == null ) && ( getClassNameStrategySelectionUI() != null ) )
+		{
+			logger.debug( "getStrategySelectionUI() loading class named: " + getClassNameStrategySelectionUI() );
+			return ((Class<StrategySelectionUI>) Class.forName( getClassNameStrategySelectionUI() ) ).newInstance();
+		}
+		
+		return strategySelectionUI;
+	}
+
 }

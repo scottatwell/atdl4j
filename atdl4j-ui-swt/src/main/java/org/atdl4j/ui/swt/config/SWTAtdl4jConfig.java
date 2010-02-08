@@ -25,7 +25,7 @@ import org.atdl4j.config.AbstractAtdl4jConfig;
 public class SWTAtdl4jConfig
 		extends AbstractAtdl4jConfig
 {
-	public static String PACKAGE_PATH_ORG_ATDL4J_UI_SWT = "org.atdl4j.ui.swt.";
+	private static String PACKAGE_PATH_ORG_ATDL4J_UI_SWT = "org.atdl4j.ui.swt.";
 	
 	public SWTAtdl4jConfig()
 	{
@@ -33,7 +33,13 @@ public class SWTAtdl4jConfig
 	}
 	
 	protected String getDefaultClassNameStrategiesUIFactory()
-	{
+	{ 
 		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "impl.SWTStrategiesUIFactory";
 	}
+	
+	protected String getDefaultClassNameStrategySelectionUI()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTStrategySelectionUI";
+	}
+	
 }

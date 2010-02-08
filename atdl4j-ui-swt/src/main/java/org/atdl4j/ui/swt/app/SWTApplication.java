@@ -1,4 +1,4 @@
-package org.atdl4j.ui.swt.application;
+package org.atdl4j.ui.swt.app;
 
 
 import java.io.File;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -23,6 +24,8 @@ import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.ui.StrategiesUI;
 import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
+import org.atdl4j.ui.app.StrategySelectionUI;
+import org.atdl4j.ui.app.StrategySelectionUIListener;
 import org.atdl4j.ui.swt.config.SWTAtdl4jConfig;
 import org.atdl4j.ui.swt.test.DebugMouseTrackListener;
 import org.eclipse.swt.SWT;
@@ -44,15 +47,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 
-public class SWTApplication {
+public class SWTApplication 
+	implements StrategySelectionUIListener
+{
 
 //	private static final Logger logger = Logger.getLogger(SWTApplication.class);
-	private final Logger logger = Logger.getLogger(SWTApplication.class);
+	public final Logger logger = Logger.getLogger(SWTApplication.class);
 	
 //	private static Combo strategiesDropDown;
 //	private static Composite strategiesPanel;
 //	private static Shell shell;
-	private Combo strategiesDropDown;
+///	private Combo strategiesDropDown;
+	private StrategySelectionUI strategySelectionUI;  // 2/7/2010 Scott Atwell replaces strategiesDropDown
+
 	private Composite strategiesPanel;
 	private Shell shell;
 
@@ -87,10 +94,19 @@ public class SWTApplication {
 	
 	public static void main(String[] args) {
 		SWTApplication tempSWTApplication = new SWTApplication();
-		tempSWTApplication.mainLine(args);
+		try
+		{
+			tempSWTApplication.mainLine(args);
+		}
+		catch ( Throwable e )
+		{
+			tempSWTApplication.logger.warn("Fatal Exception in mainLine", e);
+		}
 	}
 	
-	public void mainLine(String[] args) {
+	public void mainLine(String[] args) 
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
 		Display display = new Display();
 		shell = new Shell(display);
 		GridLayout shellLayout = new GridLayout(1, true);
@@ -168,6 +184,7 @@ public class SWTApplication {
 		    false));
 	}
 		
+/****	
 		// Strategy selector dropdown
 		Composite dropdownComposite = new Composite(shell, SWT.NONE);
 		GridLayout dropdownLayout = new GridLayout(2, false);
@@ -199,7 +216,14 @@ public class SWTApplication {
 				selectDropDownStrategy( index );
 			}
 		});
+****/
+// 2/7/2010 Scott Atwell		setStrategySelectionUI( new SWTStrategySelectionUI() );
+		setStrategySelectionUI( getAtdl4jConfig().getStrategySelectionUI() );
+		getStrategySelectionUI().addListener( this );
+		getStrategySelectionUI().buildStrategySelectionPanel( shell, getAtdl4jConfig() );
 		
+		
+	
 		if (getAtdl4jConfig().isShowStrategyDescription())
 		{
         		//descPanel = new Composite(shell, SWT.NONE);
@@ -449,7 +473,7 @@ public class SWTApplication {
 			{
 				logger.info("getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName(): " + getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName());			
 				logger.info("Invoking selectDropDownStrategy: " + getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );							
-				selectDropDownStrategy( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );
+				getStrategySelectionUI().selectDropDownStrategy( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );
 			}
 			else  // Match getWireValue() and then use getUiRep() if avail, otherwise getName()
 			{
@@ -469,12 +493,12 @@ public class SWTApplication {
 									if ( tempStrategy.getUiRep() != null )
 									{
 										logger.info("Invoking selectDropDownStrategy for tempStrategy.getUiRep(): " + tempStrategy.getUiRep() );							
-										selectDropDownStrategy( tempStrategy.getUiRep() );
+										getStrategySelectionUI().selectDropDownStrategy( tempStrategy.getUiRep() );
 									}
 									else
 									{
 										logger.info("Invoking selectDropDownStrategy for tempStrategy.getName(): " + tempStrategy.getName() );							
-										selectDropDownStrategy( tempStrategy.getName() );
+										getStrategySelectionUI().selectDropDownStrategy( tempStrategy.getName() );
 									}
 									break;
 								}
@@ -535,7 +559,8 @@ public class SWTApplication {
 		IOException, NumberFormatException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		
 		// remove all dropdown items
-		strategiesDropDown.removeAll();
+// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionUI.loadStrategyList())		strategiesDropDown.removeAll();
+		
 		// remove all strategy panels
 		for (Control control : strategiesPanel.getChildren()) control.dispose();
 	
@@ -565,6 +590,7 @@ public class SWTApplication {
 		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies());
 		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
 		
+/***	2/7/2010 Scot Atwell 	
 		for (StrategyT strategy : getAtdl4jConfig().getStrategies().getStrategy()) {
 
 //TODO 1/18/2010 Scott Atwell Added BELOW
@@ -574,12 +600,15 @@ public class SWTApplication {
 				continue; // skip it 
 			}
 //TODO 1/18/2010 Scott Atwell Added ABOVE
-			
+***/
+		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
+		
+		for (StrategyT strategy : tempFilteredStrategyList) 
+		{
 			// create composite
 			Composite strategyParent = new Composite(strategiesPanel, SWT.NONE);
 			strategyParent.setLayout(new FillLayout());
 // 2/7/2010 Scott Atwell			SWTStrategyUI ui;
-// COULDN'T PULL THIS OFF			
 			StrategyUI ui;
 
 			
@@ -603,7 +632,7 @@ public class SWTApplication {
 					messageBox.setText(e1.getLinkedException().getClass().getSimpleName());
 					msg = e1.getLinkedException().getMessage();
 				}
-				messageBox.setMessage("Error in Strategy \"" + getStrategyName(strategy) + "\":\n\n" +msg);
+				messageBox.setMessage("Error in Strategy \"" + getStrategyUiRepOrName(strategy) + "\":\n\n" +msg);
 				messageBox.open();
 				
 				// rollback changes
@@ -614,7 +643,7 @@ public class SWTApplication {
 			}
 			
 			// create dropdown item for strategy
-			strategiesDropDown.add(getStrategyName(strategy));
+// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionUI.loadStrategyList())			strategiesDropDown.add(getStrategyName(strategy));
 			getAtdl4jConfig().getStrategyUIMap().put(strategy, ui);
 			
 //TODO Scott Atwell 1/17/2010 Added BEGIN
@@ -622,12 +651,12 @@ public class SWTApplication {
 //TODO Scott Atwell 1/17/2010 Added END
 		}
 
-		
-		
-		
-		
-		if (strategiesDropDown.getItem(0) != null) strategiesDropDown.select(0);
+// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionUI.loadStrategyList())		if (strategiesDropDown.getItem(0) != null) strategiesDropDown.select(0);
 
+// 2/7/2010 Scott Atwell added
+		getStrategySelectionUI().loadStrategyList( tempFilteredStrategyList );
+			
+			
 		// TODO: This flashes all parameters on the screen when we first load
 		// There's got to be a better way...
 		shell.pack();
@@ -643,7 +672,7 @@ public class SWTApplication {
 	}
 
 //	private static String getStrategyName(StrategyT strategy) {
-	private String getStrategyName(StrategyT strategy) {
+	private String getStrategyUiRepOrName(StrategyT strategy) {
 		if (strategy.getUiRep() != null) {
 			return strategy.getUiRep();
 		} else {
@@ -665,52 +694,7 @@ public class SWTApplication {
 		}
 	}
 
-	//TODO 1/16/2010 Scott Atwell added
-//	public static void selectDropDownStrategy(int index) {
-//	public static void selectDropDownStrategy(int index) {
-	public void selectDropDownStrategy(int index) {
-		strategiesDropDown.select( index );
-		
-		// below moved from and called by strategiesDropDown.widgetSelected(SelectionEvent event)
-		for (int i = 0; i < strategiesPanel.getChildren().length; i++) {
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
-		}
-		if (getAtdl4jConfig().getStrategies() != null) {
-// 2/1/2010 Scott Atwell - CANNOT DO THIS as startegies.getStrategy() List contains ALL defined strategies (UNFILTERED) and thus NOT 1-for-1
-//			selectedStrategy = strategies.getStrategy().get(index);
-			String tempSelectedDropDownName = strategiesDropDown.getItem( index );
-			getAtdl4jConfig().setSelectedStrategy( null ); 
-			for ( StrategyT tempStrategy : getAtdl4jConfig().getStrategies().getStrategy() )
-			{
-				if ( ( ( tempStrategy.getUiRep() != null ) && ( tempStrategy.getUiRep().equals( tempSelectedDropDownName ) ) ) ||
-					  ( ( tempStrategy.getUiRep() == null ) && ( tempStrategy.getName().equals( tempSelectedDropDownName ) ) ) )
-				{
-					getAtdl4jConfig().setSelectedStrategy( tempStrategy );
-					break;
-				}
-			}
-			if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText("");
-		}
-		strategiesPanel.layout();
-		shell.pack();
-		// Strategy description must be updated after packing
-		if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
-	}
-
-//TODO 1/16/2010 Scott Atwell added
-//TODO !!!! may have issue with "either or" logic for uiRep vs. name attributes (and fact dropdown will list uiRep) @see getStrategyName()
-// public static void selectDropDownStrategy(StrategyT strategy) {
-	public void selectDropDownStrategy(String strategyName) {
-		for (int i = 0; i < strategiesDropDown.getItemCount(); i++) {
-			if ( strategyName.equals( strategiesDropDown.getItem( i ) ) ) {
-				selectDropDownStrategy( i );
-				return;
-			}
-		}
-	}
-
-//TODO 1/20/2010 Scott Atwell added	
+	//TODO 1/20/2010 Scott Atwell added	
 //	private static void applyLoggingLevel()
 	private void applyLoggingLevel()
 	{
@@ -748,6 +732,52 @@ public class SWTApplication {
 	public Atdl4jConfig getAtdl4jConfig()
 	{
 		return atdl4jConfig;
+	}
+
+	/**
+	 * @return the strategySelectionUI
+	 */
+	public StrategySelectionUI getStrategySelectionUI()
+	{
+		return this.strategySelectionUI;
+	}
+
+	/**
+	 * @param aStrategySelectionUI the strategySelectionUI to set
+	 */
+	public void setStrategySelectionUI(StrategySelectionUI aStrategySelectionUI)
+	{
+		this.strategySelectionUI = aStrategySelectionUI;
+	}
+
+
+	/**
+	 * Invoked by StrategySelectionUI via StrategySelectionUIListener when a Strategy has been selected
+	 */
+	public void strategySelected(StrategyT aStrategy, int index)
+	{
+//TODO -- These were the remnants from selectDropDownStrategy(int index) that did not become part of StrategySelectionUI
+		for (int i = 0; i < strategiesPanel.getChildren().length; i++) 
+		{
+			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
+			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
+		}
+		
+
+		if (getAtdl4jConfig().isShowStrategyDescription())
+		{
+			strategyDescription.setText("");
+		}
+		
+		strategiesPanel.layout();
+		shell.pack();
+//Strategy description must be updated after packing
+// 2/7/2010 Scott Atwell - had to add the not null check	to avoid SWT.error of Argument cannot be null	
+		if ( (getAtdl4jConfig().isShowStrategyDescription()) && 
+			  ( getAtdl4jConfig().getSelectedStrategy().getDescription() != null ) )
+		{
+			strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
+		}
 	}
 
 	
