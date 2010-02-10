@@ -4,9 +4,11 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.atdl.core.ParameterT;
 import org.atdl4j.atdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
+import org.atdl4j.data.StrategyRuleset;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 
@@ -33,14 +35,18 @@ public interface StrategyUI {
 	public void setFIXMessage(String text) throws JAXBException;
 	
 	// -- Note invoking this method may result in object construction as a result of down-casting its own map of a specific templatized instance of ControlUI<?> --
-//TODO Scott Atwell added 1/14/2010
-// 2/9/2010 Scott Atwell	public Map<String, ControlUI<?>> getControls();
 	public Map<String, ControlUI<?>> getControlUIMap();
 
 	// -- Note invoking this method may result in object construction as a result of down-casting its own map of a specific templatized instance of ControlUI<?> --
 	public Map<String, ControlUI<?>> getControlUIWithParameterMap();
 
-// Scott Atwell added 2/7/2010
    public void setCxlReplaceMode(boolean cxlReplaceMode);
+
+   
+// 2/10/2010 Scott Atwell exposed these (public within AbstractStrategyUI) -- may not be required/used   
+   public Atdl4jConfig getAtdl4jConfig();
+	public Map<String, ParameterT> getParameterMap();
+	public StrategyRuleset getStrategyRuleset();
+	public Map<String, ValidationRule> getCompleteValidationRuleMap();
 
 }
