@@ -3,9 +3,9 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.xml.bind.JAXBException;
-
-
+import org.atdl4j.atdl.layout.ListItemT;
+import org.atdl4j.atdl.layout.MultiSelectListT;
+import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -15,16 +15,12 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.ListItemT;
-import org.atdl4j.atdl.layout.MultiSelectListT;
-import org.atdl4j.atdl.layout.SingleSelectListT;
-
 public class ListBoxWidget extends AbstractSWTWidget<String> {
 	
 	private List listBox;
 	private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public ListBoxWidget(SingleSelectListT control, ParameterT parameter) throws JAXBException {
 		this.control = control;
 		this.parameter = parameter;
@@ -36,7 +32,8 @@ public class ListBoxWidget extends AbstractSWTWidget<String> {
 		this.parameter = parameter;
 		init();
 	}
-
+**/
+	
 	public Widget createWidget(Composite parent, int style) {
 		
 		// label

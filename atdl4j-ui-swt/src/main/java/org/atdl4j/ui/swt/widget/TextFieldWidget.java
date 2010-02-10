@@ -6,6 +6,13 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.atdl.core.IntT;
+import org.atdl4j.atdl.core.LengthT;
+import org.atdl4j.atdl.core.NumInGroupT;
+import org.atdl4j.atdl.core.NumericT;
+import org.atdl4j.atdl.core.SeqNumT;
+import org.atdl4j.atdl.core.TagNumT;
+import org.atdl4j.atdl.layout.TextFieldT;
 import org.atdl4j.ui.swt.util.NumberFormatVerifyListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -16,26 +23,19 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
-import org.atdl4j.atdl.core.IntT;
-import org.atdl4j.atdl.core.LengthT;
-import org.atdl4j.atdl.core.SeqNumT;
-import org.atdl4j.atdl.core.NumInGroupT;
-import org.atdl4j.atdl.core.TagNumT;
-import org.atdl4j.atdl.core.NumericT;
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.TextFieldT;
-
 public class TextFieldWidget extends AbstractSWTWidget<String> {
 
 	private Text textField;
 	private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public TextFieldWidget(TextFieldT control, ParameterT parameter) throws JAXBException {
 		this.control = control;
 		this.parameter = parameter;
 		init();
 	}
-
+**/
+	
 	public Widget createWidget(Composite parent, int style)
 			throws JAXBException {
 				

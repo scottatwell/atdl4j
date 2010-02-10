@@ -3,10 +3,6 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.CheckBoxListT;
 import org.atdl4j.atdl.layout.ListItemT;
 import org.atdl4j.atdl.layout.SliderT;
 import org.eclipse.swt.SWT;
@@ -24,6 +20,7 @@ public class SliderWidget extends AbstractSWTWidget<String>
     private Scale slider;
     private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
     public SliderWidget(SliderT control, ParameterT parameter)
 	    throws JAXBException
     {
@@ -31,7 +28,8 @@ public class SliderWidget extends AbstractSWTWidget<String>
 	this.parameter = parameter;
 	init();
     }
-
+**/
+    
     public Widget createWidget(Composite parent, int style)
     {	
 	// label

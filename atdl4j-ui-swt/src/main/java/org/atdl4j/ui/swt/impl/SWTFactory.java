@@ -6,8 +6,14 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.ui.swt.SWTWidget;
+import org.atdl4j.atdl.core.ParameterT;
+import org.atdl4j.atdl.layout.ControlT;
+import org.atdl4j.atdl.layout.PanelOrientationT;
+import org.atdl4j.atdl.layout.StrategyPanelT;
+import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.ui.ControlUIFactory;
 import org.atdl4j.ui.swt.SWTPanelFactory;
+import org.atdl4j.ui.swt.SWTWidget;
 import org.atdl4j.ui.swt.SWTWidgetFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -16,18 +22,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.ControlT;
-import org.atdl4j.atdl.layout.PanelOrientationT;
-import org.atdl4j.atdl.layout.StrategyPanelT;
-
 public class SWTFactory implements SWTWidgetFactory, SWTPanelFactory {
 	private static final Logger logger = Logger.getLogger(SWTFactory.class);
 
-	private SWTControlUIFactory controlWidgetFactory;
+// 2/9/2010 Scott Atwell	private SWTControlUIFactory controlWidgetFactory;
+	private ControlUIFactory controlWidgetFactory;
 
-	public SWTFactory() {
-		controlWidgetFactory = new SWTControlUIFactory();
+// 2/9/2010 Scott Atwell	public SWTFactory() 
+	public SWTFactory( Atdl4jConfig aAtdl4jConfig ) 
+		throws JAXBException 
+	{
+// 2/9/2010 Scott Atwell		controlWidgetFactory = new SWTControlUIFactory();
+		controlWidgetFactory = aAtdl4jConfig.getControlUIFactory( aAtdl4jConfig );
 	}
 
 	// Used to create a single parameter widget
@@ -40,7 +46,8 @@ public class SWTFactory implements SWTWidgetFactory, SWTPanelFactory {
 			logger.debug( "create(Composite parent, ControlT control, ParameterT parameter, int style) invoked " +
 					"with parms parent: " + parent + " control: " + control + " parameter: " + parameter + " style: " + style );
 			
-			parameterWidget = controlWidgetFactory.create(control, parameter);
+// 2/9/2010			parameterWidget = controlWidgetFactory.create(control, parameter);
+			parameterWidget = (SWTWidget<?>) controlWidgetFactory.create(control, parameter);
 			
 //TODO 1/19/2010 Scott Atwell added for debug
 			logger.debug( "controlWidgetFactory.create(control, parameter) returned parameterWidget: " + parameterWidget );

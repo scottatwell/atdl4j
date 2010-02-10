@@ -5,24 +5,46 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.atdl.core.StrategiesT;
+import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.atdl.validation.EditT;
+import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.validation.ValidationRuleFactory;
 import org.atdl4j.ui.StrategiesUI;
+import org.atdl4j.ui.StrategyUI;
 import org.eclipse.swt.widgets.Composite;
-import org.atdl4j.atdl.core.StrategyT;
-import org.atdl4j.atdl.core.StrategiesT;
-import org.atdl4j.atdl.validation.EditT;
 
 public class SWTStrategiesUI implements StrategiesUI<Composite> {
 
 	private Map<String, ValidationRule> strategiesRules;
 //TODO 1/16/2010 Scott Atwell added
 	private StrategiesT strategies;
+// 2/8/2010 Scott Atwell added
+	private Atdl4jConfig atdl4jConfig;
 
-	public SWTStrategiesUI(StrategiesT strategies)
-			throws JAXBException {
+	/*
+	 * Call init() after invoking the no arg constructor
+	 */
+	public SWTStrategiesUI()
+	{
+	}
+
+// 2/8/2010 Scott Atwell (use Atdl4jConfig vs. inputHiddenFieldNameValueMap)	public SWTStrategiesUI(StrategiesT strategies)
+	public SWTStrategiesUI(StrategiesT strategies, Atdl4jConfig aAtdl4jConfig)
+			throws JAXBException 
+	{
+		init(strategies, aAtdl4jConfig);
+	}
+
+// 2/8/2010 Scott Atwell (use Atdl4jConfig vs. inputHiddenFieldNameValueMap)	public SWTStrategiesUI(StrategiesT strategies)
+	public void init(StrategiesT strategies, Atdl4jConfig aAtdl4jConfig)
+			throws JAXBException 
+	{
 //TODO 1/16/2010 Scott Atwell added
 		this.strategies = strategies;
+// 2/8/2010 Scott Atwell added
+		setAtdl4jConfig( aAtdl4jConfig );
 
 		strategiesRules = new HashMap<String, ValidationRule>();
 
@@ -39,20 +61,45 @@ public class SWTStrategiesUI implements StrategiesUI<Composite> {
 	}
 
 //TODO 1/17/2010 Scott Atwell	public SWTStrategyUI createUI(StrategyT strategy, Composite parent)
-public SWTStrategyUI createUI(StrategyT strategy, Composite parent, Map<String, String> inputHiddenFieldNameValueMap)
-			throws JAXBException {
+// 2/8/2010 Scott Atwell (use getAtdl4jConfig() vs. inputHiddenFieldNameValueMap)  public SWTStrategyUI createUI(StrategyT strategy, Composite parent, Map<String, String> inputHiddenFieldNameValueMap)
+// 2/9/2010 Scott Atwell public SWTStrategyUI createUI(StrategyT strategy, Composite parent)
+public StrategyUI createUI(StrategyT strategy, Composite parent)
+	throws JAXBException
+{
 		//try {
 //TODO 1/16/2010 Scott Atwell			return new SWTStrategyUI(strategy, strategiesRules, parent);
 //TODO 1/17/2010 Scott Atwell			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies);
-			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies, inputHiddenFieldNameValueMap);
+// 2/8/2010 Scott Atwell (use getAtdl4jConfig() vs. inputHiddenFieldNameValueMap)			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies, inputHiddenFieldNameValueMap);
+// 2/9/2010 Scott Atwell			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies, getAtdl4jConfig());
+	return getAtdl4jConfig().getStrategyUI( strategy, getAtdl4jConfig(), strategiesRules, parent );
 						
 		//} catch (JAXBException e) {
 		//	throw new JAXBException("Error in Strategy \"" + strategy.getName() + "\": " + e.getMessage());
 		//}	
-	}
+}
 
-public SWTStrategyUI createUI(StrategyT strategy, Object parent, Map<String, String> inputHiddenFieldNameValueMap)
-			throws JAXBException {
-	return createUI( strategy, (Composite) parent, inputHiddenFieldNameValueMap);
+// 2/8/2010 Scott Atwell (use Atdl4jConfig vs. inputHiddenFieldNameValueMap)  public SWTStrategyUI createUI(StrategyT strategy, Object parent, Map<String, String> inputHiddenFieldNameValueMap)
+// 2/9/2010 Scott Atwell public SWTStrategyUI createUI(StrategyT strategy, Object parent)
+public StrategyUI createUI(StrategyT strategy, Object parent)
+	throws JAXBException
+{
+// 2/8/2010 Scott Atwell (use getAtdl4jConfig() vs. inputHiddenFieldNameValueMap)	return createUI( strategy, (Composite) parent, inputHiddenFieldNameValueMap);
+	return createUI( strategy, (Composite) parent);
+}
+
+/**
+ * @param atdl4jConfig the atdl4jConfig to set
+ */
+protected void setAtdl4jConfig(Atdl4jConfig atdl4jConfig)
+{
+	this.atdl4jConfig = atdl4jConfig;
+}
+
+/**
+ * @return the atdl4jConfig
+ */
+public Atdl4jConfig getAtdl4jConfig()
+{
+	return atdl4jConfig;
 }
 }

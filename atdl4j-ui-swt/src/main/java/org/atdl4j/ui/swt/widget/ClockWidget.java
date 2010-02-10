@@ -3,20 +3,16 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 import org.atdl4j.atdl.core.LocalMktDateT;
 import org.atdl4j.atdl.core.MonthYearT;
-import org.atdl4j.atdl.core.ParameterT;
 import org.atdl4j.atdl.core.UTCDateOnlyT;
 import org.atdl4j.atdl.core.UTCTimeOnlyT;
 import org.atdl4j.atdl.core.UTCTimestampT;
+import org.atdl4j.atdl.core.UseT;
 import org.atdl4j.atdl.layout.ClockT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,7 +25,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
-import org.atdl4j.atdl.core.UseT;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
  * Clock widget which will display differently depending on the parameter type
@@ -70,13 +67,15 @@ public class ClockWidget extends AbstractSWTWidget<DateTime> {
 	private boolean showDay;
 	private boolean showTime;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public ClockWidget(ClockT control, ParameterT parameter)
 			throws JAXBException {
 		this.control = control;
 		this.parameter = parameter;
 		init();
 	}
-
+**/
+	
 	public Widget createWidget(Composite parent, int style) {
 
 		if (parameter instanceof UTCTimestampT) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.atdl.layout.LabelT;
 import org.atdl4j.ui.impl.LabelUI;
 import org.atdl4j.ui.swt.SWTWidget;
 import org.eclipse.swt.SWT;
@@ -15,16 +16,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import org.atdl4j.atdl.layout.LabelT;
-
 public class LabelWidget extends LabelUI implements SWTWidget<String> {
 
 	private Label label;
-
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public LabelWidget(LabelT control) {
 		super(control);
 	}
-
+**/
+	
 	public Widget createWidget(Composite parent, int style)
 			throws JAXBException {
 				

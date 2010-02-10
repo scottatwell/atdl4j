@@ -33,14 +33,16 @@ public class RadioButtonListWidget extends AbstractSWTWidget<String>
     // 1/20/2010 Scott Atwell added
     public static boolean disableVerticalLayoutHandling = false;
 
-    public RadioButtonListWidget(RadioButtonListT control, ParameterT parameter)
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
+   public RadioButtonListWidget(RadioButtonListT control, ParameterT parameter)
 	    throws JAXBException
     {
 	this.control = control;
 	this.parameter = parameter;
 	init();
     }
-
+**/
+    
     public Widget createWidget(Composite parent, int style)
     {
 

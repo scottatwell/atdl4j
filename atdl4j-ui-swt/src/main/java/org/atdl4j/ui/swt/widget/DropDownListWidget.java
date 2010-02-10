@@ -3,8 +3,9 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.atdl.layout.DropDownListT;
+import org.atdl4j.atdl.layout.EditableDropDownListT;
+import org.atdl4j.atdl.layout.ListItemT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -14,19 +15,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.DropDownListT;
-import org.atdl4j.atdl.layout.EditableDropDownListT;
-import org.atdl4j.atdl.layout.ListItemT;
-import org.atdl4j.atdl.layout.MultiSelectListT;
-import org.atdl4j.atdl.layout.SingleSelectListT;
-import org.atdl4j.atdl.layout.SliderT;
-
 public class DropDownListWidget extends AbstractSWTWidget<String> {
 
 	private Combo dropDownList;
 	private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public DropDownListWidget(DropDownListT control, ParameterT parameter) throws JAXBException {
 		this.control = control;
 		this.parameter = parameter;
@@ -38,7 +32,8 @@ public class DropDownListWidget extends AbstractSWTWidget<String> {
 		this.parameter = parameter;
 		init();
 	}
-
+**/
+	
 	public Widget createWidget(Composite parent, int style) {
 		
 		// label

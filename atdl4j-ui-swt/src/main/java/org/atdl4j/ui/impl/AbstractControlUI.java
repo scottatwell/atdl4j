@@ -1,7 +1,6 @@
 package org.atdl4j.ui.impl;
 
 import java.util.List;
-import java.util.Vector;
 
 import javax.xml.bind.JAXBException;
 
@@ -18,6 +17,7 @@ import org.atdl4j.atdl.layout.RadioButtonListT;
 import org.atdl4j.atdl.layout.RadioButtonT;
 import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SliderT;
+import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.TypeConverterFactory;
@@ -38,6 +38,41 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	protected AbstractTypeConverter<E> controlConverter;
 	protected AbstractTypeConverter<?> parameterConverter;
 	
+// 2/9/2010 Scott Atwell added
+	private Atdl4jConfig atdl4jConfig;
+	
+	public void init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
+	{
+		control = aControl;
+		parameter = aParameter;
+		setAtdl4jConfig( aAtdl4jConfig );
+		
+		// -- This method can be overriden/implemented --
+		initPreCheck();
+		
+		//TODO: do a safe cast AbstractAdapter<?> adapter = (AbstractAdapter<E>) TypeAdapterFactory.create(control);
+		controlConverter = (AbstractTypeConverter<E>) TypeConverterFactory.create(control, parameter);
+		if (parameter != null)
+		{
+			parameterConverter = (AbstractTypeConverter<?>) TypeConverterFactory.create(parameter);
+		}
+		validateEnumPairs();
+		
+		// -- This method can be overriden/implemented --
+		initPostCheck();
+	}
+	
+	// -- Can be overriden --
+	protected void initPreCheck() throws JAXBException
+	{
+	}
+	
+	// -- Can be overriden --
+	protected void initPostCheck() throws JAXBException
+	{
+	}
+	
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	@SuppressWarnings("unchecked")
 	protected void init() throws JAXBException{
 		//TODO: do a safe cast AbstractAdapter<?> adapter = (AbstractAdapter<E>) TypeAdapterFactory.create(control);
@@ -45,7 +80,8 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		if (parameter != null) parameterConverter = (AbstractTypeConverter<?>) TypeConverterFactory.create(parameter);
 		validateEnumPairs();
 	}
-
+**/
+	
 	public String getControlValueAsString() throws JAXBException {
 		return controlConverter.convertValueToString(getControlValue());
 	}
@@ -284,5 +320,21 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			//return new Vector<ListItemT>();
 		    return null;
 		}
+	}
+
+	/**
+	 * @return the atdl4jConfig
+	 */
+	public Atdl4jConfig getAtdl4jConfig()
+	{
+		return this.atdl4jConfig;
+	}
+
+	/**
+	 * @param aAtdl4jConfig the atdl4jConfig to set
+	 */
+	protected void setAtdl4jConfig(Atdl4jConfig aAtdl4jConfig)
+	{
+		this.atdl4jConfig = aAtdl4jConfig;
 	}
 }

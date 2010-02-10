@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.atdl.layout.DoubleSpinnerT;
+import org.atdl4j.atdl.layout.SingleSpinnerT;
 import org.atdl4j.data.converter.NumberConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,10 +19,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Widget;
-
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.DoubleSpinnerT;
-import org.atdl4j.atdl.layout.SingleSpinnerT;
 
 public class SpinnerWidget extends AbstractSWTWidget<BigDecimal>
 {
@@ -38,27 +34,27 @@ public class SpinnerWidget extends AbstractSWTWidget<BigDecimal>
      */
     public class DoubleSpinnerSelection implements SelectionListener
     {
-
-	private Spinner spinner;
-
-	private int increment;
-
-	public DoubleSpinnerSelection(Spinner spinner, int increment)
-	{
-	    this.spinner = spinner;
-	    this.increment = increment;
-	}
-
-	public void widgetDefaultSelected(SelectionEvent event)
-	{
-	}
-
-	public void widgetSelected(SelectionEvent event)
-	{
-	    spinner.setSelection(spinner.getSelection() + increment);
-	}
+		private Spinner spinner;
+	
+		private int increment;
+	
+		public DoubleSpinnerSelection(Spinner spinner, int increment)
+		{
+		    this.spinner = spinner;
+		    this.increment = increment;
+		}
+	
+		public void widgetDefaultSelected(SelectionEvent event)
+		{
+		}
+	
+		public void widgetSelected(SelectionEvent event)
+		{
+		    spinner.setSelection(spinner.getSelection() + increment);
+		}
     }
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
     public SpinnerWidget(DoubleSpinnerT control, ParameterT parameter)
 	    throws JAXBException
     {
@@ -74,7 +70,8 @@ public class SpinnerWidget extends AbstractSWTWidget<BigDecimal>
 	this.parameter = parameter;
 	init();
     }
-
+**/
+    
     public Widget createWidget(Composite parent, int style)
     {
 

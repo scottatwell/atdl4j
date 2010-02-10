@@ -3,8 +3,9 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.atdl.core.BooleanT;
+import org.atdl4j.atdl.layout.CheckBoxT;
+import org.atdl4j.atdl.layout.RadioButtonT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -13,11 +14,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
-
-import org.atdl4j.atdl.core.BooleanT;
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.CheckBoxT;
-import org.atdl4j.atdl.layout.RadioButtonT;
 
 /*
  * Implements either a CheckBox or a RadioButton
@@ -29,6 +25,7 @@ public class ButtonWidget extends AbstractSWTWidget<Boolean> {
 	private Button button;
 	private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public ButtonWidget(CheckBoxT control, ParameterT parameter) throws JAXBException {
 		this.control = control;
 		this.parameter = parameter;
@@ -40,7 +37,7 @@ public class ButtonWidget extends AbstractSWTWidget<Boolean> {
 		this.parameter = parameter;
 		init(); 
 	}
-
+**/
 	public Widget createWidget(Composite parent, int style) {
 
 		// button
@@ -128,4 +125,5 @@ public class ButtonWidget extends AbstractSWTWidget<Boolean> {
 	}
 	return null;
     }
+
 }

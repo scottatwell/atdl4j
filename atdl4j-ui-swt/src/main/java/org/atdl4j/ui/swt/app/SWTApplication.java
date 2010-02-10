@@ -105,7 +105,6 @@ public class SWTApplication
 	}
 	
 	public void mainLine(String[] args) 
-		throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		Display display = new Display();
 		shell = new Shell(display);
@@ -556,7 +555,8 @@ public class SWTApplication
 //	protected static void parse(String filepath) throws JAXBException,
 	protected void parse(String filepath) throws JAXBException,
 // 2/7/2010 Scott Atwell			IOException, NumberFormatException {
-		IOException, NumberFormatException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+		IOException, NumberFormatException 
+	{
 		
 		// remove all dropdown items
 // 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionUI.loadStrategyList())		strategiesDropDown.removeAll();
@@ -579,15 +579,11 @@ public class SWTApplication
 			getAtdl4jConfig().setStrategies( (StrategiesT)element.getValue() );
 		}
 
-//TODO-SWT Reference		
+// -- 2/7/2010 Eliminate SWT-specific Reference --		
 // 2/7/2010 this worked		StrategiesUIFactory factory = new SWTStrategiesUIFactory();
-// 2/7/2010 Scott Atwell		SWTStrategiesUI strategiesUI = (SWTStrategiesUI) factory.create(strategies);
-// 2/7/2010 this worked		StrategiesUI<?> strategiesUI = factory.create(strategies);
-		// -- this throws ClassNotFoundException, IllegalAccessException, InstantiationException -- 
-// 2/7/2010 this worked		StrategiesUIFactory factory = ((Class<StrategiesUIFactory>) Class.forName( "org.atdl4j.ui.swt.impl.SWTStrategiesUIFactory" ) ).newInstance();
-		// -- this throws ClassNotFoundException, IllegalAccessException, InstantiationException -- 
 		StrategiesUIFactory factory = getAtdl4jConfig().getStrategiesUIFactory();
-		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies());
+// 2/8/2010 Scott Atwell		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies());
+		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies(), getAtdl4jConfig());
 		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
 		
 /***	2/7/2010 Scot Atwell 	
@@ -615,7 +611,8 @@ public class SWTApplication
 			// build strategy and catch strategy-specific errors
 			try {
 //TODO 1/17/2010 Scott Atwell				ui = strategiesUI.createUI(strategy, strategyParent);	
-				ui = strategiesUI.createUI(strategy, strategyParent, getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap());	
+// 2/8/2010 Scott Atwell StrategiesUI now already has Atdl4jConfig				ui = strategiesUI.createUI(strategy, strategyParent, getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap());	
+				ui = strategiesUI.createUI(strategy, strategyParent);	
 			} catch (JAXBException e1) {
 				MessageBox messageBox = new MessageBox(shell, SWT.OK
 						| SWT.ICON_ERROR);

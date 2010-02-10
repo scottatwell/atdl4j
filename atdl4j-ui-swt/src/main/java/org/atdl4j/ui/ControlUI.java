@@ -3,16 +3,21 @@ package org.atdl4j.ui;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.atdl.core.ParameterT;
 import org.atdl4j.atdl.layout.ControlT;
+import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.data.FIXMessageBuilder;
 
 /**
  * An interface for an UI widget which will be 
  * stores its underlying value in a parameter field.
  */
-public interface ControlUI<E extends Comparable<?>> {
-
+public interface ControlUI<E extends Comparable<?>> 
+{
+// 2/9/2010 Scott Atwell added
+	public void init(ControlT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+		throws JAXBException;
+	
 	public ParameterT getParameter();
 	
 	public ControlT getControl();

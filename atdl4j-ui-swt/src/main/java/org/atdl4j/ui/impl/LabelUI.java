@@ -1,6 +1,6 @@
 package org.atdl4j.ui.impl;
 
-import org.atdl4j.atdl.layout.LabelT;
+import javax.xml.bind.JAXBException;
 
 /* 
  * This class intentionally does not support parameterRef or initValue
@@ -11,8 +11,15 @@ import org.atdl4j.atdl.layout.LabelT;
 
 public abstract class LabelUI extends AbstractControlUI<String> {
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public LabelUI(LabelT control) {
 		this.control = control;
+		this.parameter = null;
+	}
+**/
+	// -- Overriden --
+	protected void initPreCheck() throws JAXBException
+	{
 		this.parameter = null;
 	}
 	

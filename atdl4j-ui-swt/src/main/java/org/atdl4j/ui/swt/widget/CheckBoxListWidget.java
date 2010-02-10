@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.atdl.core.EnumPairT;
+import org.atdl4j.atdl.layout.CheckBoxListT;
+import org.atdl4j.atdl.layout.ListItemT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
@@ -15,16 +18,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import org.atdl4j.atdl.core.EnumPairT;
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.CheckBoxListT;
-import org.atdl4j.atdl.layout.ListItemT;
-
 public class CheckBoxListWidget extends AbstractSWTWidget<String> {
 
 	private List<Button> multiCheckBox = new ArrayList<Button>();
 	private Label label;
 
+/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	public CheckBoxListWidget(CheckBoxListT control, ParameterT parameter) throws JAXBException {
 		
 		// validate ListItems and EnumPairs
@@ -36,6 +35,16 @@ public class CheckBoxListWidget extends AbstractSWTWidget<String> {
 		this.control = control;
 		this.parameter = parameter;
 		init();
+	}
+**/	
+	// -- Overriden --
+	protected void initPreCheck() throws JAXBException
+	{
+		// validate ListItems and EnumPairs
+		if (parameter != null && ((CheckBoxListT)control).getListItem().size() != parameter.getEnumPair().size())
+			throw new JAXBException("ListItems for Control \"" + control.getID() + 
+					"\" and EnumPairs for Parameter \"" + parameter.getName() + 
+					"\" are not equal in number.");
 	}
 
 	public Widget createWidget(Composite parent, int style) {
