@@ -118,4 +118,9 @@ public interface Atdl4jConfig
 	
 	public List<StrategyT> getStrategiesFilteredStrategyList();
 
+	public boolean isTreatControlVisibleFalseAsNull();
+	public boolean isTreatControlEnabledFalseAsNull();
+	
+	public boolean isShowEnabledCheckboxOnOptionalClockControl();
+	
 }

@@ -27,7 +27,13 @@ public abstract class LabelUI extends AbstractControlUI<String> {
 		// do nothing
 	}
 	
+/** 2/10/2010 Scott Atwell	
 	public String getControlValue() {
+		return null; // Labels cannot store values
+	}
+**/
+	public String getControlValueRaw() 
+	{
 		return null; // Labels cannot store values
 	}
 

@@ -19,6 +19,7 @@ import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SliderT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
+import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.converter.AbstractTypeConverter;
@@ -40,6 +41,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	
 // 2/9/2010 Scott Atwell added
 	private Atdl4jConfig atdl4jConfig;
+	
+// 2/10/2010 Scott Atwell added
+	boolean nullValue = false;
 	
 	public void init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	{
@@ -82,10 +86,28 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	}
 **/
 	
+/** 2/10/2010 Scott Atwell not used	
 	public String getControlValueAsString() throws JAXBException {
 		return controlConverter.convertValueToString(getControlValue());
 	}
+**/
+	/**
+	 * Will return null if isNullValue() is true, otherwise returns getControlValueRaw()
+	 * @return
+	 */
+	public E getControlValue()
+	{
+		if ( isNullValue() )
+		{
+			return null;
+		}
+		else
+		{
+			return getControlValueRaw();
+		}
+	}
 
+	
 	public Comparable<?> getControlValueAsComparable() throws JAXBException
 	{
 		return controlConverter.convertValueToComparable(getControlValue());
@@ -100,9 +122,34 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		return parameter == null ? null : parameterConverter.convertValueToComparable(getParameterValue());
 	}
 	
-	public void setValueAsString(String string) throws JAXBException {
-		// TODO: do i also need a Param adapter pass here?
-		setValue(controlConverter.convertValueToComparable(string));
+	/* 
+	 * This method handles string matching Atdl4jConstants.VALUE_NULL_INDICATOR and invoking setNullValue().
+	 */
+	public void setValueAsString(String string) throws JAXBException 
+	{
+// 2/10/2010 Scott Atwell
+//		 TODO: do i also need a Param adapter pass here?
+//		setValue(controlConverter.convertValueToComparable(string));
+		if ( Atdl4jConstants.VALUE_NULL_INDICATOR.equals( string ) )
+		{
+			setNullValue( true );
+			// -- note that this has no effect on the internal value which may have already been set --
+		}
+		else  // -- not null --
+		{
+			// TODO: do i also need a Param adapter pass here?
+			E tempValue = controlConverter.convertValueToComparable(string);
+			setValue( tempValue );
+			
+			if ( tempValue == null )
+			{
+				setNullValue( true );
+			}
+			else
+			{
+				setNullValue( false );
+			}
+		}
 	}
 	
 // 2/1/2010 Scott Atwell differentiate between ControlComparable and ParameterComparable	
@@ -175,9 +222,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 //TODO Scott Atwell 1/18/2010 BEFORE				
 				String name = getParameter().getName();
 				String type = Integer.toString(getFIXType());
-				builder.onField(958, name);
-				builder.onField(959, type);
-				builder.onField(960, value.toString());
+				builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_NAME, name);
+				builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_TYPE, type);
+				builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_VALUE, value.toString());
 ***/				
 				if ( getParameter().getName().startsWith( InputAndFilterData.FIX_DEFINED_FIELD_PREFIX ) )
 				{
@@ -187,9 +234,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 				{
 					String name = getParameter().getName();
 					String type = Integer.toString(getFIXType());
-					builder.onField(958, name);
-					builder.onField(959, type);
-					builder.onField(960, value.toString());
+					builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_NAME, name);
+					builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_TYPE, type);
+					builder.onField(Atdl4jConstants.TAG_STRATEGY_PARAMETER_VALUE, value.toString());
 				}
 			}
 		}
@@ -336,5 +383,45 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	protected void setAtdl4jConfig(Atdl4jConfig aAtdl4jConfig)
 	{
 		this.atdl4jConfig = aAtdl4jConfig;
+	}
+
+	/**
+	 * Note contains special logic to support returning false if:
+	 * 	( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( ! isVisible() ) 
+	 * or
+	 * 	( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( ! isEnabled() ) )
+	 * if those configs are set and nullValue is false.
+	 * 
+	 * @return the nullValue
+	 */
+	public boolean isNullValue()
+	{
+// 2/10/2010 Scott Atwell 		return this.nullValue;
+		// -- Special logic to treat non-visible and/or non-enabled as "null" if nullValue is false --
+		if ( ! this.nullValue )
+		{
+			if ( getAtdl4jConfig() != null )
+			{
+				if ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( ! isVisible() ) )
+				{
+					return false;
+				}
+				
+				if ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( ! isEnabled() ) )
+				{
+					return false;
+				}
+			}
+		}
+		
+		return this.nullValue;
+	}
+
+	/**
+	 * @param aNullValue the nullValue to set
+	 */
+	public void setNullValue(boolean aNullValue)
+	{
+		this.nullValue = aNullValue;
 	}
 }

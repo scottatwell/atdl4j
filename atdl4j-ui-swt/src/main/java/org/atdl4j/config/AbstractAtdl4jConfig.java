@@ -101,6 +101,10 @@ public abstract class AbstractAtdl4jConfig
 	
 	private boolean showStrategyDescription = true;
 	private boolean showTimezoneSelector = false;
+	private boolean treatControlVisibleFalseAsNull = false;
+	private boolean treatControlEnabledFalseAsNull = false;	
+	private boolean showEnabledCheckboxOnOptionalClockControl = false;
+
 
 	private StrategiesT strategies;
 	private Map<StrategyT, StrategyUI> strategyUIMap;
@@ -1332,6 +1336,54 @@ public abstract class AbstractAtdl4jConfig
 		}
 		
 		return strategySelectionUI;
+	}
+
+	/**
+	 * @return the treatControlVisibleFalseAsNull
+	 */
+	public boolean isTreatControlVisibleFalseAsNull()
+	{
+		return this.treatControlVisibleFalseAsNull;
+	}
+
+	/**
+	 * @param aTreatControlVisibleFalseAsNull the treatControlVisibleFalseAsNull to set
+	 */
+	public void setTreatControlVisibleFalseAsNull(boolean aTreatControlVisibleFalseAsNull)
+	{
+		this.treatControlVisibleFalseAsNull = aTreatControlVisibleFalseAsNull;
+	}
+
+	/**
+	 * @return the treatControlEnabledFalseAsNull
+	 */
+	public boolean isTreatControlEnabledFalseAsNull()
+	{
+		return this.treatControlEnabledFalseAsNull;
+	}
+
+	/**
+	 * @param aTreatControlEnabledFalseAsNull the treatControlEnabledFalseAsNull to set
+	 */
+	public void setTreatControlEnabledFalseAsNull(boolean aTreatControlEnabledFalseAsNull)
+	{
+		this.treatControlEnabledFalseAsNull = aTreatControlEnabledFalseAsNull;
+	}
+
+	/**
+	 * @return the showEnabledCheckboxOnOptionalClockControl
+	 */
+	public boolean isShowEnabledCheckboxOnOptionalClockControl()
+	{
+		return this.showEnabledCheckboxOnOptionalClockControl;
+	}
+
+	/**
+	 * @param aShowEnabledCheckboxOnOptionalClockControl the showEnabledCheckboxOnOptionalClockControl to set
+	 */
+	public void setShowEnabledCheckboxOnOptionalClockControl(boolean aShowEnabledCheckboxOnOptionalClockControl)
+	{
+		this.showEnabledCheckboxOnOptionalClockControl = aShowEnabledCheckboxOnOptionalClockControl;
 	}
 
 }

@@ -23,93 +23,120 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
-public class TextFieldWidget extends AbstractSWTWidget<String> {
+public class TextFieldWidget
+		extends AbstractSWTWidget<String>
+{
 
 	private Text textField;
 	private Label label;
 
-/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
-	public TextFieldWidget(TextFieldT control, ParameterT parameter) throws JAXBException {
-		this.control = control;
-		this.parameter = parameter;
-		init();
-	}
-**/
-	
-	public Widget createWidget(Composite parent, int style)
-			throws JAXBException {
-				
-		// label
-		label = new Label(parent, SWT.NONE);
-		if (control.getLabel() != null) label.setText(control.getLabel());
+	/**
+	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
+	 * ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
+	 * public TextFieldWidget(TextFieldT control, ParameterT parameter) throws
+	 * JAXBException { this.control = control; this.parameter = parameter;
+	 * init(); }
+	 **/
 
+	public Widget createWidget(Composite parent, int style) throws JAXBException
+	{
+
+		// label
+		label = new Label( parent, SWT.NONE );
+		if ( control.getLabel() != null )
+			label.setText( control.getLabel() );
 
 		// textField
-		Text textField = new Text(parent, style | SWT.BORDER);
+		Text textField = new Text( parent, style | SWT.BORDER );
 		this.textField = textField;
-		textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		textField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
 		// type validation
-		if (parameter instanceof IntT ||
-			parameter instanceof TagNumT ||
-			parameter instanceof LengthT ||	
-			parameter instanceof SeqNumT ||
-			parameter instanceof NumInGroupT) {
+		if ( parameter instanceof IntT || parameter instanceof TagNumT || parameter instanceof LengthT || parameter instanceof SeqNumT
+				|| parameter instanceof NumInGroupT )
+		{
 			// Integer types
-			textField.addVerifyListener(new NumberFormatVerifyListener(
-					new DecimalFormat("#"), false));
-		} else if (parameter instanceof NumericT) {
-			// Decimal types
-			textField.addVerifyListener(new NumberFormatVerifyListener(
-					new DecimalFormat("0.0"), false));
+			textField.addVerifyListener( new NumberFormatVerifyListener( new DecimalFormat( "#" ), false ) );
 		}
-		// TODO: add regex verifier for MultipleCharValueT and MultipleStringValueT
-			
+		else if ( parameter instanceof NumericT )
+		{
+			// Decimal types
+			textField.addVerifyListener( new NumberFormatVerifyListener( new DecimalFormat( "0.0" ), false ) );
+		}
+		// TODO: add regex verifier for MultipleCharValueT and
+		// MultipleStringValueT
+
 		// init value
-		if (((TextFieldT)control).getInitValue() != null)
-			textField.setText(((TextFieldT)control).getInitValue());
+		if ( ( (TextFieldT) control ).getInitValue() != null )
+			textField.setText( ( (TextFieldT) control ).getInitValue() );
 
 		// tooltip
 		String tooltip = getTooltip();
-		textField.setToolTipText(tooltip);
-		if (tooltip != null) label.setToolTipText(tooltip);
+		textField.setToolTipText( tooltip );
+		if ( tooltip != null )
+			label.setToolTipText( tooltip );
 
 		return parent;
 	}
 
-	public String getControlValue() {
-	    	// 1/24/2010 Scott Atwell added
-		if (!textField.isVisible() || !textField.isEnabled()) return null;
-		
+/** 2/10/2010 Scott Atwell	
+	public String getControlValue()
+	{
+		// 1/24/2010 Scott Atwell added
+		if ( !textField.isVisible() || !textField.isEnabled() )
+			return null;
+
 		String value = textField.getText();
 
-		if ("".equals(value)) {
+		if ( "".equals( value ) )
+		{
 			return null;
-		} else {
+		}
+		else
+		{
+			return value;
+		}
+	}
+**/
+	public String getControlValueRaw()
+	{
+		String value = textField.getText();
+
+		if ( "".equals( value ) )
+		{
+			return null;
+		}
+		else
+		{
 			return value;
 		}
 	}
 
-	public String getParameterValue() {
-		return getControlValue();
+	public String getParameterValue()
+	{
+		return (String) getControlValue();
 	}
 
-	public void setValue(String value) {
-		textField.setText((value == null) ? "" : value.toString());
+	public void setValue(String value)
+	{
+		textField.setText( ( value == null ) ? "" : value.toString() );
 	}
 
-	public List<Control> getControls() {
+	public List<Control> getControls()
+	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add(label);
-		widgets.add(textField);
+		widgets.add( label );
+		widgets.add( textField );
 		return widgets;
 	}
 
-	public void addListener(Listener listener) {
-	    textField.addListener(SWT.Modify, listener);
+	public void addListener(Listener listener)
+	{
+		textField.addListener( SWT.Modify, listener );
 	}
 
-	public void removeListener(Listener listener) {
-	    textField.removeListener(SWT.Modify, listener);
+	public void removeListener(Listener listener)
+	{
+		textField.removeListener( SWT.Modify, listener );
 	}
 }

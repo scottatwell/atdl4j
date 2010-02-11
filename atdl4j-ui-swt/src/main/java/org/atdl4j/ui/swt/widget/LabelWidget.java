@@ -88,4 +88,30 @@ public class LabelWidget extends LabelUI implements SWTWidget<String> {
 			control.setEnabled(enabled);
 		}
 	}
+	
+	public boolean isVisible()
+	{
+		for ( Control control : getControls() )
+		{
+			if ( control.isVisible() )
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public boolean isEnabled()
+	{
+		for ( Control control : getControls() )
+		{
+			if ( control.isEnabled() )
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

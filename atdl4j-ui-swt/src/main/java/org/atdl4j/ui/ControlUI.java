@@ -17,6 +17,10 @@ public interface ControlUI<E extends Comparable<?>>
 // 2/9/2010 Scott Atwell added
 	public void init(ControlT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
 		throws JAXBException;
+
+// 2/10/2010 Scott Atwell added	
+	public boolean isNullValue();
+	public void setNullValue(boolean aNullValue);
 	
 	public ParameterT getParameter();
 	
@@ -24,9 +28,19 @@ public interface ControlUI<E extends Comparable<?>>
 		
 	// Control value accessor methods
 	
+	/**
+	 * Will return null if isNullValue() is true, otherwise returns getControlValueRaw()
+	 * @return
+	 */
 	public E getControlValue();
 	
-	public String getControlValueAsString() throws JAXBException;
+	/**
+	 * Will return whatever value the Control has regardless of isNullValue()
+	 * @return
+	 */
+	public E getControlValueRaw();
+	
+// 2/10/2010 Scott Atwell not used		public String getControlValueAsString() throws JAXBException;
 	
 	public Comparable<?> getControlValueAsComparable() throws JAXBException;
 	
@@ -42,6 +56,9 @@ public interface ControlUI<E extends Comparable<?>>
 	
 	public void setValue(E value);
 		
+	/* 
+	 * This method handles string matching Atdl4jConstants.VALUE_NULL_INDICATOR and invoking setNullValue().
+	 */
 	public void setValueAsString(String value) throws JAXBException;
 
 	// Helper methods
@@ -59,8 +76,10 @@ public interface ControlUI<E extends Comparable<?>>
 	// UI methods
 	
 	public void setVisible(boolean visible);
+	public boolean isVisible();
 	
 	public void setEnabled(boolean enabled);	
+	public boolean isEnabled();
 	
 //TODO Scott Atwell 1/14/2010 Added
 	public int getFIXType() throws JAXBException;

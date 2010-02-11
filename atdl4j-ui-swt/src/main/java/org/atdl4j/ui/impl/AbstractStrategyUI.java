@@ -25,6 +25,7 @@ import org.atdl4j.atdl.validation.OperatorT;
 import org.atdl4j.atdl.validation.StrategyEditT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
+import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.StrategyRuleset;
 import org.atdl4j.data.ValidationRule;
@@ -476,7 +477,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 
 
 	// TODO: this doesn't know how to load custom repeating groups
-	// or standard repeating groups aside from 957 StrategyParameters
+	// or standard repeating groups aside from Atdl4jConstants.TAG_NO_STRATEGY_PARAMETERS StrategyParameters
 	// TODO: would like to integrate with QuickFIX engine
 	public void setFIXMessage(String fixMessage) throws JAXBException
 	{
@@ -492,7 +493,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 			String value = pair[ 1 ];
 
 			// not repeating group
-			if ( tag < 957 || tag > 960 )
+			if ( tag < Atdl4jConstants.TAG_NO_STRATEGY_PARAMETERS || tag > Atdl4jConstants.TAG_STRATEGY_PARAMETER_VALUE )
 			{
 // 2/10/2010 Scott Atwell				for ( SWTWidget<?> widget : getControlWithParameterMap().values() )
 				// -- Note that getControlUIWithParameterMap() constructs a new Map --
@@ -505,7 +506,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 				}
 			}
 			// StrategyParams repeating group
-			else if ( tag == 957 )
+			else if ( tag == Atdl4jConstants.TAG_NO_STRATEGY_PARAMETERS )
 			{
 				i++;
 				for ( int j = 0; j < Integer.parseInt( value ); j++ )
