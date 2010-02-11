@@ -110,7 +110,8 @@ public class SWTStateListener
 				else if ( Atdl4jConstants.VALUE_NULL_INDICATOR.equals( stateRule.getValue() ) )  
 				{
 					// -- This resets the widget (other widgets than value="{NULL}") to non-null --
-					affectedWidget.setNullValue( false );
+// 2/11/2010 Scott Atwell					affectedWidget.setNullValue( false );
+					affectedWidget.setNullValue( Boolean.FALSE );
 				}
 			}
 		}

@@ -20,8 +20,10 @@ public interface ControlUI<E extends Comparable<?>>
 
 // 2/10/2010 Scott Atwell added	
 	public boolean isNullValue();
-	public void setNullValue(boolean aNullValue);
-	
+	public void setNullValue(Boolean aNullValue);
+// 2/11/2010 Scott Atwell added	
+	public Boolean getNullValue();
+
 	public ParameterT getParameter();
 	
 	public ControlT getControl();

@@ -186,4 +186,12 @@ public class CheckBoxListWidget
 			b.removeListener( SWT.Selection, listener );
 		}
 	}
+
+	/* 
+	 * 
+	 */
+	protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd)
+	{
+		// TODO ?? adjust the visual appearance of the control ??
+	}
 }

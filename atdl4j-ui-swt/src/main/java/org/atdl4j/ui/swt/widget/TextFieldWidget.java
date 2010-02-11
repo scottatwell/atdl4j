@@ -139,4 +139,12 @@ public class TextFieldWidget
 	{
 		textField.removeListener( SWT.Modify, listener );
 	}
+
+	/* 
+	 * 
+	 */
+	protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd)
+	{
+		// TODO ?? adjust the visual appearance of the control ??
+	}
 }

@@ -43,7 +43,8 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	private Atdl4jConfig atdl4jConfig;
 	
 // 2/10/2010 Scott Atwell added
-	boolean nullValue = false;
+// 2/11/2010 (use Boolean to differentiate between null (unknown) vs. true and false)	boolean nullValue = false;
+	Boolean nullValue = null;  // undefined state
 	
 	public void init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	{
@@ -132,7 +133,8 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 //		setValue(controlConverter.convertValueToComparable(string));
 		if ( Atdl4jConstants.VALUE_NULL_INDICATOR.equals( string ) )
 		{
-			setNullValue( true );
+//			setNullValue( true );
+			setNullValue( Boolean.TRUE );
 			// -- note that this has no effect on the internal value which may have already been set --
 		}
 		else  // -- not null --
@@ -141,13 +143,21 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			E tempValue = controlConverter.convertValueToComparable(string);
 			setValue( tempValue );
 			
-			if ( tempValue == null )
+//			if ( tempValue == null )
+//			{
+//				setNullValue( true );
+//			}
+//			else
+//			{
+//				setNullValue( false );
+//			}
+			if ( ( tempValue == null ) && ( getNullValue() != null ) )
 			{
-				setNullValue( true );
+				setNullValue( Boolean.TRUE );
 			}
 			else
 			{
-				setNullValue( false );
+				setNullValue( Boolean.FALSE );
 			}
 		}
 	}
@@ -394,34 +404,92 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	 * 
 	 * @return the nullValue
 	 */
+// 2/11/2010 Scott Atwell Boolean vs. boolean	
+//	public boolean isNullValue()
+//	{
+//// 2/10/2010 Scott Atwell 		return this.nullValue;
+//		// -- Special logic to treat non-visible and/or non-enabled as "null" if nullValue is false --
+//		if ( ! this.nullValue )
+//		{
+//			if ( getAtdl4jConfig() != null )
+//			{
+//				if ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( ! isVisible() ) )
+//				{
+//					return false;
+//				}
+//				
+//				if ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( ! isEnabled() ) )
+//				{
+//					return false;
+//				}
+//			}
+//		}
+//		
+//		return this.nullValue;
+//	}
 	public boolean isNullValue()
 	{
-// 2/10/2010 Scott Atwell 		return this.nullValue;
-		// -- Special logic to treat non-visible and/or non-enabled as "null" if nullValue is false --
-		if ( ! this.nullValue )
+		if ( getNullValue() != null )
 		{
+			// -- If we have it set, use it --
+			return getNullValue().booleanValue();
+		}
+		else  // -- our nullValue is in an undefined state --
+		{
+			// -- Special logic to treat non-visible and/or non-enabled as "null" if nullValue is false --
 			if ( getAtdl4jConfig() != null )
 			{
-				if ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( ! isVisible() ) )
+				if ( ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( ! isVisible() ) )   ||
+					  ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( ! isEnabled() ) ) )
 				{
 					return false;
 				}
-				
-				if ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( ! isEnabled() ) )
+				else if ( ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( isVisible() ) )   ||
+						    ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( isEnabled() ) ) )
 				{
-					return false;
+					return true;
 				}
 			}
+
+			
+			// -- Treat getNullValue() == null as FALSE --
+			return false;
 		}
-		
+	}
+
+	/**
+	 * @return
+	 */
+	public Boolean getNullValue()
+	{
 		return this.nullValue;
 	}
+	
+	/**
+	 * 
+	 */
+	abstract protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd);
 
 	/**
 	 * @param aNullValue the nullValue to set
 	 */
-	public void setNullValue(boolean aNullValue)
+//	2/11/2010 Scott Atwell public void setNullValue(boolean aNullValue)
+	public void setNullValue(Boolean aNullValue)
 	{
+// 2/11/2010 Scott Atwell		this.nullValue = aNullValue;
+		Boolean tempPreExistingNullValue = this.nullValue;
+
+		// -- Assign the value --
 		this.nullValue = aNullValue;
+
+		// -- Check to see if aNullValue provided is different than the pre-existing value --
+		if ( ( ( aNullValue != null ) &&
+			    ( ! aNullValue.equals( tempPreExistingNullValue ) ) ) ||
+		     ( ( tempPreExistingNullValue != null ) &&
+				 ( ! tempPreExistingNullValue.equals( aNullValue ) ) ) )
+		{
+			// -- value has changed, notify --
+			processNullValueIndicatorChange( tempPreExistingNullValue, aNullValue );
+		}
 	}
 }

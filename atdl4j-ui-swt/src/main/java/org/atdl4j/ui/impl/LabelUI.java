@@ -40,4 +40,12 @@ public abstract class LabelUI extends AbstractControlUI<String> {
 	public Object getParameterValue() {
 		return null; // Labels cannot store values
 	}
+	
+	/* 
+	 * 
+	 */
+	protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd)
+	{
+		// Do nothing (do not need to adjust appearance of the control)
+	}
 }

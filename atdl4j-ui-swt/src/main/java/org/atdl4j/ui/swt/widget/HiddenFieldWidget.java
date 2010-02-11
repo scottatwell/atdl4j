@@ -36,4 +36,5 @@ public class HiddenFieldWidget extends HiddenFieldUI implements SWTWidget<String
 		// do nothing
 	}
 	
+
 }

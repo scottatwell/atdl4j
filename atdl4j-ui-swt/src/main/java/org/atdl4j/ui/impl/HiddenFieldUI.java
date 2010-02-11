@@ -72,4 +72,12 @@ public abstract class HiddenFieldUI
 	{
 		return false;
 	}
+	
+	/* 
+	 * 
+	 */
+	protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd)
+	{
+		// Do nothing (do not need to adjust appearance of the control)
+	}
 }
