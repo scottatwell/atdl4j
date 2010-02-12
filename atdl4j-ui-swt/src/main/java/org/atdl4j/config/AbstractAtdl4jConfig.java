@@ -101,8 +101,11 @@ public abstract class AbstractAtdl4jConfig
 	
 	private boolean showStrategyDescription = true;
 	private boolean showTimezoneSelector = false;
+	
 	private boolean treatControlVisibleFalseAsNull = false;
 	private boolean treatControlEnabledFalseAsNull = false;	
+	private boolean restoreLastNonNullStateControlValueBehavior = true;	
+	
 	private boolean showEnabledCheckboxOnOptionalClockControl = false;
 
 
@@ -1384,6 +1387,22 @@ public abstract class AbstractAtdl4jConfig
 	public void setShowEnabledCheckboxOnOptionalClockControl(boolean aShowEnabledCheckboxOnOptionalClockControl)
 	{
 		this.showEnabledCheckboxOnOptionalClockControl = aShowEnabledCheckboxOnOptionalClockControl;
+	}
+
+	/**
+	 * @return the restoreLastNonNullStateControlValueBehavior
+	 */
+	public boolean isRestoreLastNonNullStateControlValueBehavior()
+	{
+		return this.restoreLastNonNullStateControlValueBehavior;
+	}
+
+	/**
+	 * @param aRestoreLastNonNullStateControlValueBehavior the restoreLastNonNullStateControlValueBehavior to set
+	 */
+	public void setRestoreLastNonNullStateControlValueBehavior(boolean aRestoreLastNonNullStateControlValueBehavior)
+	{
+		this.restoreLastNonNullStateControlValueBehavior = aRestoreLastNonNullStateControlValueBehavior;
 	}
 
 }

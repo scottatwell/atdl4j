@@ -120,6 +120,7 @@ public interface Atdl4jConfig
 
 	public boolean isTreatControlVisibleFalseAsNull();
 	public boolean isTreatControlEnabledFalseAsNull();
+	public boolean isRestoreLastNonNullStateControlValueBehavior();
 	
 	public boolean isShowEnabledCheckboxOnOptionalClockControl();
 	

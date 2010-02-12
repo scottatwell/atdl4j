@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Logger;
 import org.atdl4j.atdl.core.EnumPairT;
 import org.atdl4j.atdl.core.ParameterT;
 import org.atdl4j.atdl.layout.CheckBoxListT;
@@ -17,6 +18,7 @@ import org.atdl4j.atdl.layout.RadioButtonListT;
 import org.atdl4j.atdl.layout.RadioButtonT;
 import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SliderT;
+import org.atdl4j.config.AbstractAtdl4jConfig;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.Atdl4jConstants;
@@ -32,7 +34,9 @@ import org.atdl4j.ui.ControlUI;
  * value getters's methods.
  */
 public abstract class AbstractControlUI<E extends Comparable<?>>
-		implements ControlUI<E> {
+		implements ControlUI<E> 
+{
+	private final Logger logger = Logger.getLogger(AbstractControlUI.class);
 
 	protected ParameterT parameter;
 	protected ControlT control;
@@ -45,6 +49,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 // 2/10/2010 Scott Atwell added
 // 2/11/2010 (use Boolean to differentiate between null (unknown) vs. true and false)	boolean nullValue = false;
 	Boolean nullValue = null;  // undefined state
+	
+// 2/11/2010 Scott Atwell
+	E lastNonNullStateControlValueRaw;
 	
 	public void init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	{
@@ -482,14 +489,59 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		// -- Assign the value --
 		this.nullValue = aNullValue;
 
+		logger.debug("setNullValue() control ID:" + getControl().getID() + " tempPreExistingNullValue: " + tempPreExistingNullValue + " aNullValue: " + aNullValue );
+
 		// -- Check to see if aNullValue provided is different than the pre-existing value --
 		if ( ( ( aNullValue != null ) &&
 			    ( ! aNullValue.equals( tempPreExistingNullValue ) ) ) ||
 		     ( ( tempPreExistingNullValue != null ) &&
 				 ( ! tempPreExistingNullValue.equals( aNullValue ) ) ) )
 		{
+			// -- "retain" the Control's last non-null raw value when changing to aNullValue of true --
+			if ( ( ( tempPreExistingNullValue == null ) || ( Boolean.FALSE.equals( tempPreExistingNullValue ) ) ) && 
+				  ( Boolean.TRUE.equals( aNullValue ) ) )
+			{
+				logger.debug("setNullValue() control ID:" + getControl().getID() + " tempPreExistingNullValue: " + tempPreExistingNullValue + " aNullValue: " + aNullValue + " invoking setLastNonNullStateControlValueRaw( " + getControlValueRaw() + " )" );				
+				setLastNonNullStateControlValueRaw( getControlValueRaw() );
+			}
+		
 			// -- value has changed, notify --
 			processNullValueIndicatorChange( tempPreExistingNullValue, aNullValue );
+			
+			// -- "restore" the Control's raw value if so configured when going from aNullValue of true to non-null --
+			if ( ( Boolean.FALSE.equals( aNullValue ) ) && ( getLastNonNullStateControlValueRaw() != null ) )
+			{
+				if ( getAtdl4jConfig().isRestoreLastNonNullStateControlValueBehavior() )
+				{
+					logger.debug("setNullValue() control ID:" + getControl().getID() + " tempPreExistingNullValue: " + tempPreExistingNullValue + " aNullValue: " + aNullValue + " invoking restoreLastNonNullStateControlValue( " + getLastNonNullStateControlValueRaw() + " )");
+					restoreLastNonNullStateControlValue( getLastNonNullStateControlValueRaw() );
+				}
+			}
 		}
+	}
+
+	/**
+	 * This method could be overridden for specific controls, if so desired.
+	 * @param aLastNonNullStateControlValue
+	 */
+	protected void restoreLastNonNullStateControlValue( E aLastNonNullStateControlValue )
+	{
+		setValue( aLastNonNullStateControlValue );
+	}
+	
+	/**
+	 * @return the lastNonNullStateControlValueRaw
+	 */
+	public E getLastNonNullStateControlValueRaw()
+	{
+		return this.lastNonNullStateControlValueRaw;
+	}
+
+	/**
+	 * @param aLastNonNullStateControlValueRaw the lastNonNullStateControlValueRaw to set
+	 */
+	protected void setLastNonNullStateControlValueRaw(E aLastNonNullStateControlValueRaw)
+	{
+		this.lastNonNullStateControlValueRaw = aLastNonNullStateControlValueRaw;
 	}
 }

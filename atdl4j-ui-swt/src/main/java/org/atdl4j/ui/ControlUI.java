@@ -85,4 +85,6 @@ public interface ControlUI<E extends Comparable<?>>
 	
 //TODO Scott Atwell 1/14/2010 Added
 	public int getFIXType() throws JAXBException;
+	
+	public E getLastNonNullStateControlValueRaw();
 }
