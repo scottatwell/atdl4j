@@ -13,14 +13,20 @@ public class StringConverter extends AbstractTypeConverter<String> {
 	public StringConverter() {
 	}
 
-	public String convertValueToComparable(Object value)
+// 2/12/2010	public String convertValueToComparable(Object value)
+	public String convertValueToParameterComparable(Object value)
 	{
 		return (value == null || "".equals(value)) ? null : value.toString();
 	}
-	
-	public String convertValueToString(Object value)
+
+	public String convertValueToControlComparable(Object value)
 	{
-		String str = convertValueToComparable(value);		
+		return convertValueToParameterComparable(value);
+	}
+
+	public String convertValueToParameterString(Object value)
+	{
+		String str = convertValueToParameterComparable(value);		
 		if (str != null)
 		{
 			if (parameter instanceof MultipleCharValueT && 
@@ -35,7 +41,25 @@ public class StringConverter extends AbstractTypeConverter<String> {
 		}
 		return null;
 	}
-	
+
+	public String convertValueToControlString(Object value)
+	{
+		String str = convertValueToControlComparable(value);		
+		if (str != null)
+		{
+			if (parameter instanceof MultipleCharValueT && 
+					((MultipleCharValueT)parameter).isInvertOnWire())
+				return invertOnWire(str);
+			
+			else if (parameter instanceof MultipleStringValueT && 
+					((MultipleStringValueT)parameter).isInvertOnWire())
+				return invertOnWire(str);
+			
+			return str;
+		}
+		return null;
+	}
+
 	private static String invertOnWire(String text) {
 		StringBuffer invertedString = new StringBuffer();
 

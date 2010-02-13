@@ -6,7 +6,8 @@ import java.util.List;
 
 import org.atdl4j.atdl.layout.DoubleSpinnerT;
 import org.atdl4j.atdl.layout.SingleSpinnerT;
-import org.atdl4j.data.converter.NumberConverter;
+import org.atdl4j.data.converter.DecimalConverter;
+import org.atdl4j.data.converter.IntegerConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -111,6 +112,7 @@ public class SpinnerWidget
 			label.setToolTipText( tooltip );
 		}
 
+/**** 2/12/2010 Scott Atwell - overhauled in conjunction with DecimalConverter/IntegerConverter vs. NumericConverter and avoid BigDecimal "scale"		
 		// Set min/max/precision if a parameter is attached
 		// TODO this is a bit messy... should probably be done separately of
 		// NumberConverter
@@ -144,6 +146,75 @@ public class SpinnerWidget
 			spinner.setMinimum( -Integer.MAX_VALUE );
 			spinner.setMaximum( Integer.MAX_VALUE );
 		}
+****/
+		// Set min/max/precision if a parameter is attached
+		if ( parameterConverter != null && parameterConverter instanceof DecimalConverter )
+		{
+			DecimalConverter tempDecimalConverter = (DecimalConverter) parameterConverter;
+			
+			if ( tempDecimalConverter.getPrecision() != null )
+			{
+				spinner.setDigits( tempDecimalConverter.getPrecision().intValue() );
+			}
+			else
+			{
+				// -- not specified in FIXatdl file, use default if we have one within Atdl4jConfig --
+				if ( ( getAtdl4jConfig() != null ) && ( getAtdl4jConfig().getDefaultDigitsForSpinnerControl() != null ) )
+				{
+					spinner.setDigits( getAtdl4jConfig().getDefaultDigitsForSpinnerControl().intValue() );
+				}
+			}
+
+			if ( tempDecimalConverter.getMinValue() != null )
+			{
+				spinner.setMinimum( tempDecimalConverter.getMinValue().intValue() );
+			}
+			else
+			{
+				spinner.setMinimum( -Integer.MAX_VALUE );
+			}
+			
+			if ( tempDecimalConverter.getMaxValue() != null )
+			{
+				spinner.setMaximum( tempDecimalConverter.getMaxValue().intValue() );
+			}
+			else
+			{
+				spinner.setMaximum( Integer.MAX_VALUE );
+			}
+		}
+		else if ( parameterConverter != null && parameterConverter instanceof IntegerConverter )
+		{
+			IntegerConverter tempIntegerConverter = (IntegerConverter) parameterConverter;
+			
+			spinner.setDigits( 0 );
+
+			if ( tempIntegerConverter.getMinValue() != null )
+			{
+				spinner.setMinimum( tempIntegerConverter.getMinValue().intValue() );
+			}
+			else
+			{
+				spinner.setMinimum( -Integer.MAX_VALUE );
+			}
+			
+			if ( tempIntegerConverter.getMaxValue() != null )
+			{
+				spinner.setMaximum( tempIntegerConverter.getMaxValue().intValue() );
+			}
+			else
+			{
+				spinner.setMaximum( Integer.MAX_VALUE );
+			}
+		}
+		else
+		{
+			spinner.setDigits( 0 );
+			spinner.setMinimum( -Integer.MAX_VALUE );
+			spinner.setMaximum( Integer.MAX_VALUE );
+		}
+
+		
 
 		if ( control instanceof DoubleSpinnerT )
 		{

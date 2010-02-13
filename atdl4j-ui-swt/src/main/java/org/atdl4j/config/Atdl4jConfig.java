@@ -27,6 +27,7 @@ import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SingleSpinnerT;
 import org.atdl4j.atdl.layout.SliderT;
 import org.atdl4j.atdl.layout.TextFieldT;
+import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.ControlUIFactory;
@@ -78,6 +79,15 @@ public interface Atdl4jConfig
 	public ControlUIFactory getControlUIFactory(Atdl4jConfig aAtdl4jConfig)
 		throws JAXBException;
 	
+	/**
+	 * @param aAtdl4jConfig
+	 * @return
+	 * @throws JAXBException
+	 */
+	public TypeConverterFactory getTypeConverterFactory(Atdl4jConfig aAtdl4jConfig)
+		throws JAXBException;
+	
+	
 	// -- Controls/Widgets (first arg is of type ControlT -- 
 	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
 	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
@@ -123,5 +133,6 @@ public interface Atdl4jConfig
 	public boolean isRestoreLastNonNullStateControlValueBehavior();
 	
 	public boolean isShowEnabledCheckboxOnOptionalClockControl();
-	
+
+	public Integer getDefaultDigitsForSpinnerControl();
 }

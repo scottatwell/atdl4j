@@ -51,6 +51,15 @@ public class TextFieldWidget
 		this.textField = textField;
 		textField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+/*** 2/12/2010 Scott Atwell	
+This is prone to issues:
+1) IntT could be negative in some cases -- would need "DecimalFormat( "#;-#" )
+2) NumericT can be a number of derived types, may very well not need/want a single decimal place to the right (the "0.0")
+3) may need to support negative (add a ";____" to the format
+4) may want thousand separators which can be locale specific, etc
+5) would need to address a variety of precision
+6) Presently is only "attached" to TextField but would be applicable on EditableDropDownList, spinner etc. if of that type
+	
 		// type validation
 		if ( parameter instanceof IntT || parameter instanceof TagNumT || parameter instanceof LengthT || parameter instanceof SeqNumT
 				|| parameter instanceof NumInGroupT )
@@ -65,7 +74,8 @@ public class TextFieldWidget
 		}
 		// TODO: add regex verifier for MultipleCharValueT and
 		// MultipleStringValueT
-
+***/
+		
 		// init value
 		if ( ( (TextFieldT) control ).getInitValue() != null )
 			textField.setText( ( (TextFieldT) control ).getInitValue() );

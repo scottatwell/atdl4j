@@ -40,17 +40,18 @@ import org.atdl4j.atdl.layout.SliderT;
 import org.atdl4j.atdl.layout.TextFieldT;
 import org.atdl4j.data.converter.BooleanConverter;
 import org.atdl4j.data.converter.DateTimeConverter;
-import org.atdl4j.data.converter.NumberConverter;
+import org.atdl4j.data.converter.DecimalConverter;
+import org.atdl4j.data.converter.IntegerConverter;
 import org.atdl4j.data.converter.StringConverter;
 
 /*
  * NumericT subclasses
-import org.atdl4j.atdl.core.AmtT;
-import org.atdl4j.atdl.core.FloatT;
-import org.atdl4j.atdl.core.PercentageT;
-import org.atdl4j.atdl.core.PriceT;
-import org.atdl4j.atdl.core.PriceOffsetT;
-import org.atdl4j.atdl.core.QtyT;
+ import org.atdl4j.atdl.core.AmtT;
+ import org.atdl4j.atdl.core.FloatT;
+ import org.atdl4j.atdl.core.PercentageT;
+ import org.atdl4j.atdl.core.PriceT;
+ import org.atdl4j.atdl.core.PriceOffsetT;
+ import org.atdl4j.atdl.core.QtyT;
  */
 
 /**
@@ -60,70 +61,88 @@ import org.atdl4j.atdl.core.QtyT;
  * Note that all UI widgets in ATDL are strongly typed.
  * 
  */
-public abstract class TypeConverterFactory {
+// 2/12/2010 (no one was extending this, simply contains static methods)  public abstract class TypeConverterFactory
+public class TypeConverterFactory
+{
 
 	/*
-	 *  Create adapter based on ParameterT
+	 * Create adapter based on ParameterT
 	 */
-	public static TypeConverter<?> create(ParameterT parameter) throws JAXBException {
-		if (parameter instanceof StringT ||
-				parameter instanceof CharT ||
-				parameter instanceof MultipleCharValueT ||
-				parameter instanceof MultipleStringValueT ||
-				parameter instanceof CurrencyT ||
-				parameter instanceof ExchangeT ||
-				parameter instanceof DataT)
+	public static TypeConverter<?> create(ParameterT parameter) throws JAXBException
+	{
+		if ( parameter instanceof StringT || parameter instanceof CharT || parameter instanceof MultipleCharValueT
+				|| parameter instanceof MultipleStringValueT || parameter instanceof CurrencyT || parameter instanceof ExchangeT
+				|| parameter instanceof DataT )
 		{
-			return new StringConverter(parameter);
-		} else if (parameter instanceof NumericT) {
-			return new NumberConverter(parameter); // Float field
-		} else if (parameter instanceof IntT
-				|| parameter instanceof NumInGroupT
-				|| parameter instanceof SeqNumT || parameter instanceof TagNumT
-				|| parameter instanceof LengthT) {
-			return new NumberConverter(parameter); // Integer field
-		} else if (parameter instanceof BooleanT) {
-			return new BooleanConverter((BooleanT) parameter);
-		} else if (parameter instanceof MonthYearT
-				|| parameter instanceof UTCTimestampT
-				|| parameter instanceof UTCTimeOnlyT
-				|| parameter instanceof LocalMktDateT
-				|| parameter instanceof UTCDateOnlyT) {
-			return new DateTimeConverter(parameter);
+			return new StringConverter( parameter );
 		}
-		else throw new JAXBException("Unsupported ParameterT type: " + parameter.getClass().getName());
+		else if ( parameter instanceof NumericT )
+		{
+// 2/12/2010 Scott Atwell			return new NumberConverter( parameter ); // Float field
+			return new DecimalConverter( parameter ); // Float field
+		}
+		else if ( parameter instanceof IntT || parameter instanceof NumInGroupT || parameter instanceof SeqNumT || parameter instanceof TagNumT
+				|| parameter instanceof LengthT )
+		{
+// 2/12/2010 Scott Atwell			return new NumberConverter( parameter ); // Integer field
+			return new IntegerConverter( parameter ); // Integer field
+		}
+		else if ( parameter instanceof BooleanT )
+		{
+			return new BooleanConverter( (BooleanT) parameter );
+		}
+		else if ( parameter instanceof MonthYearT || parameter instanceof UTCTimestampT || parameter instanceof UTCTimeOnlyT
+				|| parameter instanceof LocalMktDateT || parameter instanceof UTCDateOnlyT )
+		{
+			return new DateTimeConverter( parameter );
+		}
+		else
+			throw new JAXBException( "Unsupported ParameterT type: " + parameter.getClass().getName() );
 	}
 
 	/*
-	 *  Create adapter based on ControlT (native type for each control)
+	 * Create adapter based on ControlT (native type for each control)
 	 */
-	public static TypeConverter<?> create(ControlT control, ParameterT parameter)
-			throws JAXBException {
-		if (control instanceof TextFieldT
-				|| control instanceof SingleSelectListT
-				|| control instanceof MultiSelectListT
-				|| control instanceof CheckBoxListT
-				|| control instanceof DropDownListT
-				|| control instanceof EditableDropDownListT
-				|| control instanceof RadioButtonListT
-				|| control instanceof HiddenFieldT || control instanceof LabelT) {
+	public static TypeConverter<?> create(ControlT control, ParameterT parameter) throws JAXBException
+	{
+//TODO 2/21/2010 Scott Atwell Added
+//		TypeConverter<?> tempParameterConverter = create( parameter );
+		
+		if ( control instanceof TextFieldT || control instanceof SingleSelectListT || control instanceof MultiSelectListT
+				|| control instanceof CheckBoxListT || control instanceof DropDownListT || control instanceof EditableDropDownListT
+				|| control instanceof RadioButtonListT || control instanceof HiddenFieldT || control instanceof LabelT )
+		{
+// 2/12/2010 Scott Atwell			return new StringConverter();
+//			if ( ( tempParameterConverter instanceof DecimalConverter ) ||
+//				  ( tempParameterConverter instanceof IntegerConverter ) )
+//			{
+//				return tempParameterConverter;
+//			}
+//TODO 2/12/2010 -- TODO Need to handle adjusting a PercentageT of "9999=.1234" from loadFixMessage() to put "12.34" in TextFieldT if PercentageT@multiplyBy100 is true. 
+			
 			return new StringConverter();
 		}
-		else if (control instanceof SliderT ||
-				control instanceof SingleSpinnerT ||
-				control instanceof DoubleSpinnerT)
+		else if ( control instanceof SliderT || control instanceof SingleSpinnerT || control instanceof DoubleSpinnerT )
 		{
-			return new NumberConverter();		
+// 2/12/2010 Scott Atwell			return new NumberConverter();
+			if ( parameter instanceof NumericT )  // all of the Decimal types presently extend NumericT
+			{
+				return new DecimalConverter();
+			}
+			else
+			{
+				return new IntegerConverter();
+			}
 		}
-		else if (control instanceof CheckBoxT ||
-				control instanceof RadioButtonT)
+		else if ( control instanceof CheckBoxT || control instanceof RadioButtonT )
 		{
 			return new BooleanConverter();
 		}
-		else if (control instanceof ClockT)
+		else if ( control instanceof ClockT )
 		{
-			return new DateTimeConverter(parameter);
+			return new DateTimeConverter( parameter );
 		}
-		else throw new JAXBException("Unsupported ControlT type: " + control.getClass().getName());
+		else
+			throw new JAXBException( "Unsupported ControlT type: " + control.getClass().getName() );
 	}
 }

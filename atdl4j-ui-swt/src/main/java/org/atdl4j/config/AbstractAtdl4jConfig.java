@@ -29,6 +29,7 @@ import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SingleSpinnerT;
 import org.atdl4j.atdl.layout.SliderT;
 import org.atdl4j.atdl.layout.TextFieldT;
+import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.ControlUIFactory;
@@ -64,15 +65,18 @@ public abstract class AbstractAtdl4jConfig
 	
 	public static String DEFAULT_CLASS_NAME_STRATEGIES_UI_FACTORY = "org.atdl4j.ui.impl.BaseStrategiesUIFactory";
 	public static String DEFAULT_CLASS_NAME_CONTROL_UI_FACTORY = "org.atdl4j.ui.impl.BaseControlUIFactory";
+	public static String DEFAULT_CLASS_NAME_TYPE_CONVERTER_FACTORY = "org.atdl4j.data.TypeConverterFactory";
 	
 
 	// -- UI Infrastructure --
 	private String classNameStrategiesUIFactory;
 	private StrategiesUIFactory strategiesUIFactory;
+	private TypeConverterFactory typeConverterFactory;
 	
 	private String classNameStrategiesUI;
 	private String classNameStrategyUI;
 	private String classNameControlUIFactory;
+	private String classNameTypeConverterFactory;
 
 	
 	// -- Controls/Widgets -- 
@@ -107,7 +111,7 @@ public abstract class AbstractAtdl4jConfig
 	private boolean restoreLastNonNullStateControlValueBehavior = true;	
 	
 	private boolean showEnabledCheckboxOnOptionalClockControl = false;
-
+	private Integer defaultDigitsForSpinnerControl = new Integer( 2 );
 
 	private StrategiesT strategies;
 	private Map<StrategyT, StrategyUI> strategyUIMap;
@@ -126,7 +130,13 @@ public abstract class AbstractAtdl4jConfig
 // 2/9/2010 Scott Atwell		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "impl.SWTControlUIFactory";
 		return DEFAULT_CLASS_NAME_CONTROL_UI_FACTORY;
 	}
-
+	
+	protected String getDefaultClassNameTypeConverterFactory()
+	{ 
+		return DEFAULT_CLASS_NAME_TYPE_CONVERTER_FACTORY;
+	}
+	
+	
 	// -- UI Infrastructure --
 	abstract protected String getDefaultClassNameStrategiesUI();
 	abstract protected String getDefaultClassNameStrategyUI();
@@ -161,6 +171,7 @@ public abstract class AbstractAtdl4jConfig
 		setClassNameStrategiesUI( getDefaultClassNameStrategiesUI() );
 		setClassNameStrategyUI( getDefaultClassNameStrategyUI() );
 		setClassNameControlUIFactory( getDefaultClassNameControlUIFactory() );
+		setClassNameTypeConverterFactory( getDefaultClassNameTypeConverterFactory() );
 
 		// -- Controls/Widgets -- 
 		setClassNameControlUIForCheckBoxT( getDefaultClassNameControlUIForCheckBoxT() );
@@ -389,7 +400,56 @@ public abstract class AbstractAtdl4jConfig
 		return controlUIFactory;
 	}
 
+		
+	/**
+	 * @param classNameTypeConverterFactory the classNameTypeConverterFactory to set
+	 */
+	public void setClassNameTypeConverterFactory(String classNameTypeConverterFactory)
+	{
+		this.classNameTypeConverterFactory = classNameTypeConverterFactory;
+	}
+
+	/**
+	 * @return the classNameTypeConverterFactory
+	 */
+	public String getClassNameTypeConverterFactory()
+	{
+		return classNameTypeConverterFactory;
+	}
 	
+	/**
+	 * @param aAtdl4jConfig
+	 * @return
+	 * @throws JAXBException
+	 */
+//	public TypeConverterFactory getTypeConverterFactory() 
+	public TypeConverterFactory getTypeConverterFactory(Atdl4jConfig aAtdl4jConfig)
+		throws JAXBException 
+	{
+		if ( ( typeConverterFactory == null ) && ( getClassNameTypeConverterFactory() != null ) )
+		{
+			String tempClassName = getClassNameTypeConverterFactory();
+			logger.debug( "getTypeConverterFactory() loading class named: " + tempClassName );
+			TypeConverterFactory typeConverterFactory;
+			try
+			{
+				typeConverterFactory = ((Class<TypeConverterFactory>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+			
+//			if ( typeConverterFactory != null )
+//			{
+//				typeConverterFactory.init( aAtdl4jConfig );
+//			}
+
+		}
+		
+		return typeConverterFactory;
+	}
 	
 	/**
 	 * @param classNameControlUIForCheckBoxT the classNameControlUIForCheckBoxT to set
@@ -1403,6 +1463,22 @@ public abstract class AbstractAtdl4jConfig
 	public void setRestoreLastNonNullStateControlValueBehavior(boolean aRestoreLastNonNullStateControlValueBehavior)
 	{
 		this.restoreLastNonNullStateControlValueBehavior = aRestoreLastNonNullStateControlValueBehavior;
+	}
+
+	/**
+	 * @return the defaultDigitsForSpinnerControl
+	 */
+	public Integer getDefaultDigitsForSpinnerControl()
+	{
+		return this.defaultDigitsForSpinnerControl;
+	}
+
+	/**
+	 * @param aDefaultDigitsForSpinnerControl the defaultDigitsForSpinnerControl to set
+	 */
+	public void setDefaultDigitsForSpinnerControl(Integer aDefaultDigitsForSpinnerControl)
+	{
+		this.defaultDigitsForSpinnerControl = aDefaultDigitsForSpinnerControl;
 	}
 
 }

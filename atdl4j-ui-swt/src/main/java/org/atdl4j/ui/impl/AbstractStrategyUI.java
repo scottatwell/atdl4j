@@ -21,16 +21,20 @@ import org.atdl4j.atdl.layout.HiddenFieldT;
 import org.atdl4j.atdl.layout.StrategyPanelT;
 import org.atdl4j.atdl.validation.EditRefT;
 import org.atdl4j.atdl.validation.EditT;
+import org.atdl4j.atdl.validation.LogicOperatorT;
 import org.atdl4j.atdl.validation.OperatorT;
 import org.atdl4j.atdl.validation.StrategyEditT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.FIXMessageBuilder;
+import org.atdl4j.data.ParameterHelper;
 import org.atdl4j.data.StrategyRuleset;
+import org.atdl4j.data.TypeConverter;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.fix.PlainFIXMessageBuilder;
+import org.atdl4j.data.validation.LogicalOperatorValidationRule;
 import org.atdl4j.data.validation.PatternValidationRule;
 import org.atdl4j.data.validation.ReferencedValidationRule;
 import org.atdl4j.data.validation.ValidationRuleFactory;
@@ -227,15 +231,82 @@ public abstract class AbstractStrategyUI implements StrategyUI
 			// compile list of parameters (TODO: is this needed?)
 			tempParameters.put( parameter.getName(), parameter );
 
+// 2/12/2010 Scott Atwell
+			boolean tempIsRequired = false;
+			
 			// required fields should be validated as well
 			if ( parameter.getUse() != null )
 			{
 				if ( parameter.getUse().equals( UseT.REQUIRED ) )
 				{
+					tempIsRequired = true;
 					ValidationRule requiredFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.EX, null, strategy );
 					getStrategyRuleset().addRequiredFieldRule( requiredFieldRule );
 				}
 			}
+			
+// 2/12/2010 Scott Atwell added
+			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory( getAtdl4jConfig() ).create( parameter );
+			
+			if ( ParameterHelper.getConstValue( parameter ) != null )
+			{
+// 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getConstValue( parameter ) ); 
+				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.EQ, tempStringValue, strategy );
+				
+				if ( tempIsRequired )
+				{
+					getStrategyRuleset().addConstFieldRule( tempFieldRule );
+				}
+				else // Parameter is optional
+				{
+					LogicalOperatorValidationRule tempOptionalWrapperEdit = new LogicalOperatorValidationRule( LogicOperatorT.OR, strategy );
+					tempOptionalWrapperEdit.addRule( new ValueOperatorValidationRule( parameter.getName(), OperatorT.NX, null, strategy ) );
+					tempOptionalWrapperEdit.addRule( tempFieldRule );
+					getStrategyRuleset().addConstFieldRule( tempOptionalWrapperEdit );
+				}
+			}
+			
+// 2/12/2010 Scott Atwell added
+			if ( ParameterHelper.getMinValue( parameter ) != null )
+			{
+// 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMinValue( parameter ) ); 
+				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.GE, tempStringValue, strategy );
+				
+				if ( tempIsRequired )
+				{
+					getStrategyRuleset().addRangeFieldRule( tempFieldRule );
+				}
+				else // Parameter is optional
+				{
+					LogicalOperatorValidationRule tempOptionalWrapperEdit = new LogicalOperatorValidationRule( LogicOperatorT.OR, strategy );
+					tempOptionalWrapperEdit.addRule( new ValueOperatorValidationRule( parameter.getName(), OperatorT.NX, null, strategy ) );
+					tempOptionalWrapperEdit.addRule( tempFieldRule );
+					getStrategyRuleset().addRangeFieldRule( tempOptionalWrapperEdit );
+				}
+			}
+			
+// 2/12/2010 Scott Atwell added
+			if ( ParameterHelper.getMaxValue( parameter ) != null )
+			{
+// 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getMaxValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMaxValue( parameter ) ); 
+				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.LE, tempStringValue, strategy );
+				
+				if ( tempIsRequired )
+				{
+					getStrategyRuleset().addRangeFieldRule( tempFieldRule );
+				}
+				else // Parameter is optional
+				{
+					LogicalOperatorValidationRule tempOptionalWrapperEdit = new LogicalOperatorValidationRule( LogicOperatorT.OR, strategy );
+					tempOptionalWrapperEdit.addRule( new ValueOperatorValidationRule( parameter.getName(), OperatorT.NX, null, strategy ) );
+					tempOptionalWrapperEdit.addRule( tempFieldRule );
+					getStrategyRuleset().addRangeFieldRule( tempOptionalWrapperEdit );
+				}
+			}
+			
 
 			// validate types based on patterns
 			if ( parameter instanceof MultipleCharValueT )

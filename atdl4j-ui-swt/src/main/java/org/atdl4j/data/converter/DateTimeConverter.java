@@ -48,7 +48,9 @@ public class DateTimeConverter extends AbstractTypeConverter<DateTime> {
 		return "yyyyMMdd-HH:mm:ss";
 	}
 
-	public DateTime convertValueToComparable(Object value) throws JAXBException {
+// 2/12/2010	public DateTime convertValueToComparable(Object value) throws JAXBException
+	public DateTime convertValueToParameterComparable(Object value) throws JAXBException
+	{
 		if (value instanceof DateTime) {
 			return (DateTime) value;
 		}
@@ -80,15 +82,31 @@ public class DateTimeConverter extends AbstractTypeConverter<DateTime> {
 		return null;
 	}
 
-	public String convertValueToString(Object value) throws JAXBException {
-		DateTime date = convertValueToComparable(value); // TODO: this doesn't
+	public DateTime convertValueToControlComparable(Object value) throws JAXBException
+	{
+		return convertValueToParameterComparable(value);
+	}
+
+	public String convertValueToParameterString(Object value) throws JAXBException {
+		DateTime date = convertValueToParameterComparable(value); // TODO: this doesn't
 															// currently return
 															// null
 		if (date != null) {
-			DateTimeFormatter fmt = DateTimeFormat
-					.forPattern(getFormatString());
+			DateTimeFormatter fmt = DateTimeFormat.forPattern(getFormatString());
 			return fmt.print(date);
 		}
 		return null;
 	}
+	
+	public String convertValueToControlString(Object value) throws JAXBException {
+		DateTime date = convertValueToControlComparable(value); // TODO: this doesn't
+															// currently return
+															// null
+		if (date != null) {
+			DateTimeFormatter fmt = DateTimeFormat.forPattern(getFormatString());
+			return fmt.print(date);
+		}
+		return null;
+	}
+
 }
