@@ -48,4 +48,22 @@ public abstract class LabelUI extends AbstractControlUI<String> {
 	{
 		// Do nothing (do not need to adjust appearance of the control)
 	}
+
+	/**
+	 * 
+	 */
+	public void processConstValueHasBeenSet()
+	{
+		// -- no operation -- 
+	}
+
+	public boolean isControlExcludingLabelEnabled()
+	{
+		return isEnabled();
+	}
+
+	public void setControlExcludingLabelEnabled(boolean aEnabled)
+	{
+		setEnabled( aEnabled );
+	}
 }

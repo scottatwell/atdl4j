@@ -171,6 +171,14 @@ public class CheckBoxListWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.addAll( multiCheckBox );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		for ( Button checkBox : multiCheckBox )

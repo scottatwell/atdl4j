@@ -16,79 +16,95 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-public class LabelWidget extends LabelUI implements SWTWidget<String> {
+public class LabelWidget
+		extends LabelUI
+		implements SWTWidget<String>
+{
 
 	private Label label;
-/** 2/9/2010 Scott Atwell	@see AbstractControlUI.init(ControlT aControl, ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
-	public LabelWidget(LabelT control) {
-		super(control);
-	}
-**/
-	
-	public Widget createWidget(Composite parent, int style)
-			throws JAXBException {
-				
+
+	/**
+	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
+	 * ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
+	 * public LabelWidget(LabelT control) { super(control); }
+	 **/
+
+	public Widget createWidget(Composite parent, int style) throws JAXBException
+	{
+
 		// label
-		label = new Label(parent, SWT.NONE);
-		
-//TODO 1/19/2010 Scott Atwell (some brokers provide initValue only, fails if null)		label.setText(control.getLabel());
-//TODO 1/19/2010 Scott Atwell changes BELOW
+		label = new Label( parent, SWT.NONE );
+
+		// TODO 1/19/2010 Scott Atwell (some brokers provide initValue only, fails
+		// if null) label.setText(control.getLabel());
+		// TODO 1/19/2010 Scott Atwell changes BELOW
 		if ( control.getLabel() != null )
 		{
-			label.setText(control.getLabel());
+			label.setText( control.getLabel() );
 		}
-		else if ( ( control instanceof LabelT ) &&
-				    ( ((LabelT) control).getInitValue() != null ) )
+		else if ( ( control instanceof LabelT ) && ( ( (LabelT) control ).getInitValue() != null ) )
 		{
-			label.setText( ((LabelT) control).getInitValue() );
+			label.setText( ( (LabelT) control ).getInitValue() );
 		}
 		else
 		{
 			label.setText( "" );
 		}
-		GridData gd = new GridData(SWT.LEFT, SWT.TOP, false, false);
+		GridData gd = new GridData( SWT.LEFT, SWT.TOP, false, false );
 		gd.horizontalSpan = 2;
-		label.setLayoutData(gd);
-				
+		label.setLayoutData( gd );
+
 		// tooltip
 		String tooltip = getTooltip();
-		if (tooltip != null) label.setToolTipText(tooltip);
+		if ( tooltip != null )
+			label.setToolTipText( tooltip );
 
 		return parent;
 	}
-	
-	public void generateStateRuleListener(Listener listener) {
+
+	public void generateStateRuleListener(Listener listener)
+	{
 		// do nothing
 	}
 
-	public List<Control> getControls() {
+	public List<Control> getControls()
+	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add(label);
+		widgets.add( label );
 		return widgets;
 	}
 
-	public void addListener(Listener listener) {
+	public List<Control> getControlsExcludingLabel()
+	{
+		return getControls();
+	}
+
+	public void addListener(Listener listener)
+	{
 		// do nothing
 	}
 
-	public void removeListener(Listener listener) {
+	public void removeListener(Listener listener)
+	{
 		// do nothing
 	}
 
 	public void setVisible(boolean visible)
 	{
-		for (Control control : getControls()) {
-			control.setVisible(visible);
+		for ( Control control : getControls() )
+		{
+			control.setVisible( visible );
 		}
 	}
-	
+
 	public void setEnabled(boolean enabled)
 	{
-		for (Control control : getControls()) {
-			control.setEnabled(enabled);
+		for ( Control control : getControls() )
+		{
+			control.setEnabled( enabled );
 		}
 	}
-	
+
 	public boolean isVisible()
 	{
 		for ( Control control : getControls() )
@@ -98,7 +114,7 @@ public class LabelWidget extends LabelUI implements SWTWidget<String> {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -111,7 +127,7 @@ public class LabelWidget extends LabelUI implements SWTWidget<String> {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

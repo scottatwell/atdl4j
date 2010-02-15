@@ -168,6 +168,14 @@ public class RadioButtonListWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.addAll( buttons );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		for ( Button b : buttons )
@@ -183,7 +191,6 @@ public class RadioButtonListWidget
 			b.removeListener( SWT.Selection, listener );
 		}
 	}
-
 
 	/* 
 	 * 

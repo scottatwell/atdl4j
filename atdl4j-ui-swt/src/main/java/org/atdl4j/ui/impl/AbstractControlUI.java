@@ -18,12 +18,11 @@ import org.atdl4j.atdl.layout.RadioButtonListT;
 import org.atdl4j.atdl.layout.RadioButtonT;
 import org.atdl4j.atdl.layout.SingleSelectListT;
 import org.atdl4j.atdl.layout.SliderT;
-import org.atdl4j.config.AbstractAtdl4jConfig;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.FIXMessageBuilder;
-import org.atdl4j.data.TypeConverterFactory;
+import org.atdl4j.data.ParameterHelper;
 import org.atdl4j.data.converter.AbstractTypeConverter;
 import org.atdl4j.data.fix.PlainFIXMessageBuilder;
 import org.atdl4j.data.fix.Tag959Helper;
@@ -81,7 +80,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		}
 
 		validateEnumPairs();
-
+		
+// too early in process, Control does not yet have widget built		applyConstValue( parameter );
+		
 		// -- This method can be overriden/implemented --
 		initPostCheck();
 	}
@@ -96,6 +97,53 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	{
 	}
 
+	/**
+	 * Should be invoked after Control's Widget has been fully established.  Applies Parameter's constValue to the Control
+	 * @throws JAXBException
+	 */
+	private void applyConstValue()
+		throws JAXBException
+	{
+		if ( ( getParameter() != null ) && ( getParameter().isConst() ) )
+		{
+			Object tempConstValue = ParameterHelper.getConstValue( getParameter() );
+			
+			if ( tempConstValue != null )
+			{
+				E tempComparable = controlConverter.convertValueToControlComparable( tempConstValue );
+				setValue( tempComparable );
+				processConstValueHasBeenSet();
+			}
+			else
+			{
+				throw new IllegalArgumentException( "constValue or dailyConstValue is required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
+			}
+		}
+	
+	}
+	
+	/**
+	 * Should be invoked after Control's Widget has been fully established.  Applies Parameter's constValue to the Control
+	 * @throws JAXBException
+	 */
+	private void applyInitValue()
+		throws JAXBException
+	{
+//		if ( getInitValue() != null )
+//		{
+//			E tempComparable = controlConverter.convertValueToControlComparable( tempInitValue );
+//			setValue( tempComparable );
+//			processInitValueHasBeenSet();
+//		}
+	}
+
+	public void applyConstOrInitValues()
+		throws JAXBException
+	{
+		applyConstValue();
+		applyInitValue();
+	}
+	
 	/**
 	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
 	 * ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
@@ -524,12 +572,14 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			if ( getAtdl4jConfig() != null )
 			{
 				if ( ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( !isVisible() ) )
-						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( !isEnabled() ) ) )
+// 2/15/2010 Scott Atwell						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( !isEnabled() ) ) )
+						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( !isControlExcludingLabelEnabled() ) ) )
 				{
 					return false;
 				}
 				else if ( ( ( getAtdl4jConfig().isTreatControlVisibleFalseAsNull() ) && ( isVisible() ) )
-						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( isEnabled() ) ) )
+// 2/15/2010 Scott Atwell						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( isEnabled() ) ) )
+						|| ( ( getAtdl4jConfig().isTreatControlEnabledFalseAsNull() ) && ( isControlExcludingLabelEnabled() ) ) )
 				{
 					return true;
 				}
@@ -631,4 +681,26 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		this.lastNonNullStateControlValueRaw = aLastNonNullStateControlValueRaw;
 	}
 	
+	/**
+	 * Used when pre-populating a control with its FIX message wire value 
+	 * For example: PercentageT with isMultiplyBy100() == true would have ".1234" on the wire for "12.34" displayed/stored by the control (for 12.34%). 
+	 * @param aFIXValue
+	 * @throws JAXBException
+	 */
+	public void setFIXValue( String aFIXValue )
+		throws JAXBException
+	{
+		// -- Must use parameterConverter's coonvertToControlString (eg TextField's controlConverter is a StringConverter, not a DecimalConverter like the Parameter's would be) --
+		setValueAsString( parameterConverter.convertValueToControlString( aFIXValue ) );
+	}
+	
+
+	/**
+	 * Default implementation.  Can be overridden if so desired.
+	 */
+	public void processConstValueHasBeenSet()
+	{
+//		setEnabled( false );
+		setControlExcludingLabelEnabled( false );
+	}
 }

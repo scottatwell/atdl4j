@@ -140,6 +140,14 @@ This is prone to issues:
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( textField );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		textField.addListener( SWT.Modify, listener );
@@ -148,6 +156,15 @@ This is prone to issues:
 	public void removeListener(Listener listener)
 	{
 		textField.removeListener( SWT.Modify, listener );
+	}
+
+	/**
+	 * Overridden -- makes the textField appear non-editable vs. the default of disabled.
+	 */
+	public void processConstValueHasBeenSet()
+	{
+//		setControlExcludingLabelEnabled( false );
+		textField.setEditable( false );
 	}
 
 	/* 

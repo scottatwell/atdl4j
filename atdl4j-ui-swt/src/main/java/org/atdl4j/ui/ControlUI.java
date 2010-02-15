@@ -87,4 +87,21 @@ public interface ControlUI<E extends Comparable<?>>
 	public int getFIXType() throws JAXBException;
 	
 	public E getLastNonNullStateControlValueRaw();
+	
+	/**
+	 * Used when pre-populating a control with its FIX message wire value 
+	 * For example: PercentageT with isMultiplyBy100() == true would have ".1234" on the wire for "12.34" displayed/stored by the control (for 12.34%). 
+	 * @param aFIXValue
+	 * @throws JAXBException
+	 */
+	public void setFIXValue( String aFIXValue )
+		throws JAXBException;
+	
+	public void applyConstOrInitValues()
+		throws JAXBException;
+	
+	public void processConstValueHasBeenSet();
+	
+	public void setControlExcludingLabelEnabled(boolean enabled);	
+	public boolean isControlExcludingLabelEnabled();
 }

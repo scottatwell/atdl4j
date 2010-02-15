@@ -572,7 +572,8 @@ public abstract class AbstractStrategyUI implements StrategyUI
 				{
 					if ( widget.getParameter().getFixTag() != null && widget.getParameter().getFixTag().equals( BigInteger.valueOf( tag ) ) )
 					{
-						widget.setValueAsString( value );
+// 2/14/2010 Scott Atwell						widget.setValueAsString( value );
+						widget.setFIXValue( value );
 					}
 				}
 			}
@@ -591,7 +592,8 @@ public abstract class AbstractStrategyUI implements StrategyUI
 					{
 						if ( widget.getParameter().getName() != null && widget.getParameter().getName().equals( name ) )
 						{
-							widget.setValueAsString( value2 );
+// 2/14/2010 Scott Atwell							widget.setValueAsString( value2 );
+							widget.setFIXValue( value2 );
 						}
 					}
 					i = i + 3;

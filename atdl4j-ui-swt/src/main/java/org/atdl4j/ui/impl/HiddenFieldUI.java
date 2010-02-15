@@ -80,4 +80,24 @@ public abstract class HiddenFieldUI
 	{
 		// Do nothing (do not need to adjust appearance of the control)
 	}
+	
+
+	/**
+	 * 
+	 */
+	public void processConstValueHasBeenSet()
+	{
+		// -- no operation -- 
+	}
+
+	public boolean isControlExcludingLabelEnabled()
+	{
+		return false;
+	}
+
+	public void setControlExcludingLabelEnabled(boolean aEnabled)
+	{
+		// Do nothing
+	}
+
 }

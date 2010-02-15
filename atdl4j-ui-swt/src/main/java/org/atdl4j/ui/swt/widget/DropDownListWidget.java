@@ -184,6 +184,14 @@ public class DropDownListWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( dropDownList );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		dropDownList.addListener( SWT.Modify, listener );

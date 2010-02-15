@@ -54,4 +54,25 @@ public abstract class AbstractSWTWidget<E extends Comparable<?>>
 		return false;
 	}
 
+	public void setControlExcludingLabelEnabled(boolean enabled)
+	{
+		for ( Control control : getControlsExcludingLabel() )
+		{
+			control.setEnabled( enabled );
+		}
+	}
+
+	public boolean isControlExcludingLabelEnabled()
+	{
+		for ( Control control : getControlsExcludingLabel() )
+		{
+			if ( control.isEnabled() )
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }

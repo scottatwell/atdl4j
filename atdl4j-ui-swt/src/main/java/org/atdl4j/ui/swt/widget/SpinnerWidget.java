@@ -289,6 +289,19 @@ public class SpinnerWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( spinner );
+		if ( control instanceof DoubleSpinnerT )
+		{
+			widgets.add( buttonUp );
+			widgets.add( buttonDown );
+		}
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		spinner.addListener( SWT.Modify, listener );

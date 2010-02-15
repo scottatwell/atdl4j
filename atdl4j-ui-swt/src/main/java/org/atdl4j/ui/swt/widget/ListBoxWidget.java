@@ -167,6 +167,14 @@ public class ListBoxWidget
 		return widgets;
 	}
 
+	public java.util.List<Control> getControlsExcludingLabel()
+	{
+		java.util.List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( listBox );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		listBox.addListener( SWT.Selection, listener );

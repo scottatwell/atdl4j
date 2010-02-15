@@ -1,5 +1,7 @@
 package org.atdl4j.data;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.atdl4j.atdl.core.AmtT;
 import org.atdl4j.atdl.core.BooleanT;
 import org.atdl4j.atdl.core.CharT;
@@ -108,7 +110,8 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof UTCTimestampT )
 		{
-			return ( (UTCTimestampT) parameter ).getConstValue();
+			// -- Supports dailyConstValue --
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getConstValue(), ( (UTCTimestampT) parameter ).getDailyConstValue() );
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -145,7 +148,8 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			return ( (TZTimestampT) parameter ).getConstValue();
+			// -- Supports dailyConstValue --
+			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getConstValue(), ( (TZTimestampT) parameter ).getDailyConstValue() );
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -154,128 +158,20 @@ public class ParameterHelper
 		return null;
 	}
 	
-	public static Object getMinValue(ParameterT parameter)
+	private static XMLGregorianCalendar getDailyValueAsValue( XMLGregorianCalendar aValueIfSpecified,  XMLGregorianCalendar aDailyValue )
 	{
-		if ( parameter instanceof IntT )
+		if ( aValueIfSpecified != null )
 		{
-			return ( (IntT) parameter ).getMinValue();
+			return aValueIfSpecified;
 		}
-		else if ( parameter instanceof LengthT )
+		else
 		{
-//			return ( (LengthT) parameter ).getMinValue();
+			// -- Note that the XMLGregorianCalendar should already have defaulted to current month, day, year and thus no need to re-set these  --
+			return aDailyValue;
 		}
-		else if ( parameter instanceof NumInGroupT )
-		{
-//			return ( (NumInGroupT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof SeqNumT )
-		{
-//			return ( (SeqNumT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof TagNumT )
-		{
-//			return ( (TagNumT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof FloatT )
-		{
-			return ( (FloatT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof QtyT )
-		{
-			return ( (QtyT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof PriceT )
-		{
-			return ( (PriceT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof PriceOffsetT )
-		{
-			return ( (PriceOffsetT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof AmtT )
-		{
-			return ( (AmtT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof PercentageT )
-		{
-			return ( (PercentageT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof CharT )
-		{
-//			return ( (CharT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof BooleanT )
-		{
-//			return ( (BooleanT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof StringT )
-		{
-//			return ( (StringT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof MultipleCharValueT )
-		{
-//			return ( (MultipleCharValueT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof CurrencyT )
-		{
-//			return ( (CurrencyT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof ExchangeT )
-		{
-//			return ( (ExchangeT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof MonthYearT )
-		{
-			return ( (MonthYearT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof UTCTimestampT )
-		{
-			return ( (UTCTimestampT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof UTCTimeOnlyT )
-		{
-			return ( (UTCTimeOnlyT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof LocalMktDateT )
-		{
-			return ( (LocalMktDateT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof UTCDateOnlyT )
-		{
-			return ( (UTCDateOnlyT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof DataT )
-		{
-//			return ( (DataT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof MultipleStringValueT )
-		{
-//			return ( (MultipleStringValueT) parameter ).getMinValue();
-		}
-		// XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getMinValue(); }
-		 */
-		else if ( parameter instanceof LanguageT )
-		{
-//			return ( (LanguageT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof TZTimeOnlyT )
-		{
-			return ( (TZTimeOnlyT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof TZTimestampT )
-		{
-			return ( (TZTimestampT) parameter ).getMinValue();
-		}
-		else if ( parameter instanceof TenorT )
-		{
-//			return ( (TenorT) parameter ).getMinValue();
-		}
-		
-		return null;
-	}	
+	}
+
+
 	
 	public static Object getMaxValue(ParameterT parameter)
 	{
@@ -353,7 +249,8 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof UTCTimestampT )
 		{
-			return ( (UTCTimestampT) parameter ).getMaxValue();
+			// -- Supports dailyMaxValue --
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMaxValue(), ( (UTCTimestampT) parameter ).getMaxValue() );
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -386,7 +283,8 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimeOnlyT )
 		{
-			return ( (TZTimeOnlyT) parameter ).getMaxValue();
+			// -- Supports dailyMaxValue --
+			return getDailyValueAsValue( ( (TZTimeOnlyT) parameter ).getMaxValue(), ( (TZTimeOnlyT) parameter ).getMaxValue() );
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
@@ -395,6 +293,132 @@ public class ParameterHelper
 		else if ( parameter instanceof TenorT )
 		{
 //			return ( (TenorT) parameter ).getMaxValue();
+		}
+		
+		return null;
+	}	
+	
+	
+	public static Object getMinValue(ParameterT parameter)
+	{
+		if ( parameter instanceof IntT )
+		{
+			return ( (IntT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof LengthT )
+		{
+//			return ( (LengthT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof NumInGroupT )
+		{
+//			return ( (NumInGroupT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof SeqNumT )
+		{
+//			return ( (SeqNumT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof TagNumT )
+		{
+//			return ( (TagNumT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof FloatT )
+		{
+			return ( (FloatT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof QtyT )
+		{
+			return ( (QtyT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof PriceT )
+		{
+			return ( (PriceT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof PriceOffsetT )
+		{
+			return ( (PriceOffsetT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof AmtT )
+		{
+			return ( (AmtT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof PercentageT )
+		{
+			return ( (PercentageT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof CharT )
+		{
+//			return ( (CharT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof BooleanT )
+		{
+//			return ( (BooleanT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof StringT )
+		{
+//			return ( (StringT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof MultipleCharValueT )
+		{
+//			return ( (MultipleCharValueT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof CurrencyT )
+		{
+//			return ( (CurrencyT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof ExchangeT )
+		{
+//			return ( (ExchangeT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof MonthYearT )
+		{
+			return ( (MonthYearT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof UTCTimestampT )
+		{
+			// -- Supports dailyMinValue --
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMinValue(), ( (UTCTimestampT) parameter ).getMinValue() );
+		}
+		else if ( parameter instanceof UTCTimeOnlyT )
+		{
+			return ( (UTCTimeOnlyT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof LocalMktDateT )
+		{
+			return ( (LocalMktDateT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof UTCDateOnlyT )
+		{
+			return ( (UTCDateOnlyT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof DataT )
+		{
+//			return ( (DataT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof MultipleStringValueT )
+		{
+//			return ( (MultipleStringValueT) parameter ).getMinValue();
+		}
+		// XXX: Country is not supported in ATDL due to conflict in schema
+		/*
+		 * else if (parameter instanceof CountryT) { return
+		 * ((CountryT)parameter).getMinValue(); }
+		 */
+		else if ( parameter instanceof LanguageT )
+		{
+//			return ( (LanguageT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof TZTimeOnlyT )
+		{
+			// -- Supports dailyMinValue --
+			return getDailyValueAsValue( ( (TZTimeOnlyT) parameter ).getMinValue(), ( (TZTimeOnlyT) parameter ).getMinValue() );
+		}
+		else if ( parameter instanceof TZTimestampT )
+		{
+			return ( (TZTimestampT) parameter ).getMinValue();
+		}
+		else if ( parameter instanceof TenorT )
+		{
+//			return ( (TenorT) parameter ).getMinValue();
 		}
 		
 		return null;

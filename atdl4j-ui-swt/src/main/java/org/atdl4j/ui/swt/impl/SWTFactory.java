@@ -56,6 +56,9 @@ public class SWTFactory implements SWTWidgetFactory, SWTPanelFactory {
 //TODO 1/19/2010 Scott Atwell added for debug
 			logger.debug( "create(Composite parent, ControlT control, ParameterT parameter, int style) completed.  parameterWidget: " + parameterWidget );
 
+// 2/14/2010 Scott Atwell added
+			parameterWidget.applyConstOrInitValues();
+			
 		} catch (JAXBException e) {
 			throw e;
 		}

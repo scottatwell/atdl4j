@@ -79,6 +79,14 @@ public class ButtonWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( button );
+		return widgets;
+	}
+
 	public Button getButton()
 	{
 		return button;

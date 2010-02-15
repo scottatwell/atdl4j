@@ -131,6 +131,14 @@ public class SliderWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		widgets.add( label );
+		widgets.add( slider );
+		return widgets;
+	}
+
 	public void addListener(Listener listener)
 	{
 		slider.addListener( SWT.Selection, listener );

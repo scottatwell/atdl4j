@@ -368,6 +368,31 @@ public class ClockWidget
 		return widgets;
 	}
 
+	public List<Control> getControlsExcludingLabel()
+	{
+		List<Control> widgets = new ArrayList<Control>();
+//		if ( enabledButton != null )
+//		{
+//			widgets.add( enabledButton );
+//		}
+//
+//		if ( label != null )
+//		{
+//			widgets.add( label );
+//		}
+
+		if ( showMonthYear )
+		{
+			widgets.add( dateClock );
+		}
+		if ( showTime )
+		{
+			widgets.add( timeClock );
+		}
+		return widgets;
+	}
+
+
 	// 1/20/2010 Scott Atwell added
 	private void applyEnabledSetting()
 	{
