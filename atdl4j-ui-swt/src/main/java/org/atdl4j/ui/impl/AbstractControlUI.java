@@ -98,8 +98,15 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			if ( tempConstValue != null )
 			{
 				E tempComparable = controlConverter.convertValueToControlComparable( tempConstValue );
-				setValue( tempComparable );
-				processConstValueHasBeenSet();
+				if ( tempComparable != null )
+				{
+					setValue( tempComparable );
+					processConstValueHasBeenSet();
+				}
+				else
+				{
+					throw new IllegalArgumentException( "Unable to convert constValue or dailyConstValue [" + tempConstValue + "] -- required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
+				}
 			}
 			else
 			{

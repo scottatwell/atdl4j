@@ -31,6 +31,8 @@ import org.atdl4j.atdl.core.TenorT;
 import org.atdl4j.atdl.core.UTCDateOnlyT;
 import org.atdl4j.atdl.core.UTCTimeOnlyT;
 import org.atdl4j.atdl.core.UTCTimestampT;
+import org.atdl4j.atdl.timezones.Timezone;
+import org.atdl4j.data.converter.DateTimeConverter;
 
 public class ParameterHelper
 {
@@ -111,7 +113,7 @@ public class ParameterHelper
 		else if ( parameter instanceof UTCTimestampT )
 		{
 			// -- Supports dailyConstValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getConstValue(), ( (UTCTimestampT) parameter ).getDailyConstValue() );
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getConstValue(), ( (UTCTimestampT) parameter ).getDailyConstValue(), ((UTCTimestampT) parameter).getLocalMktTz() );
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -149,7 +151,7 @@ public class ParameterHelper
 		else if ( parameter instanceof TZTimestampT )
 		{
 			// -- Supports dailyConstValue --
-			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getConstValue(), ( (TZTimestampT) parameter ).getDailyConstValue() );
+			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getConstValue(), ( (TZTimestampT) parameter ).getDailyConstValue(), null );
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -158,16 +160,19 @@ public class ParameterHelper
 		return null;
 	}
 	
-	private static XMLGregorianCalendar getDailyValueAsValue( XMLGregorianCalendar aValueIfSpecified,  XMLGregorianCalendar aDailyValue )
+	private static XMLGregorianCalendar getDailyValueAsValue( XMLGregorianCalendar aValueIfSpecified, XMLGregorianCalendar aDailyValue, Timezone aTimezone )
 	{
 		if ( aValueIfSpecified != null )
 		{
 			return aValueIfSpecified;
 		}
+		else if ( aDailyValue != null )
+		{
+			return DateTimeConverter.convertDailyValueToValue( aDailyValue, aTimezone );
+		}
 		else
 		{
-			// -- Note that the XMLGregorianCalendar should already have defaulted to current month, day, year and thus no need to re-set these  --
-			return aDailyValue;
+			return null;
 		}
 	}
 
@@ -250,7 +255,7 @@ public class ParameterHelper
 		else if ( parameter instanceof UTCTimestampT )
 		{
 			// -- Supports dailyMaxValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMaxValue(), ( (UTCTimestampT) parameter ).getMaxValue() );
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMaxValue(), ( (UTCTimestampT) parameter ).getDailyMaxValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -283,12 +288,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimeOnlyT )
 		{
-			// -- Supports dailyMaxValue --
-			return getDailyValueAsValue( ( (TZTimeOnlyT) parameter ).getMaxValue(), ( (TZTimeOnlyT) parameter ).getMaxValue() );
+			return ( (TZTimeOnlyT) parameter ).getMaxValue();
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			return ( (TZTimestampT) parameter ).getMaxValue();
+			// -- Supports dailyMaxValue --
+			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMaxValue(), ( (TZTimestampT) parameter ).getDailyMaxValue(), null );
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -376,7 +381,7 @@ public class ParameterHelper
 		else if ( parameter instanceof UTCTimestampT )
 		{
 			// -- Supports dailyMinValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMinValue(), ( (UTCTimestampT) parameter ).getMinValue() );
+			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMinValue(), ( (UTCTimestampT) parameter ).getDailyMinValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -409,12 +414,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimeOnlyT )
 		{
-			// -- Supports dailyMinValue --
-			return getDailyValueAsValue( ( (TZTimeOnlyT) parameter ).getMinValue(), ( (TZTimeOnlyT) parameter ).getMinValue() );
+			return ( (TZTimeOnlyT) parameter ).getMinValue();
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			return ( (TZTimestampT) parameter ).getMinValue();
+			// -- Supports dailyMinValue --
+			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMinValue(), ( (TZTimestampT) parameter ).getDailyMinValue(), null );
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -423,4 +428,18 @@ public class ParameterHelper
 		
 		return null;
 	}	
+	
+	public static Timezone getLocalMktTz( ParameterT parameter )
+	{
+		if ( parameter instanceof UTCTimestampT )
+		{
+			return ( (UTCTimestampT) parameter ).getLocalMktTz();
+		}
+		else if ( parameter instanceof UTCTimeOnlyT )
+		{
+			return ( (UTCTimeOnlyT) parameter ).getLocalMktTz();
+		}
+		
+		return null;
+	}
 }

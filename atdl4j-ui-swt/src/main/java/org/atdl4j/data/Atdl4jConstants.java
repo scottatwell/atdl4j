@@ -21,4 +21,7 @@ public class Atdl4jConstants
 	public static final int TAG_STRATEGY_PARAMETER_TYPE = 959;
 	public static final int TAG_STRATEGY_PARAMETER_VALUE = 960;
 
+	public static int CLOCK_INIT_VALUE_MODE_USE_AS_IS = 0;  // default
+	public static int CLOCK_INIT_VALUE_MODE_USE_CURRENT_TIME_IF_LATER = 1;  
+	
 }
