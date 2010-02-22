@@ -20,6 +20,7 @@ public class StrategyRuleset
 	private List<ValidationRule> requiredFieldRules;
 	private List<ValidationRule> constFieldRules;
 	private List<ValidationRule> rangeFieldRules;
+	private List<ValidationRule> lengthFieldRules;
 
 	private List<ValidationRule> patternRules;
 
@@ -38,6 +39,11 @@ public class StrategyRuleset
 		rangeFieldRules.add( editUI );
 	}
 
+	public void addLengthFieldRule(ValidationRule editUI)
+	{
+		lengthFieldRules.add( editUI );
+	}
+
 	public void addPatternRule(ValidationRule editUI)
 	{
 		patternRules.add( editUI );
@@ -49,6 +55,7 @@ public class StrategyRuleset
 		this.requiredFieldRules = new ArrayList<ValidationRule>();
 		this.constFieldRules = new ArrayList<ValidationRule>();
 		this.rangeFieldRules = new ArrayList<ValidationRule>();
+		this.lengthFieldRules = new ArrayList<ValidationRule>();
 		this.patternRules = new ArrayList<ValidationRule>();
 	}
 
@@ -99,6 +106,20 @@ public class StrategyRuleset
 				ControlUI<?> target = e.getTarget();
 				String name = target.getParameter().getName();
 				throw new ValidationException( target, "Parameter \"" + name + "\" is out of range (min/max bounds)." );
+			}
+		}
+
+		for ( ValidationRule lengthFieldRule : lengthFieldRules )
+		{
+			try
+			{
+				lengthFieldRule.validate( refRules, parameters );
+			}
+			catch (ValidationException e)
+			{
+				ControlUI<?> target = e.getTarget();
+				String name = target.getParameter().getName();
+				throw new ValidationException( target, "Parameter \"" + name + "\" length is out of range (min/max bounds)." );
 			}
 		}
 

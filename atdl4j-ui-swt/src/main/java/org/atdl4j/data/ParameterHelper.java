@@ -1,5 +1,7 @@
 package org.atdl4j.data;
 
+import java.math.BigInteger;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.atdl4j.atdl.core.AmtT;
@@ -442,4 +444,252 @@ public class ParameterHelper
 		
 		return null;
 	}
+	
+	
+	public static BigInteger getMaxLength(ParameterT parameter)
+	{
+		if ( parameter instanceof IntT )
+		{
+//			return ( (IntT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof LengthT )
+		{
+//			return ( (LengthT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof NumInGroupT )
+		{
+//			return ( (NumInGroupT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof SeqNumT )
+		{
+//			return ( (SeqNumT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof TagNumT )
+		{
+//			return ( (TagNumT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof FloatT )
+		{
+//			return ( (FloatT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof QtyT )
+		{
+//			return ( (QtyT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof PriceT )
+		{
+//			return ( (PriceT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof PriceOffsetT )
+		{
+//			return ( (PriceOffsetT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof AmtT )
+		{
+//			return ( (AmtT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof PercentageT )
+		{
+//			return ( (PercentageT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof CharT )
+		{
+//			return ( (CharT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof BooleanT )
+		{
+//			return ( (BooleanT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof StringT )
+		{
+			return ( (StringT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof MultipleCharValueT )
+		{
+			return ( (MultipleCharValueT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof CurrencyT )
+		{
+//			return ( (CurrencyT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof ExchangeT )
+		{
+//			return ( (ExchangeT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof MonthYearT )
+		{
+//			return ( (MonthYearT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof UTCTimestampT )
+		{
+//			return ( (UTCTimestampT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof UTCTimeOnlyT )
+		{
+//			return ( (UTCTimeOnlyT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof LocalMktDateT )
+		{
+//			return ( (LocalMktDateT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof UTCDateOnlyT )
+		{
+//			return ( (UTCDateOnlyT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof DataT )
+		{
+			return ( (DataT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof MultipleStringValueT )
+		{
+			return ( (MultipleStringValueT) parameter ).getMaxLength();
+		}
+//		 XXX: Country is not supported in ATDL due to conflict in schema
+		/*
+		 * else if (parameter instanceof CountryT) { return
+		 * ((CountryT)parameter).getMaxLength(); }
+		 */
+		else if ( parameter instanceof LanguageT )
+		{
+//			return ( (LanguageT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof TZTimeOnlyT )
+		{
+//			return ( (TZTimeOnlyT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof TZTimestampT )
+		{
+//			return ( (TZTimestampT) parameter ).getMaxLength();
+		}
+		else if ( parameter instanceof TenorT )
+		{
+//			return ( (TenorT) parameter ).getMaxLength();
+		}
+		
+		return null;
+	}	
+	
+	
+	public static BigInteger getMinLength(ParameterT parameter)
+	{
+		if ( parameter instanceof IntT )
+		{
+//			return ( (IntT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof LengthT )
+		{
+//			return ( (LengthT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof NumInGroupT )
+		{
+//			return ( (NumInGroupT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof SeqNumT )
+		{
+//			return ( (SeqNumT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof TagNumT )
+		{
+//			return ( (TagNumT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof FloatT )
+		{
+//			return ( (FloatT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof QtyT )
+		{
+//			return ( (QtyT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof PriceT )
+		{
+//			return ( (PriceT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof PriceOffsetT )
+		{
+//			return ( (PriceOffsetT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof AmtT )
+		{
+//			return ( (AmtT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof PercentageT )
+		{
+//			return ( (PercentageT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof CharT )
+		{
+//			return ( (CharT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof BooleanT )
+		{
+//			return ( (BooleanT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof StringT )
+		{
+			return ( (StringT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof MultipleCharValueT )
+		{
+			return ( (MultipleCharValueT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof CurrencyT )
+		{
+//			return ( (CurrencyT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof ExchangeT )
+		{
+//			return ( (ExchangeT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof MonthYearT )
+		{
+//			return ( (MonthYearT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof UTCTimestampT )
+		{
+//			return ( (UTCTimestampT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof UTCTimeOnlyT )
+		{
+//			return ( (UTCTimeOnlyT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof LocalMktDateT )
+		{
+//			return ( (LocalMktDateT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof UTCDateOnlyT )
+		{
+//			return ( (UTCDateOnlyT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof DataT )
+		{
+			return ( (DataT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof MultipleStringValueT )
+		{
+			return ( (MultipleStringValueT) parameter ).getMinLength();
+		}
+//		 XXX: Country is not supported in ATDL due to conflict in schema
+		/*
+		 * else if (parameter instanceof CountryT) { return
+		 * ((CountryT)parameter).getMinLength(); }
+		 */
+		else if ( parameter instanceof LanguageT )
+		{
+//			return ( (LanguageT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof TZTimeOnlyT )
+		{
+//			return ( (TZTimeOnlyT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof TZTimestampT )
+		{
+//			return ( (TZTimestampT) parameter ).getMinLength();
+		}
+		else if ( parameter instanceof TenorT )
+		{
+//			return ( (TenorT) parameter ).getMinLength();
+		}
+		
+		return null;
+	}	
 }

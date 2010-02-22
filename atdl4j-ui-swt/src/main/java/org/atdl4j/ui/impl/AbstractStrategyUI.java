@@ -34,6 +34,7 @@ import org.atdl4j.data.TypeConverter;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.fix.PlainFIXMessageBuilder;
+import org.atdl4j.data.validation.LengthValidationRule;
 import org.atdl4j.data.validation.LogicalOperatorValidationRule;
 import org.atdl4j.data.validation.PatternValidationRule;
 import org.atdl4j.data.validation.ReferencedValidationRule;
@@ -307,7 +308,43 @@ public abstract class AbstractStrategyUI implements StrategyUI
 				}
 			}
 			
+// 2/21/2010 Scott Atwell added
+			if ( ParameterHelper.getMinLength( parameter ) != null )
+			{
+				ValidationRule tempFieldRule = new LengthValidationRule( parameter.getName(), OperatorT.GE, ParameterHelper.getMinLength( parameter ), strategy );
+				
+				if ( tempIsRequired )
+				{
+					getStrategyRuleset().addLengthFieldRule( tempFieldRule );
+				}
+				else // Parameter is optional
+				{
+					LogicalOperatorValidationRule tempOptionalWrapperEdit = new LogicalOperatorValidationRule( LogicOperatorT.OR, strategy );
+					tempOptionalWrapperEdit.addRule( new ValueOperatorValidationRule( parameter.getName(), OperatorT.NX, null, strategy ) );
+					tempOptionalWrapperEdit.addRule( tempFieldRule );
+					getStrategyRuleset().addLengthFieldRule( tempOptionalWrapperEdit );
+				}
+			}
+			
+// 2/21/2010 Scott Atwell added
+			if ( ParameterHelper.getMaxLength( parameter ) != null )
+			{
+				ValidationRule tempFieldRule = new LengthValidationRule( parameter.getName(), OperatorT.LE, ParameterHelper.getMaxLength( parameter ), strategy );
+				
+				if ( tempIsRequired )
+				{
+					getStrategyRuleset().addLengthFieldRule( tempFieldRule );
+				}
+				else // Parameter is optional
+				{
+					LogicalOperatorValidationRule tempOptionalWrapperEdit = new LogicalOperatorValidationRule( LogicOperatorT.OR, strategy );
+					tempOptionalWrapperEdit.addRule( new ValueOperatorValidationRule( parameter.getName(), OperatorT.NX, null, strategy ) );
+					tempOptionalWrapperEdit.addRule( tempFieldRule );
+					getStrategyRuleset().addLengthFieldRule( tempOptionalWrapperEdit );
+				}
+			}
 
+			
 			// validate types based on patterns
 			if ( parameter instanceof MultipleCharValueT )
 			{
