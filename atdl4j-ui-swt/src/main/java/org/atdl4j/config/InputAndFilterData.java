@@ -4,6 +4,7 @@
  */
 package org.atdl4j.config;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public class InputAndFilterData
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_REGION_name = "FIX_FIXatdl_Region_name";
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_COUNTRY_CountryCode = "FIX_FIXatdl_Country_CountryCode";
 
+	public static String INPUT_FIELD_NAME_INIT_POLICY_LotSize = "FIX_FIXatdl_LotSize";
+	public static String INPUT_FIELD_NAME_INIT_POLICY_Tick = "FIX_FIXatdl_Tick";
 	
 	private boolean inputCxlReplaceMode = false;
 	
@@ -478,7 +481,6 @@ public class InputAndFilterData
 	}
 	
 	/**
-	 * @param aFieldValue
 	 */
 	public String getInputStrategyFilterRegion_name()
 	{
@@ -486,7 +488,6 @@ public class InputAndFilterData
 	}
 	
 	/**
-	 * @param aFieldValue
 	 */
 	public void setInputStrategyFilterCountry_CountryCode( String aFieldValue )
 	{
@@ -494,11 +495,41 @@ public class InputAndFilterData
 	}
 	
 	/**
-	 * @param aFieldValue
 	 */
 	public String getInputStrategyFilterCountry_CountryCode()
 	{
 		return getInputHiddenFieldValue( INPUT_FIELD_NAME_STRATEGY_FILTER_COUNTRY_CountryCode );
 	}
+
+	/**
+	 */
+	public BigInteger getInputInitPolicy_LotSize()
+	{
+		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INIT_POLICY_LotSize );
+		if ( tempValue != null )
+		{
+			return new BigInteger( tempValue );
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
+	/**
+	 */
+	public BigInteger getInputInitPolicy_Tick()
+	{
+		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INIT_POLICY_Tick );
+		if ( tempValue != null )
+		{
+			return new BigInteger( tempValue );
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+
 }

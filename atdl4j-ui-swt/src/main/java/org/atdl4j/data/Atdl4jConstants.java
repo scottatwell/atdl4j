@@ -24,4 +24,8 @@ public class Atdl4jConstants
 	public static int CLOCK_INIT_VALUE_MODE_USE_AS_IS = 0;  // default
 	public static int CLOCK_INIT_VALUE_MODE_USE_CURRENT_TIME_IF_LATER = 1;  
 	
+	public static String INCREMENT_POLICY_STATIC = "Static";  // -- use value from increment attribute --
+	public static String INCREMENT_POLICY_LOT_SIZE = "LotSize";  // -- use the round lot size of symbol --
+	public static String INCREMENT_POLICY_TICK = "Tick";  // -- use symbol minimum tick size --
+	
 }

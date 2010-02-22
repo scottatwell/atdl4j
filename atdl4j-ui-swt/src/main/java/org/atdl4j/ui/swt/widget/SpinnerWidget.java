@@ -8,6 +8,7 @@ import org.atdl4j.atdl.layout.DoubleSpinnerT;
 import org.atdl4j.atdl.layout.SingleSpinnerT;
 import org.atdl4j.data.converter.DecimalConverter;
 import org.atdl4j.data.converter.IntegerConverter;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -57,18 +58,6 @@ public class SpinnerWidget
 		}
 	}
 
-	/**
-	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
-	 * ParameterT aParameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException
-	 * public SpinnerWidget(DoubleSpinnerT control, ParameterT parameter) throws
-	 * JAXBException { this.control = control; this.parameter = parameter;
-	 * init(); }
-	 * 
-	 * public SpinnerWidget(SingleSpinnerT control, ParameterT parameter) throws
-	 * JAXBException { this.control = control; this.parameter = parameter;
-	 * init(); }
-	 **/
-
 	public Widget createWidget(Composite parent, int style)
 	{
 
@@ -112,41 +101,7 @@ public class SpinnerWidget
 			label.setToolTipText( tooltip );
 		}
 
-/**** 2/12/2010 Scott Atwell - overhauled in conjunction with DecimalConverter/IntegerConverter vs. NumericConverter and avoid BigDecimal "scale"		
-		// Set min/max/precision if a parameter is attached
-		// TODO this is a bit messy... should probably be done separately of
-		// NumberConverter
-		if ( parameterConverter != null && parameterConverter instanceof NumberConverter )
-		{
-			spinner.setDigits( ( (NumberConverter) parameterConverter ).getPrecision() );
 
-			Integer minimum = ( (NumberConverter) parameterConverter ).getMinimum();
-			if ( minimum != null )
-			{
-				spinner.setMinimum( minimum );
-			}
-			else
-			{
-				spinner.setMinimum( -Integer.MAX_VALUE );
-			}
-
-			Integer maximum = ( (NumberConverter) parameterConverter ).getMaximum();
-			if ( maximum != null )
-			{
-				spinner.setMaximum( maximum );
-			}
-			else
-			{
-				spinner.setMaximum( Integer.MAX_VALUE );
-			}
-		}
-		else
-		{
-			spinner.setDigits( 0 );
-			spinner.setMinimum( -Integer.MAX_VALUE );
-			spinner.setMaximum( Integer.MAX_VALUE );
-		}
-****/
 		// Set min/max/precision if a parameter is attached
 		if ( parameterConverter != null && parameterConverter instanceof DecimalConverter )
 		{
@@ -218,15 +173,30 @@ public class SpinnerWidget
 
 		if ( control instanceof DoubleSpinnerT )
 		{
-			if ( ( (DoubleSpinnerT) control ).getInnerIncrement() != null )
-				spinner.setIncrement( ( (DoubleSpinnerT) control ).getInnerIncrement().intValue() );
+//			if ( ( (DoubleSpinnerT) control ).getInnerIncrement() != null )
+//				spinner.setIncrement( ( (DoubleSpinnerT) control ).getInnerIncrement().intValue() );
+// 2/21/2010 Scott Atwell -- this method supports innerIncrementPolicy (Static, LotSize, Tick) --			
+			if ( ControlHelper.getInnerIncrementValue( control, getAtdl4jConfig() ) != null )
+				spinner.setIncrement( ControlHelper.getInnerIncrementValue( control, getAtdl4jConfig() ).intValue() );
 
 			int outerStepSize = 1 * (int) Math.pow( 10, spinner.getDigits() );
-			if ( ( (DoubleSpinnerT) control ).getOuterIncrement() != null )
-				outerStepSize = ( ( (DoubleSpinnerT) control ).getOuterIncrement().intValue() );
+//			if ( ( (DoubleSpinnerT) control ).getOuterIncrement() != null )
+//				outerStepSize = ( ( (DoubleSpinnerT) control ).getOuterIncrement().intValue() );
+// 2/21/2010 Scott Atwell -- this method supports outerIncrementPolicy (Static, LotSize, Tick) --			
+			if ( ControlHelper.getOuterIncrementValue( control, getAtdl4jConfig() ) != null )
+				outerStepSize = ControlHelper.getOuterIncrementValue( control, getAtdl4jConfig() ).intValue();
 
 			buttonUp.addSelectionListener( new DoubleSpinnerSelection( spinner, outerStepSize ) );
 			buttonDown.addSelectionListener( new DoubleSpinnerSelection( spinner, -1 * outerStepSize ) );
+		}
+// 2/21/2010 Scott Atwell Added
+		else if ( control instanceof SingleSpinnerT )
+		{
+//			if ( ( (SingleSpinnerT) control ).getIncrement() != null )
+//				spinner.setIncrement( ( (SingleSpinnerT) control ).getIncrement().intValue() );
+// 2/21/2010 Scott Atwell -- this method supports incrementPolicy (Static, LotSize, Tick) --			
+			if ( ControlHelper.getIncrementValue( control, getAtdl4jConfig() ) != null )
+				spinner.setIncrement( ControlHelper.getIncrementValue( control, getAtdl4jConfig() ).intValue() );
 		}
 
 		Double initValue = control instanceof SingleSpinnerT ? ( (SingleSpinnerT) control ).getInitValue() : ( (DoubleSpinnerT) control )
@@ -237,23 +207,7 @@ public class SpinnerWidget
 		return parent;
 	}
 
-/** 2/10/2010 Scott Atwell	
-	public BigDecimal getControlValue()
-	{
-		// 1/24/2010 Scott Atwell added
-		if ( !spinner.isVisible() || !spinner.isEnabled() )
-			return null;
 
-		try
-		{
-			return BigDecimal.valueOf( spinner.getSelection(), spinner.getDigits() );
-		}
-		catch (NumberFormatException e)
-		{
-			return null;
-		}
-	}
-**/
 	public BigDecimal getControlValueRaw()
 	{
 		try
