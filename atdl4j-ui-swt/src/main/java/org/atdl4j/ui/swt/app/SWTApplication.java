@@ -50,6 +50,8 @@ import org.eclipse.swt.widgets.Text;
 public class SWTApplication 
 	implements StrategySelectionUIListener
 {
+//TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
+	
 
 //	private static final Logger logger = Logger.getLogger(SWTApplication.class);
 	public final Logger logger = Logger.getLogger(SWTApplication.class);
@@ -227,13 +229,13 @@ public class SWTApplication
 		{
         		//descPanel = new Composite(shell, SWT.NONE);
         		strategyDescription = new Text(shell, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
-        		strategyDescription.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+        	   strategyDescription.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
         		strategyDescription.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
         		
         		
         		GridData descData = new GridData(SWT.FILL, SWT.FILL, true, false);
         		descData.grabExcessHorizontalSpace = true;
-        		descData.heightHint = 40;
+       		descData.heightHint = 40;
         		strategyDescription.setLayoutData(descData);
         		
         		
@@ -766,15 +768,28 @@ public class SWTApplication
 			strategyDescription.setText("");
 		}
 		
-		strategiesPanel.layout();
-		shell.pack();
+// 2/23/2010 Scott Atwell moved after StrategyDescription stuff		strategiesPanel.layout();
+// 2/23/2010 Scott Atwell moved after StrategyDescription stuff		shell.pack();
 //Strategy description must be updated after packing
 // 2/7/2010 Scott Atwell - had to add the not null check	to avoid SWT.error of Argument cannot be null	
 		if ( (getAtdl4jConfig().isShowStrategyDescription()) && 
 			  ( getAtdl4jConfig().getSelectedStrategy().getDescription() != null ) )
 		{
 			strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
+			strategyDescription.setVisible( true );
 		}
+		else if ( strategyDescription != null )
+		{
+//TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
+			strategyDescription.setVisible( false );
+		}
+		
+
+		strategiesPanel.layout();
+// 2/23/2010 Scott Atwell added shell.Layout()		
+		shell.layout();
+		shell.pack();
+		
 	}
 
 	

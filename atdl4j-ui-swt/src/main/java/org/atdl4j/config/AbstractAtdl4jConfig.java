@@ -103,7 +103,9 @@ public abstract class AbstractAtdl4jConfig
 	
 	private InputAndFilterData inputAndFilterData;
 	
-	private boolean showStrategyDescription = true;
+//TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
+//	private boolean showStrategyDescription = true;
+	private boolean showStrategyDescription = false;
 	private boolean showTimezoneSelector = false;
 	
 	private boolean treatControlVisibleFalseAsNull = false;
