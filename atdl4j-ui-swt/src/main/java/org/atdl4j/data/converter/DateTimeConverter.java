@@ -70,6 +70,7 @@ public class DateTimeConverter
 			return (DateTime) value;
 		}
 // 2/16/2010 Scott Atwell Added (when handling dailyConstValue)		
+// 2/23/2010 Scott Atwell Added (when handling 'daily' format for constValue)		
 		else if ( value instanceof XMLGregorianCalendar )
 		{
 			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) value, getTimezone() );

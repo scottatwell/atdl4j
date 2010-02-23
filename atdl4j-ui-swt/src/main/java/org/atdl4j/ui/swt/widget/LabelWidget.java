@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.atdl4j.atdl.layout.LabelT;
+import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.impl.LabelUI;
 import org.atdl4j.ui.swt.SWTWidget;
 import org.eclipse.swt.SWT;
@@ -42,9 +43,11 @@ public class LabelWidget
 		{
 			label.setText( control.getLabel() );
 		}
-		else if ( ( control instanceof LabelT ) && ( ( (LabelT) control ).getInitValue() != null ) )
+//		else if ( ( control instanceof LabelT ) && ( ( (LabelT) control ).getInitValue() != null ) )
+		else if ( ControlHelper.getInitValue( control, getAtdl4jConfig() ) != null )
 		{
-			label.setText( ( (LabelT) control ).getInitValue() );
+//			label.setText( ( (LabelT) control ).getInitValue() );
+			label.setText( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ) );
 		}
 		else
 		{

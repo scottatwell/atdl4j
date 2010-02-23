@@ -249,7 +249,8 @@ public abstract class AbstractStrategyUI implements StrategyUI
 // 2/12/2010 Scott Atwell added
 			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory( getAtdl4jConfig() ).create( parameter );
 			
-			if ( ( parameter.isConst() ) && ( ParameterHelper.getConstValue( parameter ) != null ) )
+// Parameter/@const has been removed 			if ( ( parameter.isConst() ) && ( ParameterHelper.getConstValue( parameter ) != null ) )
+			if ( ParameterHelper.getConstValue( parameter ) != null )
 			{
 // 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
 				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getConstValue( parameter ) ); 

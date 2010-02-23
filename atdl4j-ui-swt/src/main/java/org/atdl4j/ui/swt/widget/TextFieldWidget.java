@@ -1,19 +1,12 @@
 package org.atdl4j.ui.swt.widget;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.IntT;
-import org.atdl4j.atdl.core.LengthT;
-import org.atdl4j.atdl.core.NumInGroupT;
-import org.atdl4j.atdl.core.NumericT;
-import org.atdl4j.atdl.core.SeqNumT;
-import org.atdl4j.atdl.core.TagNumT;
 import org.atdl4j.atdl.layout.TextFieldT;
-import org.atdl4j.ui.swt.util.NumberFormatVerifyListener;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -77,8 +70,10 @@ This is prone to issues:
 ***/
 		
 		// init value
-		if ( ( (TextFieldT) control ).getInitValue() != null )
-			textField.setText( ( (TextFieldT) control ).getInitValue() );
+//		if ( ( (TextFieldT) control ).getInitValue() != null )
+//			textField.setText( ( (TextFieldT) control ).getInitValue() );
+		if ( ControlHelper.getInitValue( control, getAtdl4jConfig() ) != null )
+			textField.setText( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ) );
 
 		// tooltip
 		String tooltip = getTooltip();
@@ -172,6 +167,9 @@ This is prone to issues:
 	 */
 	protected void processNullValueIndicatorChange(Boolean aOldNullValueInd, Boolean aNewNullValueInd)
 	{
-		// TODO ?? adjust the visual appearance of the control ??
+		if ( Boolean.FALSE.equals( aNewNullValueInd ) )
+		{
+			textField.setText( "" );
+		}
 	}
 }

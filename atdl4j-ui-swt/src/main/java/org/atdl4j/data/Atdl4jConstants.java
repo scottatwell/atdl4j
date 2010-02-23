@@ -28,4 +28,6 @@ public class Atdl4jConstants
 	public static String INCREMENT_POLICY_LOT_SIZE = "LotSize";  // -- use the round lot size of symbol --
 	public static String INCREMENT_POLICY_TICK = "Tick";  // -- use symbol minimum tick size --
 	
+	public static String INIT_POLICY_USE_VALUE = "UseValue";  // -- use value from ControlT/@initValue --
+	public static String INIT_POLICY_USE_FIX_FIELD = "UseFixField";  // -- use value from ControlT/@initFixField if available, else ControlT/@initValue --
 }

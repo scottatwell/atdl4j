@@ -16,6 +16,7 @@ import org.atdl4j.atdl.core.UseT;
 import org.atdl4j.atdl.layout.ClockT;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.converter.DateTimeConverter;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -178,7 +179,8 @@ public class ClockWidget
 		}
 
 		// init value, if applicable
-		setAndRenderInitValue( ((ClockT) control).getInitValue(), ((ClockT) control).getInitValueMode() );
+//		setAndRenderInitValue( ((ClockT) control).getInitValue(), ((ClockT) control).getInitValueMode() );
+		setAndRenderInitValue( (XMLGregorianCalendar ) ControlHelper.getInitValue( control, getAtdl4jConfig() ), ((ClockT) control).getInitValueMode() );
 
 		
 		// TODO 1/20/2010 Scott Atwell

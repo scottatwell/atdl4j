@@ -199,8 +199,9 @@ public class SpinnerWidget
 				spinner.setIncrement( ControlHelper.getIncrementValue( control, getAtdl4jConfig() ).intValue() );
 		}
 
-		Double initValue = control instanceof SingleSpinnerT ? ( (SingleSpinnerT) control ).getInitValue() : ( (DoubleSpinnerT) control )
-				.getInitValue();
+//		Double initValue = control instanceof SingleSpinnerT ? ( (SingleSpinnerT) control ).getInitValue() : ( (DoubleSpinnerT) control )
+//				.getInitValue();
+		Double initValue = (Double) ControlHelper.getInitValue( control, getAtdl4jConfig() );
 		if ( initValue != null )
 			spinner.setSelection( initValue.intValue() * (int) Math.pow( 10, spinner.getDigits() ) );
 

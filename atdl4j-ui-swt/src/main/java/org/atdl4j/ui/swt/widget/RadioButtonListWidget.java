@@ -9,6 +9,7 @@ import org.atdl4j.atdl.layout.ListItemT;
 import org.atdl4j.atdl.layout.PanelOrientationT;
 import org.atdl4j.atdl.layout.RadioButtonListT;
 import org.atdl4j.atdl.layout.StrategyPanelT;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -100,8 +101,10 @@ public class RadioButtonListWidget
 		// set initValue (Note that this has to be the enumID, not the
 		// wireValue)
 		// set initValue
-		if ( ( (RadioButtonListT) control ).getInitValue() != null )
-			setValue( ( (RadioButtonListT) control ).getInitValue(), true );
+//		if ( ( (RadioButtonListT) control ).getInitValue() != null )
+//			setValue( ( (RadioButtonListT) control ).getInitValue(), true );
+		if ( ControlHelper.getInitValue( control, getAtdl4jConfig() ) != null )
+			setValue( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ), true );
 
 		return c;
 	}

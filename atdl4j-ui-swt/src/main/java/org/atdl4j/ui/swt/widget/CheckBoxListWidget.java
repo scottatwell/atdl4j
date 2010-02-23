@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.atdl4j.atdl.core.EnumPairT;
 import org.atdl4j.atdl.layout.CheckBoxListT;
 import org.atdl4j.atdl.layout.ListItemT;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
@@ -96,8 +97,10 @@ public class CheckBoxListWidget
 		}
 
 		// set initValue
-		if ( ( (CheckBoxListT) control ).getInitValue() != null )
-			setValue( ( (CheckBoxListT) control ).getInitValue(), true );
+//		if ( ( (CheckBoxListT) control ).getInitValue() != null )
+//			setValue( ( (CheckBoxListT) control ).getInitValue(), true );
+		if ( ControlHelper.getInitValue( control, getAtdl4jConfig() ) != null )
+			setValue( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ), true );
 
 		return parent;
 	}

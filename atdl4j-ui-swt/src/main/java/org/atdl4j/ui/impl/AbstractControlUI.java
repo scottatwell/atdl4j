@@ -91,7 +91,9 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	private void applyConstValue()
 		throws JAXBException
 	{
-		if ( ( getParameter() != null ) && ( getParameter().isConst() ) )
+// Parameter/@const has been removed		
+//		if ( ( getParameter() != null ) && ( getParameter().isConst() ) )
+		if ( getParameter() != null ) 
 		{
 			Object tempConstValue = ParameterHelper.getConstValue( getParameter() );
 			
@@ -105,13 +107,14 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 				}
 				else
 				{
-					throw new IllegalArgumentException( "Unable to convert constValue or dailyConstValue [" + tempConstValue + "] -- required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
+//					throw new IllegalArgumentException( "Unable to convert constValue or dailyConstValue [" + tempConstValue + "] -- required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
+					throw new IllegalArgumentException( "Unable to convert constValue [" + tempConstValue + "] -- required when Parameter@constValue is non-null [Parameter: " + parameter.getName() + "]");
 				}
 			}
-			else
-			{
-				throw new IllegalArgumentException( "constValue or dailyConstValue is required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
-			}
+//			else
+//			{
+//				throw new IllegalArgumentException( "constValue or dailyConstValue is required when Parameter@const=true [Parameter: " + parameter.getName() + "]");
+//			}
 		}
 	
 	}

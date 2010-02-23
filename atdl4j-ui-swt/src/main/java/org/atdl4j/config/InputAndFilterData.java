@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.core.CountryT;
 import org.atdl4j.atdl.core.InclusionT;
 import org.atdl4j.atdl.core.MarketT;
 import org.atdl4j.atdl.core.RegionT;
@@ -273,7 +272,7 @@ public class InputAndFilterData
 						if ( ( aCountry_CountryCode != null ) &&
 							  ( tempRegion.getCountry() != null ) )
 						{
-							for ( CountryT tempCountry : tempRegion.getCountry() )
+							for ( RegionT.Country tempCountry : tempRegion.getCountry() )
 							{
 								if ( ( InclusionT.INCLUDE.equals( tempCountry.getInclusion() ) ) &&
 									  ( aCountry_CountryCode.equals( tempCountry.getCountryCode() ) ) )
@@ -305,7 +304,7 @@ public class InputAndFilterData
 						if ( ( aCountry_CountryCode != null ) &&
 							  ( tempRegion.getCountry() != null ) )
 						{
-							for ( CountryT tempCountry : tempRegion.getCountry() )
+							for ( RegionT.Country tempCountry : tempRegion.getCountry() )
 							{
 								if ( ( InclusionT.EXCLUDE.equals( tempCountry.getInclusion() ) ) &&
 									  ( aCountry_CountryCode.equals( tempCountry.getCountryCode() ) ) )

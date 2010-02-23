@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.atdl4j.atdl.layout.ListItemT;
 import org.atdl4j.atdl.layout.SliderT;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -71,8 +72,10 @@ public class SliderWidget
 			label.setToolTipText( tooltip );
 		}
 
-		if ( ( (SliderT) control ).getInitValue() != null )
-			setValue( ( (SliderT) control ).getInitValue(), true );
+//		if ( ( (SliderT) control ).getInitValue() != null )
+//			setValue( ( (SliderT) control ).getInitValue(), true );
+		if ( ControlHelper.getInitValue( control, getAtdl4jConfig() ) != null )
+			setValue( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ), true );
 
 		return parent;
 	}

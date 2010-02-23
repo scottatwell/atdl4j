@@ -7,6 +7,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.atdl4j.atdl.core.AmtT;
 import org.atdl4j.atdl.core.BooleanT;
 import org.atdl4j.atdl.core.CharT;
+import org.atdl4j.atdl.core.CountryT;
 import org.atdl4j.atdl.core.CurrencyT;
 import org.atdl4j.atdl.core.DataT;
 import org.atdl4j.atdl.core.ExchangeT;
@@ -114,8 +115,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof UTCTimestampT )
 		{
-			// -- Supports dailyConstValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getConstValue(), ( (UTCTimestampT) parameter ).getDailyConstValue(), ((UTCTimestampT) parameter).getLocalMktTz() );
+//			// -- Supports dailyConstValue --
+//			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getConstValue(), ( (UTCTimestampT) parameter ).getDailyConstValue(), ((UTCTimestampT) parameter).getLocalMktTz() );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (UTCTimestampT) parameter ).getConstValue(), getLocalMktTz( parameter) );
+			}
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -137,11 +142,10 @@ public class ParameterHelper
 		{
 			return ( (MultipleStringValueT) parameter ).getConstValue();
 		}
-		// XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getConstValue(); }
-		 */
+		else if (parameter instanceof CountryT) 
+		{ 
+			return ((CountryT)parameter).getConstValue(); 
+		}
 		else if ( parameter instanceof LanguageT )
 		{
 			return ( (LanguageT) parameter ).getConstValue();
@@ -152,8 +156,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			// -- Supports dailyConstValue --
-			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getConstValue(), ( (TZTimestampT) parameter ).getDailyConstValue(), null );
+//			// -- Supports dailyConstValue --
+//			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getConstValue(), ( (TZTimestampT) parameter ).getDailyConstValue(), null );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (TZTimestampT) parameter ).getConstValue(), null );
+			}
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -162,21 +170,21 @@ public class ParameterHelper
 		return null;
 	}
 	
-	private static XMLGregorianCalendar getDailyValueAsValue( XMLGregorianCalendar aValueIfSpecified, XMLGregorianCalendar aDailyValue, Timezone aTimezone )
-	{
-		if ( aValueIfSpecified != null )
-		{
-			return aValueIfSpecified;
-		}
-		else if ( aDailyValue != null )
-		{
-			return DateTimeConverter.convertDailyValueToValue( aDailyValue, aTimezone );
-		}
-		else
-		{
-			return null;
-		}
-	}
+//	private static XMLGregorianCalendar getDailyValueAsValue( XMLGregorianCalendar aValueIfSpecified, XMLGregorianCalendar aDailyValue, Timezone aTimezone )
+//	{
+//		if ( aValueIfSpecified != null )
+//		{
+//			return aValueIfSpecified;
+//		}
+//		else if ( aDailyValue != null )
+//		{
+//			return DateTimeConverter.convertDailyValueToValue( aDailyValue, aTimezone );
+//		}
+//		else
+//		{
+//			return null;
+//		}
+//	}
 
 
 	
@@ -256,8 +264,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof UTCTimestampT )
 		{
-			// -- Supports dailyMaxValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMaxValue(), ( (UTCTimestampT) parameter ).getDailyMaxValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
+//			// -- Supports dailyMaxValue --
+//			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMaxValue(), ( (UTCTimestampT) parameter ).getDailyMaxValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (UTCTimestampT) parameter ).getMaxValue(), getLocalMktTz( parameter) );
+			}
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -279,11 +291,10 @@ public class ParameterHelper
 		{
 //			return ( (MultipleStringValueT) parameter ).getMaxValue();
 		}
-		// XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getMaxValue(); }
-		 */
+		else if (parameter instanceof CountryT) 
+		{ 
+//			return ( (CountryT) parameter).getMaxValue(); 
+		}
 		else if ( parameter instanceof LanguageT )
 		{
 //			return ( (LanguageT) parameter ).getMaxValue();
@@ -294,8 +305,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			// -- Supports dailyMaxValue --
-			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMaxValue(), ( (TZTimestampT) parameter ).getDailyMaxValue(), null );
+//			// -- Supports dailyMaxValue --
+//			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMaxValue(), ( (TZTimestampT) parameter ).getDailyMaxValue(), null );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (TZTimestampT) parameter ).getMaxValue(), null );
+			}
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -382,8 +397,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof UTCTimestampT )
 		{
-			// -- Supports dailyMinValue --
-			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMinValue(), ( (UTCTimestampT) parameter ).getDailyMinValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
+//			// -- Supports dailyMinValue --
+//			return getDailyValueAsValue( ( (UTCTimestampT) parameter ).getMinValue(), ( (UTCTimestampT) parameter ).getDailyMinValue(), ( (UTCTimestampT) parameter ).getLocalMktTz() );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (UTCTimestampT) parameter ).getMinValue(), getLocalMktTz( parameter) );
+			}
 		}
 		else if ( parameter instanceof UTCTimeOnlyT )
 		{
@@ -405,11 +424,10 @@ public class ParameterHelper
 		{
 //			return ( (MultipleStringValueT) parameter ).getMinValue();
 		}
-		// XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getMinValue(); }
-		 */
+		else if (parameter instanceof CountryT) 
+		{ 
+//			return ( (CountryT) parameter).getMinValue(); 
+		}
 		else if ( parameter instanceof LanguageT )
 		{
 //			return ( (LanguageT) parameter ).getMinValue();
@@ -420,8 +438,12 @@ public class ParameterHelper
 		}
 		else if ( parameter instanceof TZTimestampT )
 		{
-			// -- Supports dailyMinValue --
-			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMinValue(), ( (TZTimestampT) parameter ).getDailyMinValue(), null );
+//			// -- Supports dailyMinValue --
+//			return getDailyValueAsValue( ( (TZTimestampT) parameter ).getMinValue(), ( (TZTimestampT) parameter ).getDailyMinValue(), null );
+			if ( parameter != null )
+			{
+				return DateTimeConverter.convertDailyValueToValue( ( (TZTimestampT) parameter ).getMinValue(), null );
+			}
 		}
 		else if ( parameter instanceof TenorT )
 		{
@@ -544,11 +566,10 @@ public class ParameterHelper
 		{
 			return ( (MultipleStringValueT) parameter ).getMaxLength();
 		}
-//		 XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getMaxLength(); }
-		 */
+		else if (parameter instanceof CountryT) 
+		{ 
+//			return ( (CountryT) parameter).getMaxLength(); 
+		}
 		else if ( parameter instanceof LanguageT )
 		{
 //			return ( (LanguageT) parameter ).getMaxLength();
@@ -668,11 +689,10 @@ public class ParameterHelper
 		{
 			return ( (MultipleStringValueT) parameter ).getMinLength();
 		}
-//		 XXX: Country is not supported in ATDL due to conflict in schema
-		/*
-		 * else if (parameter instanceof CountryT) { return
-		 * ((CountryT)parameter).getMinLength(); }
-		 */
+		else if (parameter instanceof CountryT) 
+		{ 
+//			return ( (CountryT) parameter).getMinLength(); 
+		}
 		else if ( parameter instanceof LanguageT )
 		{
 //			return ( (LanguageT) parameter ).getMinLength();

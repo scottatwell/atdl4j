@@ -5,6 +5,7 @@ import javax.xml.bind.JAXBException;
 import org.atdl4j.atdl.core.AmtT;
 import org.atdl4j.atdl.core.BooleanT;
 import org.atdl4j.atdl.core.CharT;
+import org.atdl4j.atdl.core.CountryT;
 import org.atdl4j.atdl.core.CurrencyT;
 import org.atdl4j.atdl.core.DataT;
 import org.atdl4j.atdl.core.ExchangeT;
@@ -35,71 +36,127 @@ import org.atdl4j.atdl.core.UTCTimestampT;
 /**
  * Utility class.
  */
-public abstract class Tag959Helper {
+public abstract class Tag959Helper
+{
 
-	public static int toInteger(ParameterT parameter) throws JAXBException {
-		if (parameter instanceof IntT) {
+	public static int toInteger(ParameterT parameter) throws JAXBException
+	{
+		if ( parameter instanceof IntT )
+		{
 			return 1;
-		} else if (parameter instanceof LengthT) {
+		}
+		else if ( parameter instanceof LengthT )
+		{
 			return 2;
-		} else if (parameter instanceof NumInGroupT) {
+		}
+		else if ( parameter instanceof NumInGroupT )
+		{
 			return 3;
-		} else if (parameter instanceof SeqNumT) {
+		}
+		else if ( parameter instanceof SeqNumT )
+		{
 			return 4;
-		} else if (parameter instanceof TagNumT) {
+		}
+		else if ( parameter instanceof TagNumT )
+		{
 			return 5;
-		} else if (parameter instanceof FloatT) {
+		}
+		else if ( parameter instanceof FloatT )
+		{
 			return 6;
-		} else if (parameter instanceof QtyT) {
+		}
+		else if ( parameter instanceof QtyT )
+		{
 			return 7;
-		} else if (parameter instanceof PriceT) {
+		}
+		else if ( parameter instanceof PriceT )
+		{
 			return 8;
-		} else if (parameter instanceof PriceOffsetT) {
+		}
+		else if ( parameter instanceof PriceOffsetT )
+		{
 			return 9;
-		} else if (parameter instanceof AmtT) {
+		}
+		else if ( parameter instanceof AmtT )
+		{
 			return 10;
-		} else if (parameter instanceof PercentageT) {
+		}
+		else if ( parameter instanceof PercentageT )
+		{
 			return 11;
-		} else if (parameter instanceof CharT) {
+		}
+		else if ( parameter instanceof CharT )
+		{
 			return 12;
-		} else if (parameter instanceof BooleanT) {
+		}
+		else if ( parameter instanceof BooleanT )
+		{
 			return 13;
-		} else if (parameter instanceof StringT) {
+		}
+		else if ( parameter instanceof StringT )
+		{
 			return 14;
-		} else if (parameter instanceof MultipleCharValueT) {
+		}
+		else if ( parameter instanceof MultipleCharValueT )
+		{
 			return 15;
-		} else if (parameter instanceof CurrencyT) {
+		}
+		else if ( parameter instanceof CurrencyT )
+		{
 			return 16;
-		} else if (parameter instanceof ExchangeT) {
+		}
+		else if ( parameter instanceof ExchangeT )
+		{
 			return 17;
-		} else if (parameter instanceof MonthYearT) {
+		}
+		else if ( parameter instanceof MonthYearT )
+		{
 			return 18;
-		} else if (parameter instanceof UTCTimestampT) {
+		}
+		else if ( parameter instanceof UTCTimestampT )
+		{
 			return 19;
-		} else if (parameter instanceof UTCTimeOnlyT) {
+		}
+		else if ( parameter instanceof UTCTimeOnlyT )
+		{
 			return 20;
-		} else if (parameter instanceof LocalMktDateT) {
+		}
+		else if ( parameter instanceof LocalMktDateT )
+		{
 			return 21;
-		} else if (parameter instanceof UTCDateOnlyT) {
+		}
+		else if ( parameter instanceof UTCDateOnlyT )
+		{
 			return 22;
-		} else if (parameter instanceof DataT) {
+		}
+		else if ( parameter instanceof DataT )
+		{
 			return 23;
-		} else if (parameter instanceof MultipleStringValueT) {
+		}
+		else if ( parameter instanceof MultipleStringValueT )
+		{
 			return 24;
 		}
-		// XXX: Country is not supported in ATDL due to conflict in schema
-		/* else if (parameter instanceof CountryT) {
-		return 25;
-		}*/
-		else if (parameter instanceof LanguageT) {
+		else if ( parameter instanceof CountryT )
+		{
+			return 25;
+		}
+		else if ( parameter instanceof LanguageT )
+		{
 			return 26;
-		} else if (parameter instanceof TZTimeOnlyT) {
+		}
+		else if ( parameter instanceof TZTimeOnlyT )
+		{
 			return 27;
-		} else if (parameter instanceof TZTimestampT) {
+		}
+		else if ( parameter instanceof TZTimestampT )
+		{
 			return 28;
-		} else if (parameter instanceof TenorT) {
+		}
+		else if ( parameter instanceof TenorT )
+		{
 			return 29;
 		}
-		throw new JAXBException("Unsupported Parameter type.");
+		throw new JAXBException( "Unsupported Parameter type." );
 	}
 }

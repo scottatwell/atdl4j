@@ -6,6 +6,7 @@ import java.util.List;
 import org.atdl4j.atdl.layout.DropDownListT;
 import org.atdl4j.atdl.layout.EditableDropDownListT;
 import org.atdl4j.atdl.layout.ListItemT;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -71,8 +72,9 @@ public class DropDownListWidget
 		dropDownList.select( 0 );
 
 		// select initValue if available
-		String initValue = ( control instanceof EditableDropDownListT ) ? ( (EditableDropDownListT) control ).getInitValue()
-				: ( (DropDownListT) control ).getInitValue();
+//		String initValue = ( control instanceof EditableDropDownListT ) ? ( (EditableDropDownListT) control ).getInitValue()
+//				: ( (DropDownListT) control ).getInitValue();
+		String initValue = (String) ControlHelper.getInitValue( control, getAtdl4jConfig() );
 		if ( initValue != null )
 			setValue( initValue, true );
 

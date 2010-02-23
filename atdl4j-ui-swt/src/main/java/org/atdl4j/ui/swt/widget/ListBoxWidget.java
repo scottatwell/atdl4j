@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.atdl4j.atdl.layout.ListItemT;
 import org.atdl4j.atdl.layout.MultiSelectListT;
 import org.atdl4j.atdl.layout.SingleSelectListT;
+import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -73,8 +74,9 @@ public class ListBoxWidget
 		}
 
 		// init value
-		String initValue = control instanceof MultiSelectListT ? ( (MultiSelectListT) control ).getInitValue() : ( (SingleSelectListT) control )
-				.getInitValue();
+//		String initValue = control instanceof MultiSelectListT ? ( (MultiSelectListT) control ).getInitValue() : ( (SingleSelectListT) control )
+//				.getInitValue();
+		String initValue = (String) ControlHelper.getInitValue( control, getAtdl4jConfig() );
 		if ( initValue != null )
 			setValue( initValue, true );
 
