@@ -29,7 +29,7 @@ public class RadioButtonListWidget
 	private Label label;
 
 	// 1/20/2010 Scott Atwell added
-	public static boolean disableVerticalLayoutHandling = false;
+// 2/23/2010 support newly added RadioButtonList/@orientation="VERTICAL"	public static boolean disableVerticalLayoutHandling = false;
 
 	/**
 	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
@@ -61,12 +61,14 @@ public class RadioButtonListWidget
 		// @see SWTFactory.createLayout() -- it has: else if (orientation ==
 		// PanelOrientationT.VERTICAL) { GridLayout l = new GridLayout(2,
 		// false); }
-		if ( ( disableVerticalLayoutHandling == false ) && ( parent.getChildren().length <= 2 ) && ( parent.getData() instanceof StrategyPanelT )
-				&& ( ( (StrategyPanelT) parent.getData() ).getOrientation() == PanelOrientationT.VERTICAL ) )
+// 2/23/2010 Scott Atwell RadioButtonList/@orientation has been added
+//		if ( ( disableVerticalLayoutHandling == false ) && ( parent.getChildren().length <= 2 ) && ( parent.getData() instanceof StrategyPanelT )
+//				&& ( ( (StrategyPanelT) parent.getData() ).getOrientation() == PanelOrientationT.VERTICAL ) )
+		if ( PanelOrientationT.VERTICAL.equals( ((RadioButtonListT) control).getOrientation() ) )
 		{
-			// -- consider it (orientation == PanelOrientationT.VERTICAL) --
-			logger.info( "LOG RadioButtonGroupWidget: " + control.getID() + " Considering parent: " + parent + " with GridLayout: "
-					+ ( (GridLayout) parent.getLayout() ) + "to be PanelOrientationT.VERTICAL" );
+//			// -- consider it (orientation == PanelOrientationT.VERTICAL) --
+//			logger.info( "LOG RadioButtonGroupWidget: " + control.getID() + " Considering parent: " + parent + " with GridLayout: "
+//					+ ( (GridLayout) parent.getLayout() ) + "to be PanelOrientationT.VERTICAL" );
 			c.setLayout( new GridLayout( 1, false ) );
 		}
 		// TODO Scott Atwell 1/20/2010 ABOVE

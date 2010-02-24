@@ -9,9 +9,11 @@ import javax.xml.bind.JAXBException;
 import org.atdl4j.atdl.core.EnumPairT;
 import org.atdl4j.atdl.layout.CheckBoxListT;
 import org.atdl4j.atdl.layout.ListItemT;
+import org.atdl4j.atdl.layout.PanelOrientationT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,6 +62,12 @@ public class CheckBoxListWidget
 		Composite c = new Composite( parent, SWT.NONE );
 		c.setLayout( new FillLayout() );
 
+// 2/23/2010 Scott Atwell added		
+		if ( PanelOrientationT.VERTICAL.equals( ((CheckBoxListT) control).getOrientation() ) )
+		{
+			c.setLayout( new GridLayout( 1, false ) );
+		}
+		
 		// label tooltip
 		String tooltip = getTooltip();
 		if ( tooltip != null )
