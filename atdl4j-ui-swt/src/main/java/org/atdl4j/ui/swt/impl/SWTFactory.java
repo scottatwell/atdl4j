@@ -6,11 +6,11 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.BorderT;
-import org.atdl4j.atdl.layout.ControlT;
-import org.atdl4j.atdl.layout.PanelOrientationT;
-import org.atdl4j.atdl.layout.StrategyPanelT;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.layout.BorderT;
+import org.atdl4j.fixatdl.layout.ControlT;
+import org.atdl4j.fixatdl.layout.PanelOrientationT;
+import org.atdl4j.fixatdl.layout.StrategyPanelT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.ui.ControlUIFactory;
 import org.atdl4j.ui.swt.SWTPanelFactory;

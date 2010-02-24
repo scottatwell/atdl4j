@@ -2,7 +2,7 @@ package org.atdl4j.ui.impl;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.layout.HiddenFieldT;
+import org.atdl4j.fixatdl.layout.HiddenFieldT;
 import org.atdl4j.data.ParameterHelper;
 
 public abstract class HiddenFieldUI

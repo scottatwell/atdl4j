@@ -4,8 +4,8 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.StrategyRuleset;

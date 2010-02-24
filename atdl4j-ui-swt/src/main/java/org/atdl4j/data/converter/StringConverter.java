@@ -1,8 +1,8 @@
 package org.atdl4j.data.converter;
 
-import org.atdl4j.atdl.core.MultipleCharValueT;
-import org.atdl4j.atdl.core.MultipleStringValueT;
-import org.atdl4j.atdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.MultipleCharValueT;
+import org.atdl4j.fixatdl.core.MultipleStringValueT;
+import org.atdl4j.fixatdl.core.ParameterT;
 
 public class StringConverter extends AbstractTypeConverter<String> {
 	

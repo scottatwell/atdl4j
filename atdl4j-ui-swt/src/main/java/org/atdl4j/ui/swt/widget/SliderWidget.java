@@ -3,8 +3,8 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.atdl4j.atdl.layout.ListItemT;
-import org.atdl4j.atdl.layout.SliderT;
+import org.atdl4j.fixatdl.layout.ListItemT;
+import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

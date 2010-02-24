@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.core.InclusionT;
-import org.atdl4j.atdl.core.MarketT;
-import org.atdl4j.atdl.core.RegionT;
-import org.atdl4j.atdl.core.StrategyT;
-import org.atdl4j.atdl.core.SecurityTypesT.SecurityType;
+import org.atdl4j.fixatdl.core.InclusionT;
+import org.atdl4j.fixatdl.core.MarketT;
+import org.atdl4j.fixatdl.core.RegionT;
+import org.atdl4j.fixatdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.SecurityTypesT.SecurityType;
 
 /**
  * This class contains the "input" data provided by the external application which drive

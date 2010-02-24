@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;

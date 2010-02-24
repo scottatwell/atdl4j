@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.atdl4j.atdl.layout.DoubleSpinnerT;
-import org.atdl4j.atdl.layout.SingleSpinnerT;
+import org.atdl4j.fixatdl.layout.DoubleSpinnerT;
+import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.data.converter.DecimalConverter;
 import org.atdl4j.data.converter.IntegerConverter;
 import org.atdl4j.ui.ControlHelper;

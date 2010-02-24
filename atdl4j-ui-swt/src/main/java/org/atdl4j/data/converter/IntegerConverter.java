@@ -2,12 +2,12 @@ package org.atdl4j.data.converter;
 
 import java.math.BigInteger;
 
-import org.atdl4j.atdl.core.IntT;
-import org.atdl4j.atdl.core.LengthT;
-import org.atdl4j.atdl.core.NumInGroupT;
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.core.SeqNumT;
-import org.atdl4j.atdl.core.TagNumT;
+import org.atdl4j.fixatdl.core.IntT;
+import org.atdl4j.fixatdl.core.LengthT;
+import org.atdl4j.fixatdl.core.NumInGroupT;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.SeqNumT;
+import org.atdl4j.fixatdl.core.TagNumT;
 
 /*
  * Supports Integer or BigInteger-based Parameter types:

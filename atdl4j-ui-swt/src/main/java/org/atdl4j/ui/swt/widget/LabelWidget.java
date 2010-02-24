@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.layout.LabelT;
+import org.atdl4j.fixatdl.layout.LabelT;
 import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.impl.LabelUI;
 import org.atdl4j.ui.swt.SWTWidget;

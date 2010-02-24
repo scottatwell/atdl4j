@@ -5,8 +5,8 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.flow.StateRuleT;
-import org.atdl4j.atdl.validation.OperatorT;
+import org.atdl4j.fixatdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.ui.ControlUI;

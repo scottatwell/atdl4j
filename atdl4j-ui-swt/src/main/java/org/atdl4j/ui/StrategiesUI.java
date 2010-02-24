@@ -2,8 +2,8 @@ package org.atdl4j.ui;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.StrategiesT;
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.StrategiesT;
+import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 
 public interface StrategiesUI<T> {

@@ -15,8 +15,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.core.StrategiesT;
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.StrategiesT;
+import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.FIXMessageParser;

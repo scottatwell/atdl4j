@@ -3,7 +3,7 @@ package org.atdl4j.data.converter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.atdl4j.atdl.core.BooleanT;
+import org.atdl4j.fixatdl.core.BooleanT;
 
 public class BooleanConverter
 		extends AbstractTypeConverter<Boolean>

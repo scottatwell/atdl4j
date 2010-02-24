@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.EnumPairT;
-import org.atdl4j.atdl.layout.CheckBoxListT;
-import org.atdl4j.atdl.layout.ListItemT;
-import org.atdl4j.atdl.layout.PanelOrientationT;
+import org.atdl4j.fixatdl.core.EnumPairT;
+import org.atdl4j.fixatdl.layout.CheckBoxListT;
+import org.atdl4j.fixatdl.layout.ListItemT;
+import org.atdl4j.fixatdl.layout.PanelOrientationT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;

@@ -12,8 +12,8 @@ import org.atdl4j.ui.ControlUI;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
-import org.atdl4j.atdl.flow.StateRuleT;
-import org.atdl4j.atdl.validation.OperatorT;
+import org.atdl4j.fixatdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.validation.OperatorT;
 
 /**
  * Validator that validates input against another existing field.

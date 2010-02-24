@@ -4,7 +4,7 @@
  */
 package org.atdl4j.ui.app;
 
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
  * 

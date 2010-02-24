@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.ui.app.StrategySelectionUI;
 import org.atdl4j.ui.app.StrategySelectionUIListener;

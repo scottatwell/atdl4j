@@ -2,7 +2,7 @@ package org.atdl4j.ui;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.StrategiesT;
+import org.atdl4j.fixatdl.core.StrategiesT;
 import org.atdl4j.config.Atdl4jConfig;
 
 // @see org.atdl4j.ui.impl.BaseStrategiesUIFactory

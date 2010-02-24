@@ -3,9 +3,9 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.atdl4j.atdl.layout.ListItemT;
-import org.atdl4j.atdl.layout.MultiSelectListT;
-import org.atdl4j.atdl.layout.SingleSelectListT;
+import org.atdl4j.fixatdl.layout.ListItemT;
+import org.atdl4j.fixatdl.layout.MultiSelectListT;
+import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

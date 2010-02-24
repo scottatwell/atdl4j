@@ -3,9 +3,9 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.atdl4j.atdl.core.BooleanT;
-import org.atdl4j.atdl.layout.CheckBoxT;
-import org.atdl4j.atdl.layout.RadioButtonT;
+import org.atdl4j.fixatdl.core.BooleanT;
+import org.atdl4j.fixatdl.layout.CheckBoxT;
+import org.atdl4j.fixatdl.layout.RadioButtonT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;

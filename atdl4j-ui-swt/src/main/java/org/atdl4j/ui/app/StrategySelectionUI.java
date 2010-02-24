@@ -6,7 +6,7 @@ package org.atdl4j.ui.app;
 
 import java.util.List;
 
-import org.atdl4j.atdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 
 /**

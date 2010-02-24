@@ -4,10 +4,10 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.validation.EditRefT;
-import org.atdl4j.atdl.validation.EditT;
-import org.atdl4j.atdl.validation.LogicOperatorT;
-import org.atdl4j.atdl.validation.OperatorT;
+import org.atdl4j.fixatdl.validation.EditRefT;
+import org.atdl4j.fixatdl.validation.EditT;
+import org.atdl4j.fixatdl.validation.LogicOperatorT;
+import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.data.ValidationRule;
 
 public abstract class ValidationRuleFactory {

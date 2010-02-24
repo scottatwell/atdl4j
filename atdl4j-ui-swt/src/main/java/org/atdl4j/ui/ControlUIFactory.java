@@ -6,8 +6,8 @@ package org.atdl4j.ui;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.atdl.core.ParameterT;
-import org.atdl4j.atdl.layout.ControlT;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.layout.ControlT;
 import org.atdl4j.config.Atdl4jConfig;
 
 /**
