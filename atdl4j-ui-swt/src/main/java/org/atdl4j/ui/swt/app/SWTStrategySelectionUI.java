@@ -55,6 +55,11 @@ public class SWTStrategySelectionUI
 		// dropDownList
 		strategiesDropDown = new Combo(dropdownComposite, SWT.READ_ONLY | SWT.BORDER);
 		strategiesDropDown.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
+		if ( ( atdl4jConfig != null ) && ( atdl4jConfig.getStrategyDropDownItemDepth() != null ) )
+		{
+			strategiesDropDown.setVisibleItemCount( atdl4jConfig.getStrategyDropDownItemDepth().intValue() );
+		}
 		// tooltip
 		strategiesDropDown.setToolTipText("Select a Strategy");
 		// action listener

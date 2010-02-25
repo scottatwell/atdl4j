@@ -107,6 +107,7 @@ public abstract class AbstractAtdl4jConfig
 //	private boolean showStrategyDescription = true;
 	private boolean showStrategyDescription = false;
 	private boolean showTimezoneSelector = false;
+	private Integer strategyDropDownItemDepth = new Integer( 15 );  // ComboBox drop down 'depth' (aka VisibleItemCount)
 	
 	private boolean treatControlVisibleFalseAsNull = false;
 	private boolean treatControlEnabledFalseAsNull = false;	
@@ -1481,6 +1482,22 @@ public abstract class AbstractAtdl4jConfig
 	public void setDefaultDigitsForSpinnerControl(Integer aDefaultDigitsForSpinnerControl)
 	{
 		this.defaultDigitsForSpinnerControl = aDefaultDigitsForSpinnerControl;
+	}
+
+	/**
+	 * @return the strategyDropDownItemDepth
+	 */
+	public Integer getStrategyDropDownItemDepth()
+	{
+		return this.strategyDropDownItemDepth;
+	}
+
+	/**
+	 * @param aStrategyDropDownItemDepth the strategyDropDownItemDepth to set
+	 */
+	public void setStrategyDropDownItemDepth(Integer aStrategyDropDownItemDepth)
+	{
+		this.strategyDropDownItemDepth = aStrategyDropDownItemDepth;
 	}
 
 }
