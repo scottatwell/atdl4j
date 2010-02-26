@@ -39,9 +39,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -119,6 +121,45 @@ public class SWTApplication
 		headerComposite.setLayout(headerLayout);
 		headerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		final Text filepathText = new Text(headerComposite, SWT.BORDER);
+// 2/25/2010 Scott Atwell added
+		// -- Handle Enter key within Text field --
+		filepathText.addListener( SWT.DefaultSelection, new Listener()
+		{
+			public void handleEvent(Event e) 
+			{
+				try 
+				{
+					parse( filepathText.getText() );
+				} 
+				catch (JAXBException e1) 
+				{
+					logger.warn("parse() Exception", e1);
+					MessageBox messageBox = new MessageBox(shell, SWT.OK
+							| SWT.ICON_ERROR);
+					// e1.getMessage() is null if there is a JAXB parse error 
+					String msg = "";
+					if (e1.getMessage() != null) msg = e1.getMessage();
+					else if (e1.getLinkedException() != null && 
+							e1.getLinkedException().getMessage() != null)
+					{
+						messageBox.setText(e1.getLinkedException().getClass().getSimpleName());
+						msg = e1.getLinkedException().getMessage();
+					}
+					messageBox.setMessage(msg);
+					messageBox.open();
+				} 
+				catch ( Exception e1) 
+				{
+					logger.warn("parse() Exception", e1);
+					MessageBox messageBox = new MessageBox(shell, SWT.OK
+							| SWT.ICON_ERROR);
+					messageBox.setMessage("Parse/UI Build Exception: " + e1.getMessage());
+					messageBox.open();
+				}
+			}
+		});
+		
+		
 		GridData filepathTextData = new GridData(SWT.FILL, SWT.CENTER, true, true);
 		filepathTextData.horizontalSpan = 2;
 		filepathText.setLayoutData(filepathTextData);
@@ -755,6 +796,9 @@ public class SWTApplication
 	 */
 	public void strategySelected(StrategyT aStrategy, int index)
 	{
+// 2/25/2010 Scott Atwell added
+		outputFixMessageText.setText( "" );  // reset
+		
 //TODO -- These were the remnants from selectDropDownStrategy(int index) that did not become part of StrategySelectionUI
 		for (int i = 0; i < strategiesPanel.getChildren().length; i++) 
 		{
