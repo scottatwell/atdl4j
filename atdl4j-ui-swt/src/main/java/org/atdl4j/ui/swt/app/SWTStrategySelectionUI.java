@@ -1,12 +1,14 @@
 package org.atdl4j.ui.swt.app;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.ui.app.AbstractStrategySelectionUI;
 import org.atdl4j.ui.app.StrategySelectionUI;
 import org.atdl4j.ui.app.StrategySelectionUIListener;
 import org.eclipse.swt.SWT;
@@ -21,15 +23,14 @@ import org.eclipse.swt.widgets.Shell;
 
 
 public class SWTStrategySelectionUI 
-	implements StrategySelectionUI
+//	implements StrategySelectionUI
+	extends AbstractStrategySelectionUI
 {
 	private final Logger logger = Logger.getLogger(SWTStrategySelectionUI.class);
 	
 	private Combo strategiesDropDown;
 	
 	private List<StrategySelectionUIListener> listenerList = new Vector<StrategySelectionUIListener>();
-
-	private Atdl4jConfig atdl4jConfig = null;
 
 	public SWTStrategySelectionUI()
 	{
@@ -76,22 +77,38 @@ public class SWTStrategySelectionUI
 	
 		return dropdownComposite;
 	}
+
 	
 	public void loadStrategyList( List<StrategyT> aStrategyList )
 	{
 		// remove all dropdown items
 		strategiesDropDown.removeAll();
 
-		if ( aStrategyList == null )
+// 2/26/2010 Scott Atwell replaced with getStrategyNameList()		
+//		if ( aStrategyList == null )
+//		{
+//			return;
+//		}
+//
+//		for (StrategyT strategy : aStrategyList) 
+//		{
+//			// create dropdown item for strategy
+//			strategiesDropDown.add(getStrategyUiRepOrName(strategy));
+//		}
+		List<String> tempStrategyUiRepOrNameList = getStrategyyUiRepOrNameList( aStrategyList );
+		
+		if ( tempStrategyUiRepOrNameList == null )
 		{
 			return;
 		}
 		
-		for (StrategyT strategy : aStrategyList) 
+		for (String tempStrategy : tempStrategyUiRepOrNameList) 
 		{
 			// create dropdown item for strategy
-			strategiesDropDown.add(getStrategyUiRepOrName(strategy));
+			strategiesDropDown.add( tempStrategy );
 		}
+		
+		
 
 		if (strategiesDropDown.getItemCount() > 0)
 		{
@@ -99,24 +116,6 @@ public class SWTStrategySelectionUI
 		}
 	}
 
-
-//	private String getStrategyName(StrategyT strategy) 
-	public static String getStrategyUiRepOrName(StrategyT strategy) 
-	{
-		if ( strategy == null )
-		{
-			return null;
-		}
-		
-		if (strategy.getUiRep() != null) 
-		{
-			return strategy.getUiRep();
-		} 
-		else 
-		{
-			return strategy.getName();
-		}
-	}
 
 	public void selectDropDownStrategy(int index) 
 	{
@@ -166,22 +165,6 @@ public class SWTStrategySelectionUI
 		}
 	}
 
-
-	/**
-	 * @param atdl4jConfig the atdl4jConfig to set
-	 */
-	public void setAtdl4jConfig(Atdl4jConfig atdl4jConfig)
-	{
-		this.atdl4jConfig = atdl4jConfig;
-	}
-
-	/**
-	 * @return the atdl4jConfig
-	 */
-	public Atdl4jConfig getAtdl4jConfig()
-	{
-		return atdl4jConfig;
-	}
 
 	public void addListener( StrategySelectionUIListener aStrategySelectionPanelListener )
 	{
