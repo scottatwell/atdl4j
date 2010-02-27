@@ -6,6 +6,7 @@ package org.atdl4j.config;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -53,6 +54,9 @@ public class InputAndFilterData
 	// -- Used to pass "other standard FIX message fields (eg FIX_OrderQty, FIX_Price, FIX_TimeInForce, etc)" and Strategy-eligibility ones (eg FIX_FIXatdl_Region, FIX_FIXatdl_Country, etc) -- 
 	private Map<String, String> inputHiddenFieldNameValueMap = null;
 	
+	private List<String> inputStrategyUiRepOrNameList = null;  // -- if specified, controls the order strategy name choices presented to the user --
+	private Boolean applyInputStrategyUiRepOrNameListAsFilter = null; // -- if specified, exclude any strategyNames not in inputStrategyUiRepOrNameList -- 
+
 	private String inputSelectStrategyName = null;
 
 	/**
@@ -528,6 +532,43 @@ public class InputAndFilterData
 		{
 			return null;
 		}
+	}
+
+
+	/**
+	 * If specified, controls the order strategy name choices presented to the user
+	 * @param inputStrategyUiRepOrNameList the inputStrategyUiRepOrNameList to set
+	 */
+	public void setInputStrategyUiRepOrNameList(List<String> inputStrategyUiRepOrNameList)
+	{
+		this.inputStrategyUiRepOrNameList = inputStrategyUiRepOrNameList;
+	}
+
+	/**
+	 * If specified, controls the order strategy name choices presented to the user
+	 * @return the inputStrategyUiRepOrNameList
+	 */
+	public List<String> getInputStrategyUiRepOrNameList()
+	{
+		return inputStrategyUiRepOrNameList;
+	}
+
+	/**
+	 * If specified, exclude any strategyNames not in inputStrategyUiRepOrNameList
+	 * @param applyInputStrategyUiRepOrNameListAsFilter the applyInputStrategyUiRepOrNameListAsFilter to set
+	 */
+	public void setApplyInputStrategyUiRepOrNameListAsFilter(Boolean applyInputStrategyUiRepOrNameListAsFilter)
+	{
+		this.applyInputStrategyUiRepOrNameListAsFilter = applyInputStrategyUiRepOrNameListAsFilter;
+	}
+
+	/**
+	 * If specified, exclude any strategyNames not in inputStrategyUiRepOrNameList
+	 * @return the applyInputStrategyUiRepOrNameListAsFilter
+	 */
+	public Boolean getApplyInputStrategyUiRepOrNameListAsFilter()
+	{
+		return applyInputStrategyUiRepOrNameListAsFilter;
 	}
 	
 

@@ -6,8 +6,8 @@ package org.atdl4j.ui.app;
 
 import java.util.List;
 
-import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
  * 
@@ -25,8 +25,12 @@ public interface StrategySelectionUI
 
 	public void selectDropDownStrategy(String strategyName);
 
-	public void addListener(StrategySelectionUIListener strategySelectionPanelListener);
+	public Atdl4jConfig getAtdl4jConfig();
 	
-	public void removeListener(StrategySelectionUIListener strategySelectionPanelListener);
+	public void setAtdl4jConfig(Atdl4jConfig atdl4jConfig);
+	
+	public void addListener(StrategySelectionUIListener strategySelectionUIListener);
+	
+	public void removeListener(StrategySelectionUIListener strategySelectionUIListener);
 
 }
