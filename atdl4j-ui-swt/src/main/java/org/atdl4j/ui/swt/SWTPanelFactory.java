@@ -10,7 +10,11 @@ import org.eclipse.swt.widgets.Composite;
 
 public interface SWTPanelFactory {
 
-	public Map<String, SWTWidget<?>> create(Composite parent,
+//	3/5/2010 Scott Atwell renamed
+//	public Map<String, SWTWidget<?>> create(Composite parent,
+//			StrategyPanelT panel, Map<String, ParameterT> parameters, int style) throws JAXBException;
+
+	public Map<String, SWTWidget<?>> createStrategyPanelAndWidgets(Composite parent,
 			StrategyPanelT panel, Map<String, ParameterT> parameters, int style) throws JAXBException;
 
 }

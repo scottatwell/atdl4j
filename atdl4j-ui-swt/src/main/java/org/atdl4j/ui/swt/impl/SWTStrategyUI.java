@@ -11,14 +11,14 @@ import java.util.Map.Entry;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.fixatdl.flow.StateRuleT;
-import org.atdl4j.fixatdl.layout.ControlT;
-import org.atdl4j.fixatdl.layout.RadioButtonT;
-import org.atdl4j.fixatdl.layout.StrategyPanelT;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.validation.Field2OperatorValidationRule;
 import org.atdl4j.data.validation.LogicalOperatorValidationRule;
 import org.atdl4j.data.validation.ValueOperatorValidationRule;
+import org.atdl4j.fixatdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.layout.ControlT;
+import org.atdl4j.fixatdl.layout.RadioButtonT;
+import org.atdl4j.fixatdl.layout.StrategyPanelT;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.impl.AbstractStrategyUI;
 import org.atdl4j.ui.swt.SWTWidget;
@@ -289,7 +289,8 @@ public class SWTStrategyUI
 		// build panels and widgets recursively
 		for ( StrategyPanelT panel : aStrategyPanelList )
 		{
-			tempControlMap.putAll( getControlFactory().create( getParent(), panel, getParameterMap(), SWT.NONE ) );
+// 3/5/2010 Scott Atwell renamed			tempControlMap.putAll( getControlFactory().create( getParent(), panel, getParameterMap(), SWT.NONE ) );
+			tempControlMap.putAll( getControlFactory().createStrategyPanelAndWidgets( getParent(), panel, getParameterMap(), SWT.NONE ) );
 		}
 	
 		setControlMap( tempControlMap );

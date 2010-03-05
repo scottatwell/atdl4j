@@ -8,5 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 
 public interface SWTWidgetFactory {
 
-	public SWTWidget<?> create(Composite parent, ControlT control, ParameterT parameter, int style) throws JAXBException;
+// 3/5/2010 Scott Atwell	public SWTWidget<?> create(Composite parent, ControlT control, ParameterT parameter, int style) throws JAXBException;
+	public SWTWidget<?> createWidget(Composite parent, ControlT control, ParameterT parameter, int style) throws JAXBException;
 }
