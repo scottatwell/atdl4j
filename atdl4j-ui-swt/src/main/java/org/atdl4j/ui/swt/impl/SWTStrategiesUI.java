@@ -71,7 +71,7 @@ public StrategyUI createUI(StrategyT strategy, Composite parent)
 //TODO 1/17/2010 Scott Atwell			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies);
 // 2/8/2010 Scott Atwell (use getAtdl4jConfig() vs. inputHiddenFieldNameValueMap)			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies, inputHiddenFieldNameValueMap);
 // 2/9/2010 Scott Atwell			return new SWTStrategyUI(strategy, strategiesRules, parent, strategies, getAtdl4jConfig());
-	return getAtdl4jConfig().getStrategyUI( strategy, getAtdl4jConfig(), strategiesRules, parent );
+	return getAtdl4jConfig().getStrategyUI( strategy, strategiesRules, parent );
 						
 		//} catch (JAXBException e) {
 		//	throw new JAXBException("Error in Strategy \"" + strategy.getName() + "\": " + e.getMessage());

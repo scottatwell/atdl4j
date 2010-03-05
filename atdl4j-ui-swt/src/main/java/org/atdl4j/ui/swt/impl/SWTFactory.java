@@ -35,7 +35,7 @@ public class SWTFactory
 	public SWTFactory(Atdl4jConfig aAtdl4jConfig) throws JAXBException
 	{
 		// 2/9/2010 Scott Atwell controlWidgetFactory = new SWTControlUIFactory();
-		controlWidgetFactory = aAtdl4jConfig.getControlUIFactory( aAtdl4jConfig );
+		controlWidgetFactory = aAtdl4jConfig.getControlUIFactory();
 	}
 
 	// Used to create a single parameter widget

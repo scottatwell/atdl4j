@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.atdl4j.data.TypeConverterFactory;
+import org.atdl4j.data.ValidationRule;
 import org.atdl4j.fixatdl.core.ParameterT;
 import org.atdl4j.fixatdl.core.StrategiesT;
 import org.atdl4j.fixatdl.core.StrategyT;
@@ -27,14 +29,21 @@ import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.fixatdl.layout.TextFieldT;
-import org.atdl4j.data.TypeConverterFactory;
-import org.atdl4j.data.ValidationRule;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.ControlUIFactory;
 import org.atdl4j.ui.StrategiesUI;
 import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
-import org.atdl4j.ui.app.StrategySelectionUI;
+import org.atdl4j.ui.app.Atdl4jCompositePanel;
+import org.atdl4j.ui.app.Atdl4jInputAndFilterDataPanel;
+import org.atdl4j.ui.app.Atdl4jInputAndFilterDataSelectionPanel;
+import org.atdl4j.ui.app.Atdl4jTesterPanel;
+import org.atdl4j.ui.app.Atdl4jUserMessageHandler;
+import org.atdl4j.ui.app.FixMsgLoadPanel;
+import org.atdl4j.ui.app.FixatdlFileSelectionPanel;
+import org.atdl4j.ui.app.StrategiesPanel;
+import org.atdl4j.ui.app.StrategyDescriptionPanel;
+import org.atdl4j.ui.app.StrategySelectionPanel;
 
 /**
  * 
@@ -52,61 +61,67 @@ public interface Atdl4jConfig
 
 	/**
 	 * @param strategies
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public StrategiesUI getStrategiesUI(StrategiesT strategies, Atdl4jConfig aAtdl4jConfig)
+	public StrategiesUI getStrategiesUI(StrategiesT strategies)
 		throws JAXBException;
 
 
 	/**
 	 * @param strategy
-	 * @param aAtdl4jConfig (contains getStrategies())
 	 * @param strategiesRules
 	 * @param parentContainer (for SWT: should be swt.Composite)
 	 * @return
 	 * @throws JAXBException
 	 */
-	public StrategyUI getStrategyUI(StrategyT strategy, Atdl4jConfig aAtdl4jConfig, Map<String, ValidationRule> strategiesRules, Object parentContainer)
+	public StrategyUI getStrategyUI(StrategyT strategy, Map<String, ValidationRule> strategiesRules, Object parentContainer)
 		throws JAXBException;
 	
 	/**
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUIFactory getControlUIFactory(Atdl4jConfig aAtdl4jConfig)
+	public ControlUIFactory getControlUIFactory()
 		throws JAXBException;
 	
 	/**
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public TypeConverterFactory getTypeConverterFactory(Atdl4jConfig aAtdl4jConfig)
+	public TypeConverterFactory getTypeConverterFactory()
 		throws JAXBException;
 	
 	
 	// -- Controls/Widgets (first arg is of type ControlT -- 
-	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
-	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig) throws JAXBException;
+	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter) throws JAXBException;
 
 	// -- App Components --
-	public StrategySelectionUI getStrategySelectionUI();
+	public Atdl4jTesterPanel getAtdl4jTesterPanel();
+	public Atdl4jInputAndFilterDataSelectionPanel getAtdl4jInputAndFilterDataSelectionPanel();
+	public Atdl4jInputAndFilterDataPanel getAtdl4jInputAndFilterDataPanel();
+	public Atdl4jCompositePanel getAtdl4jCompositePanel();
+	public StrategiesPanel getStrategiesPanel();
+	public void initAtdl4jUserMessageHandler( Object parentOrShell );
+	public Atdl4jUserMessageHandler getAtdl4jUserMessageHandler();
+	public FixatdlFileSelectionPanel getFixatdlFileSelectionPanel();
+	public FixMsgLoadPanel getFixMsgLoadPanel();
+	public StrategySelectionPanel getStrategySelectionPanel();
+	public StrategyDescriptionPanel getStrategyDescriptionPanel();
 	
 	public InputAndFilterData getInputAndFilterData();
 	public void setInputAndFilterData(InputAndFilterData inputAndFilterData);
@@ -137,4 +152,7 @@ public interface Atdl4jConfig
 	public Integer getDefaultDigitsForSpinnerControl();
 	
 	public Integer getStrategyDropDownItemDepth();
+	
+	public boolean isSelectedStrategyValidated();
+	public void setSelectedStrategyValidated(boolean aSelectedStrategyValidated);
 }

@@ -8,18 +8,10 @@ import org.atdl4j.config.AbstractAtdl4jConfig;
 
 /**
  * 
- *  =====================================================================*
- *  Copyright Notice 
- *  This file contains proprietary information of American Century.
- *  Copying or reproduction without prior written approval is prohibited.
- *  Copyright (c) 2010
- *  =====================================================================*
- * 
- * 
  * This class contains the data associated with the <code>SWTAtdl4jConfig</code>.
  * 
  * Creation date: (Feb 7, 2010 6:39:07 PM)
- * @author SWL
+ * @author Scott Atwell
  * @version 1.0, Feb 7, 2010
  */
 public class SWTAtdl4jConfig
@@ -48,9 +40,54 @@ public class SWTAtdl4jConfig
 		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "impl.SWTStrategyUI";
 	}
 	
-	protected String getDefaultClassNameStrategySelectionUI()
+	protected String getDefaultClassNameFixatdlFileSelectionPanel()
 	{ 
-		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTStrategySelectionUI";
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTFixatdlFileSelectionPanel";
+	}
+
+	protected String getDefaultClassNameFixMsgLoadPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTFixMsgLoadPanel";
+	}
+
+	protected String getDefaultClassNameStrategySelectionPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTStrategySelectionPanel";
+	}
+
+	protected String getDefaultClassNameStrategyDescriptionPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTStrategyDescriptionPanel";
+	}
+
+	protected String getDefaultClassNameStrategiesPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTStrategiesPanel";
+	}
+
+	protected String getDefaultClassNameAtdl4jTesterPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTAtdl4jTesterPanel";
+	}
+
+	protected String getDefaultClassNameAtdl4jInputAndFilterDataSelectionPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTAtdl4jInputAndFilterDataSelectionPanel";
+	}
+
+	protected String getDefaultClassNameAtdl4jInputAndFilterDataPanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTAtdl4jInputAndFilterDataPanel";
+	}
+
+	protected String getDefaultClassNameAtdl4jCompositePanel()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTAtdl4jCompositePanel";
+	}
+
+	protected String getDefaultClassNameAtdl4jUserMessageHandler()
+	{ 
+		return PACKAGE_PATH_ORG_ATDL4J_UI_SWT + "app.SWTAtdl4jUserMessageHandler";
 	}
 
 	protected String getDefaultClassNameControlUIForCheckBoxListT()

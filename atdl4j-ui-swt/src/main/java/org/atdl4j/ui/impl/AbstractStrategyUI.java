@@ -247,7 +247,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 			}
 			
 // 2/12/2010 Scott Atwell added
-			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory( getAtdl4jConfig() ).create( parameter );
+			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory().create( parameter );
 			
 // Parameter/@const has been removed 			if ( ( parameter.isConst() ) && ( ParameterHelper.getConstValue( parameter ) != null ) )
 			if ( ParameterHelper.getConstValue( parameter ) != null )
@@ -485,7 +485,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 				hiddenField.setInitValue( tempValue.toString() );
 				hiddenField.setParameterRef( tempName );
 	
-				ControlUI hiddenFieldWidget = getAtdl4jConfig().getControlUIForHiddenFieldT( hiddenField, parameter, getAtdl4jConfig() );
+				ControlUI hiddenFieldWidget = getAtdl4jConfig().getControlUIForHiddenFieldT( hiddenField, parameter );
 //			getControlMap().put( tempName, (SWTWidget<?>) hiddenFieldWidget );
 				addToControlMap( tempName, hiddenFieldWidget );
 			}

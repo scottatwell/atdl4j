@@ -30,4 +30,15 @@ public class Atdl4jConstants
 	
 	public static String INIT_POLICY_USE_VALUE = "UseValue";  // -- use value from ControlT/@initValue --
 	public static String INIT_POLICY_USE_FIX_FIELD = "UseFixField";  // -- use value from ControlT/@initFixField if available, else ControlT/@initValue --
+	
+	public static String STRATEGY_FILTER_REGION_TheAmericas = "TheAmericas";  // @see org.atdl4j.core.RegionT
+	public static String STRATEGY_FILTER_REGION_EuropeMiddleEastAfricas = "EuropeMiddleEastAfrica";  // @see org.atdl4j.core.RegionT
+	public static String STRATEGY_FILTER_REGION_AsiaPacificJapan = "AsiaPacificJapan";  // @see org.atdl4j.core.RegionT
+	public static String[] STRATEGY_FILTER_REGIONS = new String[] { 
+				STRATEGY_FILTER_REGION_TheAmericas,
+				STRATEGY_FILTER_REGION_EuropeMiddleEastAfricas,
+				STRATEGY_FILTER_REGION_AsiaPacificJapan };
+				
+	public static String[] STRATEGY_FILTER_FIX_MSG_TYPES = new String[] { "D", "E", "AB", "s" };  // @see Strategy/@fixMsgType
+
 }

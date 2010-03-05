@@ -18,6 +18,6 @@ public class BaseStrategiesUIFactory
 	public StrategiesUI<?> create(StrategiesT strategies, Atdl4jConfig aAtdl4jConfig)
 			throws JAXBException
 	{
-		return aAtdl4jConfig.getStrategiesUI( strategies, aAtdl4jConfig );
+		return aAtdl4jConfig.getStrategiesUI( strategies );
 	}
 }

@@ -9,30 +9,22 @@ import java.util.List;
 import java.util.Vector;
 
 import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.data.Atdl4jHelper;
 import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
- * 
- *  =====================================================================*
- *  Copyright Notice 
- *  This file contains proprietary information of American Century.
- *  Copying or reproduction without prior written approval is prohibited.
- *  Copyright (c) 2010
- *  =====================================================================*
- * 
- * 
- * This class contains the data associated with the <code>AbstractStrategySelectionUI</code>.
+ * Represents the base, non-GUI system-specific available strategy choices component.
  * 
  * Creation date: (Feb 26, 2010 11:09:19 PM)
- * @author swl
+ * @author Scott Atwell
  * @version 1.0, Feb 26, 2010
  */
-public abstract class AbstractStrategySelectionUI
-		implements StrategySelectionUI
+public abstract class AbstractStrategySelectionPanel
+		implements StrategySelectionPanel
 {
 	private Atdl4jConfig atdl4jConfig = null;
 	
-	private List<StrategySelectionUIListener> listenerList = new Vector<StrategySelectionUIListener>();
+	private List<StrategySelectionPanelListener> listenerList = new Vector<StrategySelectionPanelListener>();
 
 
 
@@ -56,7 +48,7 @@ public abstract class AbstractStrategySelectionUI
 		// -- Build list all strategy names --
 		for (StrategyT strategy : aStrategyList) 
 		{
-			tempAvailableStrategyNameList.add(getStrategyUiRepOrName(strategy));
+			tempAvailableStrategyNameList.add(Atdl4jHelper.getStrategyUiRepOrName(strategy));
 		}
 		
 		List tempStrategyNameList;
@@ -101,31 +93,9 @@ public abstract class AbstractStrategySelectionUI
 
 	
 	/**
-	 * @param strategy
-	 * @return
-	 */
-	public static String getStrategyUiRepOrName(StrategyT strategy) 
-	{
-		if ( strategy == null )
-		{
-			return null;
-		}
-		
-		if (strategy.getUiRep() != null) 
-		{
-			return strategy.getUiRep();
-		} 
-		else 
-		{
-			return strategy.getName();
-		}
-	}
-
-
-	/**
 	 * @param atdl4jConfig the atdl4jConfig to set
 	 */
-	public void setAtdl4jConfig(Atdl4jConfig atdl4jConfig)
+	protected void setAtdl4jConfig(Atdl4jConfig atdl4jConfig)
 	{
 		this.atdl4jConfig = atdl4jConfig;
 	}
@@ -140,19 +110,19 @@ public abstract class AbstractStrategySelectionUI
 	}
 	
 
-	public void addListener( StrategySelectionUIListener aStrategySelectionPanelListener )
+	public void addListener( StrategySelectionPanelListener aStrategySelectionPanelListener )
 	{
 		listenerList.add( aStrategySelectionPanelListener );
 	}
 
-	public void removeListener( StrategySelectionUIListener aStrategySelectionPanelListener )
+	public void removeListener( StrategySelectionPanelListener aStrategySelectionPanelListener )
 	{
 		listenerList.remove( aStrategySelectionPanelListener );
 	}	
 	
 	protected void fireStrategySelectedEvent( StrategyT aStrategy, int index )
 	{
-		for ( StrategySelectionUIListener tempListener : listenerList )
+		for ( StrategySelectionPanelListener tempListener : listenerList )
 		{
 			tempListener.strategySelected( aStrategy, index );
 		}

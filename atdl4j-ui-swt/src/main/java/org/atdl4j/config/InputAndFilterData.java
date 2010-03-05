@@ -38,9 +38,9 @@ public class InputAndFilterData
 	
 	// -- Constants for "Hidden" parameters passed to app used to control eligibility of each Strategy -- 
 	// -- ("FIX_" + "FIXatdl_" + XmlElement + "_" + XmlAttribute) --
-	/**
-	 * 
-	 */
+// 3/4/2010 Scott Atwell Added	
+	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_FIX_MSG_TYPE = "FIX_FIXatdl_FixMsgType";  // @see Strategy/@fixMsgType
+	
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_SECURITY_TYPE_name = "FIX_FIXatdl_SecurityType_name";
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_MARKET_MICCode = "FIX_FIXatdl_Market_MICCode";
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_REGION_name = "FIX_FIXatdl_Region_name";
@@ -162,12 +162,25 @@ public class InputAndFilterData
 	 */
 	public boolean isStrategySupported(StrategyT aStrategy)
 	{
+		if ( aStrategy == null )
+		{
+			return false;
+		}
+		
 		if ( getInputHiddenFieldNameValueMap() != null )
 		{
+			String tempFixMsgType = getInputStrategyFilterFixMsgType();
 			String tempSecurityType_name = getInputStrategyFilterSecurityType_name();
 			String tempMarket_MICCode = getInputStrategyFilterMarket_MICCode();
 			String tempRegion_name = getInputStrategyFilterRegion_name();
 			String tempCountry_CountryCode = getInputStrategyFilterCountry_CountryCode();
+
+// 3/4/2010 Scott Atwell added			
+			if ( isFixMsgTypeSupportedForStrategy( tempFixMsgType, aStrategy ) == false )
+			{
+				logger.info("Excluding strategy: " + aStrategy.getName() + " as isFixMsgTypeSupportedForStrategy() returned false for tempFixMsgType: " + tempFixMsgType );
+				return false;
+			}
 			
 			if ( isSecurityTypeSupportedForStrategy( tempSecurityType_name, aStrategy ) == false )
 			{
@@ -192,6 +205,25 @@ public class InputAndFilterData
 	}
 
 
+	/**
+	 * @param aFixMsgType @see Strategy/@fixMsgType
+	 * @param aStrategy
+	 * @return
+	 */
+	public boolean isFixMsgTypeSupportedForStrategy(String aFixMsgType, StrategyT aStrategy)
+	{
+		if ( ( aFixMsgType != null ) &&
+			  ( aStrategy.getFixMsgType() != null ) )
+		{
+			return aStrategy.getFixMsgType().equals( aFixMsgType );
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	
 	/**
 	 * @param aSecurityType_name  SecurityType's name attribute
 	 * @param aStrategy
@@ -258,7 +290,13 @@ public class InputAndFilterData
 	 */
 	public boolean isRegionCountrySupportedForStrategy(String aRegion_name, String aCountry_CountryCode, StrategyT aStrategy)
 	{
-		if ( ( ( aRegion_name != null ) || ( aCountry_CountryCode != null ) ) &&
+		if ( ( aCountry_CountryCode != null ) && ( aRegion_name == null ) )
+		{
+			logger.warn( "ERROR: isRegionCountrySupportedForStrategy() received CountryCode: " + aCountry_CountryCode + ", however, Region was not specified." );
+			return true;
+		}
+		
+		if ( ( aRegion_name != null ) &&
 			  ( aStrategy.getRegions() != null ) && 
 			  ( aStrategy.getRegions().getRegion() != null ) )
 		{
@@ -425,7 +463,15 @@ public class InputAndFilterData
 			setInputHiddenFieldNameValueMap( new HashMap<String, String>() );
 		}
 		
-		getInputHiddenFieldNameValueMap().put( aFieldName, aFieldValue );
+		if ( aFieldValue != null )
+		{
+			getInputHiddenFieldNameValueMap().put( aFieldName, aFieldValue );
+		}
+		else
+		{
+			// - attempt to remove existing entry if aFieldValue is null --
+			getInputHiddenFieldNameValueMap().remove( aFieldName );
+		}
 	}
 	
 	/**
@@ -502,6 +548,20 @@ public class InputAndFilterData
 	public String getInputStrategyFilterCountry_CountryCode()
 	{
 		return getInputHiddenFieldValue( INPUT_FIELD_NAME_STRATEGY_FILTER_COUNTRY_CountryCode );
+	}
+
+	/**
+	 */
+	public void setInputStrategyFilterFixMsgType( String aFieldValue )
+	{
+		setInputHiddenFieldNameValuePair( INPUT_FIELD_NAME_STRATEGY_FILTER_FIX_MSG_TYPE, aFieldValue );
+	}
+	
+	/**
+	 */
+	public String getInputStrategyFilterFixMsgType()
+	{
+		return getInputHiddenFieldValue( INPUT_FIELD_NAME_STRATEGY_FILTER_FIX_MSG_TYPE );
 	}
 
 	/**

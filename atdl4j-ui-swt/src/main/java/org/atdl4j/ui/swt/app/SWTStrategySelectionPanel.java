@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.fixatdl.core.StrategyT;
-import org.atdl4j.ui.app.AbstractStrategySelectionUI;
+import org.atdl4j.ui.app.AbstractStrategySelectionPanel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,32 +15,32 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 
 
-public class SWTStrategySelectionUI 
-//	implements StrategySelectionUI
-	extends AbstractStrategySelectionUI
+/**
+ * Represents the SWT-specific available strategy choices GUI component.
+ * 
+ * @author Scott Atwell
+ * @version 1.0, Mar 1, 2010
+ */
+public class SWTStrategySelectionPanel 
+	extends AbstractStrategySelectionPanel
 {
-	private final Logger logger = Logger.getLogger(SWTStrategySelectionUI.class);
+	private final Logger logger = Logger.getLogger(SWTStrategySelectionPanel.class);
 	
 	private Combo strategiesDropDown;
 	
-	public SWTStrategySelectionUI()
-	{
-	}
-
 	public Object buildStrategySelectionPanel(Object parentOrShell, Atdl4jConfig atdl4jConfig)
 	{
-		return buildStrategySelectionPanel( (Shell) parentOrShell, atdl4jConfig );
+		return buildStrategySelectionPanel( (Composite) parentOrShell, atdl4jConfig );
 	}
 	
-	public Composite buildStrategySelectionPanel(Shell shell, Atdl4jConfig atdl4jConfig)
+	public Composite buildStrategySelectionPanel(Composite aParentComposite, Atdl4jConfig atdl4jConfig)
 	{
 		setAtdl4jConfig( atdl4jConfig );
 		
 		// Strategy selector dropdown
-		Composite dropdownComposite = new Composite(shell, SWT.NONE);
+		Composite dropdownComposite = new Composite(aParentComposite, SWT.NONE);
 		GridLayout dropdownLayout = new GridLayout(2, false);
 		dropdownComposite.setLayout(dropdownLayout);
 		dropdownComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -115,14 +115,6 @@ public class SWTStrategySelectionUI
 	{
 		strategiesDropDown.select( index );
 		
-//TODO ??????		
-//		// below moved from and called by strategiesDropDown.widgetSelected(SelectionEvent event)
-//		for (int i = 0; i < strategiesPanel.getChildren().length; i++) {
-//			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
-//			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
-//		}
-		
-		
 		if ( (getAtdl4jConfig() != null ) && (getAtdl4jConfig().getStrategies() != null) )
 		{
 			String tempSelectedDropDownName = strategiesDropDown.getItem( index );
@@ -137,13 +129,7 @@ public class SWTStrategySelectionUI
 					break;
 				}
 			}
-			
-//TODO move outside to listener			if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText("");
 		}
-//TODO move outside to listener		strategiesPanel.layout();
-//TODO move outside to listener		shell.pack();
-// Strategy description must be updated after packing
-//TODO move outside to listener		if (getAtdl4jConfig().isShowStrategyDescription()) strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
 	}
 
 	
@@ -159,4 +145,13 @@ public class SWTStrategySelectionUI
 		}
 	}
 
+	public void selectFirstDropDownStrategy()
+	{
+		if ( ( strategiesDropDown != null ) && 
+			  ( strategiesDropDown.getItemCount() > 0 ) )
+		{
+			strategiesDropDown.deselectAll();
+			selectDropDownStrategy( 0 );
+		}
+	}
 }

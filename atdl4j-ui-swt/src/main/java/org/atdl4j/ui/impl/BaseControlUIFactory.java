@@ -71,32 +71,32 @@ public class BaseControlUIFactory
 		if ( control instanceof CheckBoxT )
 		{
 //			return new ButtonWidget( (CheckBoxT) control, parameter );
-			return getAtdl4jConfig().getControlUIForCheckBoxT( (CheckBoxT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForCheckBoxT( (CheckBoxT) control, parameter );
 		}
 		else if ( control instanceof DropDownListT )
 		{
 //			return new DropDownListWidget( (DropDownListT) control, parameter );
-			return getAtdl4jConfig().getControlUIForDropDownListT( (DropDownListT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForDropDownListT( (DropDownListT) control, parameter );
 		}
 		else if ( control instanceof EditableDropDownListT )
 		{
 //			return new DropDownListWidget( (EditableDropDownListT) control, parameter );
-			return getAtdl4jConfig().getControlUIForEditableDropDownListT( (EditableDropDownListT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForEditableDropDownListT( (EditableDropDownListT) control, parameter );
 		}
 		else if ( control instanceof RadioButtonListT )
 		{
 //			return new RadioButtonListWidget( (RadioButtonListT) control, parameter );
-			return getAtdl4jConfig().getControlUIForRadioButtonListT( (RadioButtonListT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForRadioButtonListT( (RadioButtonListT) control, parameter );
 		}
 		else if ( control instanceof TextFieldT )
 		{
 //			return new TextFieldWidget( (TextFieldT) control, parameter );
-			return getAtdl4jConfig().getControlUIForTextFieldT( (TextFieldT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForTextFieldT( (TextFieldT) control, parameter );
 		}
 		else if ( control instanceof SliderT )
 		{
 //			return new SliderWidget( (SliderT) control, parameter );
-			return getAtdl4jConfig().getControlUIForSliderT( (SliderT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForSliderT( (SliderT) control, parameter );
 		}
 		else if ( control instanceof CheckBoxListT )
 		{
@@ -104,7 +104,7 @@ public class BaseControlUIFactory
 			if ( parameter == null || parameter instanceof MultipleStringValueT || parameter instanceof MultipleCharValueT )
 			{
 //				return new CheckBoxListWidget( (CheckBoxListT) control, parameter );
-				return getAtdl4jConfig().getControlUIForCheckBoxListT( (CheckBoxListT) control, parameter, getAtdl4jConfig() );
+				return getAtdl4jConfig().getControlUIForCheckBoxListT( (CheckBoxListT) control, parameter );
 			}
 		}
 		else if ( control instanceof ClockT )
@@ -114,7 +114,7 @@ public class BaseControlUIFactory
 			{ // support StringT
 				// as well...
 //				return new ClockWidget( (ClockT) control, parameter );
-				return getAtdl4jConfig().getControlUIForClockT( (ClockT) control, parameter, getAtdl4jConfig() );
+				return getAtdl4jConfig().getControlUIForClockT( (ClockT) control, parameter );
 			}
 			/*
 			 * if (parameter == null) { return new
@@ -139,7 +139,7 @@ public class BaseControlUIFactory
 					|| parameter instanceof SeqNumT || parameter instanceof NumInGroupT || parameter instanceof NumericT )
 			{
 //				return new SpinnerWidget( (SingleSpinnerT) control, parameter );
-				return getAtdl4jConfig().getControlUIForSingleSpinnerT( (SingleSpinnerT) control, parameter, getAtdl4jConfig() );
+				return getAtdl4jConfig().getControlUIForSingleSpinnerT( (SingleSpinnerT) control, parameter );
 			}
 		}
 		else if ( control instanceof DoubleSpinnerT )
@@ -149,13 +149,13 @@ public class BaseControlUIFactory
 					|| parameter instanceof SeqNumT || parameter instanceof NumInGroupT || parameter instanceof NumericT )
 			{
 //				return new SpinnerWidget( (DoubleSpinnerT) control, parameter );
-				return getAtdl4jConfig().getControlUIForDoubleSpinnerT( (DoubleSpinnerT) control, parameter, getAtdl4jConfig() );
+				return getAtdl4jConfig().getControlUIForDoubleSpinnerT( (DoubleSpinnerT) control, parameter );
 			}
 		}
 		else if ( control instanceof SingleSelectListT )
 		{
 //			return new ListBoxWidget( (SingleSelectListT) control, parameter );
-			return getAtdl4jConfig().getControlUIForSingleSelectListT( (SingleSelectListT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForSingleSelectListT( (SingleSelectListT) control, parameter );
 		}
 		else if ( control instanceof MultiSelectListT )
 		{
@@ -163,23 +163,23 @@ public class BaseControlUIFactory
 			if ( parameter == null || parameter instanceof MultipleStringValueT || parameter instanceof MultipleCharValueT )
 			{
 //				return new ListBoxWidget( (MultiSelectListT) control, parameter );
-				return getAtdl4jConfig().getControlUIForMultiSelectListT( (MultiSelectListT) control, parameter, getAtdl4jConfig() );
+				return getAtdl4jConfig().getControlUIForMultiSelectListT( (MultiSelectListT) control, parameter );
 			}
 		}
 		else if ( control instanceof HiddenFieldT )
 		{
 //			return new HiddenFieldWidget( (HiddenFieldT) control, parameter );
-			return getAtdl4jConfig().getControlUIForHiddenFieldT( (HiddenFieldT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForHiddenFieldT( (HiddenFieldT) control, parameter );
 		}
 		else if ( control instanceof LabelT )
 		{
 //			return new LabelWidget( (LabelT) control );
-			return getAtdl4jConfig().getControlUIForLabelT( (LabelT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForLabelT( (LabelT) control, parameter );
 		}
 		else if ( control instanceof RadioButtonT )
 		{
 //			return new ButtonWidget( (RadioButtonT) control, parameter );
-			return getAtdl4jConfig().getControlUIForRadioButtonT( (RadioButtonT) control, parameter, getAtdl4jConfig() );
+			return getAtdl4jConfig().getControlUIForRadioButtonT( (RadioButtonT) control, parameter );
 		}
 
 		throw new JAXBException( "Control ID: \"" + control.getID() + "\" has unsupported Control type \"" + control.getClass().getSimpleName() + "\""

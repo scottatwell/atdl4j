@@ -27,18 +27,10 @@ import org.atdl4j.data.Atdl4jConstants;
 
 /**
  * 
- *  =====================================================================*
- *  Copyright Notice 
- *  This file contains proprietary information of American Century.
- *  Copying or reproduction without prior written approval is prohibited.
- *  Copyright (c) 2010
- *  =====================================================================*
- * 
- * 
  * This class contains the data associated with the <code>ControlHelper</code>.
  * 
  * Creation date: (Feb 21, 2010 5:44:02 PM)
- * @author SWL
+ * @author Scott Atwell
  * @version 1.0, Feb 21, 2010
  */
 public class ControlHelper

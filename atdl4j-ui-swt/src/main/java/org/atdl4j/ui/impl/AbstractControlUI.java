@@ -59,11 +59,11 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 		// -- This method can be overridden/implemented --
 		initPreCheck();
 
-		controlConverter = (AbstractTypeConverter<E>) getAtdl4jConfig().getTypeConverterFactory( getAtdl4jConfig() ).create( control, parameter );
+		controlConverter = (AbstractTypeConverter<E>) getAtdl4jConfig().getTypeConverterFactory().create( control, parameter );
 
 		if ( parameter != null )
 		{
-			parameterConverter = (AbstractTypeConverter<?>) getAtdl4jConfig().getTypeConverterFactory( getAtdl4jConfig() ).create( parameter );
+			parameterConverter = (AbstractTypeConverter<?>) getAtdl4jConfig().getTypeConverterFactory().create( parameter );
 		}
 
 		validateEnumPairs();

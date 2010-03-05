@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.atdl4j.data.TypeConverterFactory;
+import org.atdl4j.data.ValidationRule;
 import org.atdl4j.fixatdl.core.ParameterT;
 import org.atdl4j.fixatdl.core.StrategiesT;
 import org.atdl4j.fixatdl.core.StrategyT;
@@ -29,14 +31,21 @@ import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.fixatdl.layout.TextFieldT;
-import org.atdl4j.data.TypeConverterFactory;
-import org.atdl4j.data.ValidationRule;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.ControlUIFactory;
 import org.atdl4j.ui.StrategiesUI;
 import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
-import org.atdl4j.ui.app.StrategySelectionUI;
+import org.atdl4j.ui.app.Atdl4jCompositePanel;
+import org.atdl4j.ui.app.Atdl4jInputAndFilterDataPanel;
+import org.atdl4j.ui.app.Atdl4jInputAndFilterDataSelectionPanel;
+import org.atdl4j.ui.app.Atdl4jTesterPanel;
+import org.atdl4j.ui.app.Atdl4jUserMessageHandler;
+import org.atdl4j.ui.app.FixMsgLoadPanel;
+import org.atdl4j.ui.app.FixatdlFileSelectionPanel;
+import org.atdl4j.ui.app.StrategiesPanel;
+import org.atdl4j.ui.app.StrategyDescriptionPanel;
+import org.atdl4j.ui.app.StrategySelectionPanel;
 
 /**
  * Typical setup (for class named XXX):
@@ -97,17 +106,36 @@ public abstract class AbstractAtdl4jConfig
 	private String classNameControlUIForRadioButtonT;
 	
 	// -- App Components --
-	private String classNameStrategySelectionUI;
-	private StrategySelectionUI strategySelectionUI;
+	private String classNameAtdl4jTesterPanel;
+	private Atdl4jTesterPanel atdl4jTesterPanel;
+	private String classNameAtdl4jInputAndFilterDataSelectionPanel;
+	private Atdl4jInputAndFilterDataSelectionPanel atdl4jInputAndFilterDataSelectionPanel;
+	private String classNameAtdl4jInputAndFilterDataPanel;
+	private Atdl4jInputAndFilterDataPanel atdl4jInputAndFilterDataPanel;
+	private String classNameAtdl4jCompositePanel;
+	private Atdl4jCompositePanel atdl4jCompositePanel;
+	private String classNameStrategiesPanel;
+	private StrategiesPanel strategiesPanel;
+	private String classNameAtdl4jUserMessageHandler;
+	private Atdl4jUserMessageHandler atdl4jUserMessageHandler;
+	private String classNameFixatdlFileSelectionPanel;
+	private FixatdlFileSelectionPanel fixatdlFileSelectionPanel;
+	private String classNameFixMsgLoadPanel;
+	private FixMsgLoadPanel fixMsgLoadPanel;
+	private String classNameStrategySelectionPanel;
+	private StrategySelectionPanel strategySelectionPanel;
+	private String classNameStrategyDescriptionPanel;
+	private StrategyDescriptionPanel strategyDescriptionPanel;
 	
 	
 	private InputAndFilterData inputAndFilterData;
 	
 //TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
-//	private boolean showStrategyDescription = true;
-	private boolean showStrategyDescription = false;
+	private boolean showStrategyDescription = true;
+//	private boolean showStrategyDescription = false;
 	private boolean showTimezoneSelector = false;
 	private Integer strategyDropDownItemDepth = new Integer( 15 );  // ComboBox drop down 'depth' (aka VisibleItemCount)
+	private boolean selectedStrategyValidated = false;
 	
 	private boolean treatControlVisibleFalseAsNull = false;
 	private boolean treatControlEnabledFalseAsNull = false;	
@@ -162,7 +190,16 @@ public abstract class AbstractAtdl4jConfig
 	abstract protected String getDefaultClassNameControlUIForRadioButtonT();
 
 	// -- App Components --
-	abstract protected String getDefaultClassNameStrategySelectionUI();
+	abstract protected String getDefaultClassNameAtdl4jTesterPanel();
+	abstract protected String getDefaultClassNameAtdl4jInputAndFilterDataSelectionPanel();
+	abstract protected String getDefaultClassNameAtdl4jInputAndFilterDataPanel();
+	abstract protected String getDefaultClassNameAtdl4jCompositePanel();
+	abstract protected String getDefaultClassNameStrategiesPanel();
+	abstract protected String getDefaultClassNameAtdl4jUserMessageHandler();
+	abstract protected String getDefaultClassNameFixatdlFileSelectionPanel();
+	abstract protected String getDefaultClassNameFixMsgLoadPanel();
+	abstract protected String getDefaultClassNameStrategySelectionPanel();
+	abstract protected String getDefaultClassNameStrategyDescriptionPanel();
 	
 	/**
 	 * 
@@ -194,7 +231,16 @@ public abstract class AbstractAtdl4jConfig
 		setClassNameControlUIForRadioButtonT( getDefaultClassNameControlUIForRadioButtonT() );
 
 		// -- App Components --
-		setClassNameStrategySelectionUI( getDefaultClassNameStrategySelectionUI() );
+		setClassNameAtdl4jTesterPanel( getDefaultClassNameAtdl4jTesterPanel() );
+		setClassNameAtdl4jInputAndFilterDataSelectionPanel( getDefaultClassNameAtdl4jInputAndFilterDataSelectionPanel() );
+		setClassNameAtdl4jInputAndFilterDataPanel( getDefaultClassNameAtdl4jInputAndFilterDataPanel() );
+		setClassNameAtdl4jCompositePanel( getDefaultClassNameAtdl4jCompositePanel() );
+		setClassNameStrategiesPanel( getDefaultClassNameStrategiesPanel() );
+		setClassNameAtdl4jUserMessageHandler( getDefaultClassNameAtdl4jUserMessageHandler() );
+		setClassNameFixatdlFileSelectionPanel( getDefaultClassNameFixatdlFileSelectionPanel() );
+		setClassNameFixMsgLoadPanel( getDefaultClassNameFixMsgLoadPanel() );
+		setClassNameStrategySelectionPanel( getDefaultClassNameStrategySelectionPanel() );
+		setClassNameStrategyDescriptionPanel( getDefaultClassNameStrategyDescriptionPanel() );
 	}
 	
 	
@@ -266,12 +312,11 @@ public abstract class AbstractAtdl4jConfig
 	 * Constructs a new instance every call.
 	 * 
 	 * @param strategies
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
 //	public StrategiesUI getStrategiesUI() 
-	public StrategiesUI getStrategiesUI(StrategiesT strategies, Atdl4jConfig aAtdl4jConfig)
+	public StrategiesUI getStrategiesUI(StrategiesT strategies)
 		throws JAXBException 
 	{
 // Constructs a new instance every call.
@@ -292,7 +337,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( strategiesUI != null )
 			{
-				strategiesUI.init( strategies, aAtdl4jConfig );
+				strategiesUI.init( strategies, this );
 			}
 //		}
 		
@@ -319,14 +364,13 @@ public abstract class AbstractAtdl4jConfig
 	 * Constructs a new instance every call.
 	 * 
 	 * @param strategy
-	 * @param aAtdl4jConfig (contains getStrategies())
 	 * @param strategiesRules
 	 * @param parentContainer (for SWT: should be swt.Composite)
 	 * @return
 	 * @throws JAXBException
 	 */
 //	public StrategyUI getStrategyUI() 
-	public StrategyUI getStrategyUI(StrategyT strategy, Atdl4jConfig aAtdl4jConfig, Map<String, ValidationRule> strategiesRules, Object parentContainer)
+	public StrategyUI getStrategyUI(StrategyT strategy, Map<String, ValidationRule> strategiesRules, Object parentContainer)
 		throws JAXBException 
 	{
 // Constructs a new instance every call.
@@ -347,7 +391,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( strategyUI != null )
 			{
-				strategyUI.init( strategy, aAtdl4jConfig, strategiesRules, parentContainer );
+				strategyUI.init( strategy, this, strategiesRules, parentContainer );
 			}
 //		}
 		
@@ -371,12 +415,10 @@ public abstract class AbstractAtdl4jConfig
 	}
 	
 	/**
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-//	public ControlUIFactory getControlUIFactory() 
-	public ControlUIFactory getControlUIFactory(Atdl4jConfig aAtdl4jConfig)
+	public ControlUIFactory getControlUIFactory() 
 		throws JAXBException 
 	{
 // construct new each time		if ( ( controlUIFactory == null ) && ( getClassNameControlUIFactory() != null ) )
@@ -396,7 +438,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIFactory != null )
 			{
-				controlUIFactory.init( aAtdl4jConfig );
+				controlUIFactory.init( this );
 			}
 //		}
 		
@@ -421,12 +463,10 @@ public abstract class AbstractAtdl4jConfig
 	}
 	
 	/**
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-//	public TypeConverterFactory getTypeConverterFactory() 
-	public TypeConverterFactory getTypeConverterFactory(Atdl4jConfig aAtdl4jConfig)
+	public TypeConverterFactory getTypeConverterFactory() 
 		throws JAXBException 
 	{
 		if ( ( typeConverterFactory == null ) && ( getClassNameTypeConverterFactory() != null ) )
@@ -446,7 +486,7 @@ public abstract class AbstractAtdl4jConfig
 			
 //			if ( typeConverterFactory != null )
 //			{
-//				typeConverterFactory.init( aAtdl4jConfig );
+//				typeConverterFactory.init( this );
 //			}
 
 		}
@@ -473,11 +513,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForCheckBoxT == null ) && ( getClassNameControlUIForCheckBoxT() != null ) )
@@ -497,7 +536,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForCheckBoxT != null )
 			{
-				controlUIForCheckBoxT.init( control, parameter, aAtdl4jConfig );
+				controlUIForCheckBoxT.init( control, parameter, this );
 			}
 //		}
 		
@@ -525,11 +564,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForDropDownListT == null ) && ( getClassNameControlUIForDropDownListT() != null ) )
@@ -549,7 +587,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForDropDownListT != null )
 			{
-				controlUIForDropDownListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForDropDownListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -577,11 +615,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForEditableDropDownListT == null ) && ( getClassNameControlUIForEditableDropDownListT() != null ) )
@@ -601,7 +638,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForEditableDropDownListT != null )
 			{
-				controlUIForEditableDropDownListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForEditableDropDownListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -629,11 +666,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForRadioButtonListT == null ) && ( getClassNameControlUIForRadioButtonListT() != null ) )
@@ -653,7 +689,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForRadioButtonListT != null )
 			{
-				controlUIForRadioButtonListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForRadioButtonListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -681,11 +717,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForTextFieldT == null ) && ( getClassNameControlUIForTextFieldT() != null ) )
@@ -705,7 +740,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForTextFieldT != null )
 			{
-				controlUIForTextFieldT.init( control, parameter, aAtdl4jConfig );
+				controlUIForTextFieldT.init( control, parameter, this );
 			}
 //		}
 		
@@ -733,11 +768,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSliderT == null ) && ( getClassNameControlUIForSliderT() != null ) )
@@ -757,7 +791,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForSliderT != null )
 			{
-				controlUIForSliderT.init( control, parameter, aAtdl4jConfig );
+				controlUIForSliderT.init( control, parameter, this );
 			}
 //		}
 		
@@ -785,11 +819,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForCheckBoxListT == null ) && ( getClassNameControlUIForCheckBoxListT() != null ) )
@@ -809,7 +842,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForCheckBoxListT != null )
 			{
-				controlUIForCheckBoxListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForCheckBoxListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -837,11 +870,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForClockT == null ) && ( getClassNameControlUIForClockT() != null ) )
@@ -861,7 +893,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForClockT != null )
 			{
-				controlUIForClockT.init( control, parameter, aAtdl4jConfig );
+				controlUIForClockT.init( control, parameter, this );
 			}
 //		}
 		
@@ -889,11 +921,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSingleSpinnerT == null ) && ( getClassNameControlUIForSingleSpinnerT() != null ) )
@@ -913,7 +944,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForSingleSpinnerT != null )
 			{
-				controlUIForSingleSpinnerT.init( control, parameter, aAtdl4jConfig );
+				controlUIForSingleSpinnerT.init( control, parameter, this );
 			}
 //		}
 		
@@ -941,11 +972,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForDoubleSpinnerT == null ) && ( getClassNameControlUIForDoubleSpinnerT() != null ) )
@@ -965,7 +995,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForDoubleSpinnerT != null )
 			{
-				controlUIForDoubleSpinnerT.init( control, parameter, aAtdl4jConfig );
+				controlUIForDoubleSpinnerT.init( control, parameter, this );
 			}
 //		}
 		
@@ -993,11 +1023,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSingleSelectListT == null ) && ( getClassNameControlUIForSingleSelectListT() != null ) )
@@ -1017,7 +1046,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForSingleSelectListT != null )
 			{
-				controlUIForSingleSelectListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForSingleSelectListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -1045,11 +1074,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForMultiSelectListT == null ) && ( getClassNameControlUIForMultiSelectListT() != null ) )
@@ -1069,7 +1097,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForMultiSelectListT != null )
 			{
-				controlUIForMultiSelectListT.init( control, parameter, aAtdl4jConfig );
+				controlUIForMultiSelectListT.init( control, parameter, this );
 			}
 //		}
 		
@@ -1097,11 +1125,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForHiddenFieldT == null ) && ( getClassNameControlUIForHiddenFieldT() != null ) )
@@ -1121,7 +1148,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForHiddenFieldT != null )
 			{
-				controlUIForHiddenFieldT.init( control, parameter, aAtdl4jConfig );
+				controlUIForHiddenFieldT.init( control, parameter, this );
 			}
 //		}
 		
@@ -1149,11 +1176,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForLabelT == null ) && ( getClassNameControlUIForLabelT() != null ) )
@@ -1173,7 +1199,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForLabelT != null )
 			{
-				controlUIForLabelT.init( control, parameter, aAtdl4jConfig );
+				controlUIForLabelT.init( control, parameter, this );
 			}
 //		}
 		
@@ -1201,11 +1227,10 @@ public abstract class AbstractAtdl4jConfig
 	/**
 	 * @param control
 	 * @param parameter
-	 * @param aAtdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter)
 		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForRadioButtonT == null ) && ( getClassNameControlUIForRadioButtonT() != null ) )
@@ -1225,7 +1250,7 @@ public abstract class AbstractAtdl4jConfig
 			
 			if ( controlUIForRadioButtonT != null )
 			{
-				controlUIForRadioButtonT.init( control, parameter, aAtdl4jConfig );
+				controlUIForRadioButtonT.init( control, parameter, this );
 			}
 //		}
 		
@@ -1358,41 +1383,41 @@ public abstract class AbstractAtdl4jConfig
 	}
 
 	/**
-	 * @param classNameStrategySelectionUI the classNameStrategySelectionUI to set
+	 * @param classNameStrategySelectionPanel the classNameStrategySelectionPanel to set
 	 */
-	public void setClassNameStrategySelectionUI(String classNameStrategySelectionUI)
+	public void setClassNameStrategySelectionPanel(String classNameStrategySelectionPanel)
 	{
-		this.classNameStrategySelectionUI = classNameStrategySelectionUI;
+		this.classNameStrategySelectionPanel = classNameStrategySelectionPanel;
 	}
 
 	/**
-	 * @return the classNameStrategySelectionUI
+	 * @return the classNameStrategySelectionPanel
 	 */
-	public String getClassNameStrategySelectionUI()
+	public String getClassNameStrategySelectionPanel()
 	{
-		return classNameStrategySelectionUI;
+		return classNameStrategySelectionPanel;
 	}
 
 	/**
-	 * @param strategySelectionUI the strategySelectionUI to set
+	 * @param strategySelectionPanel the strategySelectionPanel to set
 	 */
-	public void setStrategySelectionUI(StrategySelectionUI strategySelectionUI)
+	public void setStrategySelectionPanel(StrategySelectionPanel strategySelectionPanel)
 	{
-		this.strategySelectionUI = strategySelectionUI;
+		this.strategySelectionPanel = strategySelectionPanel;
 	}
 
 	/**
-	 * @return the StrategySelectionUI
+	 * @return the StrategySelectionPanel
 	 */
-	public StrategySelectionUI getStrategySelectionUI() 
+	public StrategySelectionPanel getStrategySelectionPanel() 
 	{
-		if ( ( strategySelectionUI == null ) && ( getClassNameStrategySelectionUI() != null ) )
+		if ( ( strategySelectionPanel == null ) && ( getClassNameStrategySelectionPanel() != null ) )
 		{
-			String tempClassName = getClassNameStrategySelectionUI();
-			logger.debug( "getStrategySelectionUI() loading class named: " + tempClassName );
+			String tempClassName = getClassNameStrategySelectionPanel();
+			logger.debug( "getStrategySelectionPanel() loading class named: " + tempClassName );
 			try
 			{
-				strategySelectionUI = ((Class<StrategySelectionUI>) Class.forName( tempClassName ) ).newInstance();
+				strategySelectionPanel = ((Class<StrategySelectionPanel>) Class.forName( tempClassName ) ).newInstance();
 			}
 			catch ( Exception e )
 			{
@@ -1401,7 +1426,443 @@ public abstract class AbstractAtdl4jConfig
 			}
 		}
 		
-		return strategySelectionUI;
+		return strategySelectionPanel;
+	}
+
+
+	/**
+	 * @param classNameStrategyDescriptionPanel the classNameStrategyDescriptionPanel to set
+	 */
+	public void setClassNameStrategyDescriptionPanel(String classNameStrategyDescriptionPanel)
+	{
+		this.classNameStrategyDescriptionPanel = classNameStrategyDescriptionPanel;
+	}
+
+	/**
+	 * @return the classNameStrategyDescriptionPanel
+	 */
+	public String getClassNameStrategyDescriptionPanel()
+	{
+		return classNameStrategyDescriptionPanel;
+	}
+
+	/**
+	 * @param strategyDescriptionPanel the strategyDescriptionPanel to set
+	 */
+	public void setStrategyDescriptionPanel(StrategyDescriptionPanel strategyDescriptionPanel)
+	{
+		this.strategyDescriptionPanel = strategyDescriptionPanel;
+	}
+
+	/**
+	 * @return the StrategyDescriptionPanel
+	 */
+	public StrategyDescriptionPanel getStrategyDescriptionPanel() 
+	{
+		if ( ( strategyDescriptionPanel == null ) && ( getClassNameStrategyDescriptionPanel() != null ) )
+		{
+			String tempClassName = getClassNameStrategyDescriptionPanel();
+			logger.debug( "getStrategyDescriptionPanel() loading class named: " + tempClassName );
+			try
+			{
+				strategyDescriptionPanel = ((Class<StrategyDescriptionPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return strategyDescriptionPanel;
+	}
+
+
+	/**
+	 * @param classNameFixatdlFileSelectionPanel the classNameFixatdlFileSelectionPanel to set
+	 */
+	public void setClassNameFixatdlFileSelectionPanel(String classNameFixatdlFileSelectionPanel)
+	{
+		this.classNameFixatdlFileSelectionPanel = classNameFixatdlFileSelectionPanel;
+	}
+
+	/**
+	 * @return the classNameFixatdlFileSelectionPanel
+	 */
+	public String getClassNameFixatdlFileSelectionPanel()
+	{
+		return classNameFixatdlFileSelectionPanel;
+	}
+
+	/**
+	 * @param aFixatdlFileSelectionPanel the aFixatdlFileSelectionPanel to set
+	 */
+	public void setFixatdlFileSelectionPanel(FixatdlFileSelectionPanel aFixatdlFileSelectionPanel)
+	{
+		this.fixatdlFileSelectionPanel = aFixatdlFileSelectionPanel;
+	}
+
+	/**
+	 * @return the FixatdlFileSelectionPanel
+	 */
+	public FixatdlFileSelectionPanel getFixatdlFileSelectionPanel() 
+	{
+		if ( ( fixatdlFileSelectionPanel == null ) && ( getClassNameFixatdlFileSelectionPanel() != null ) )
+		{
+			String tempClassName = getClassNameFixatdlFileSelectionPanel();
+			logger.debug( "getFixatdlFileSelectionPanel() loading class named: " + tempClassName );
+			try
+			{
+				fixatdlFileSelectionPanel = ((Class<FixatdlFileSelectionPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return fixatdlFileSelectionPanel;
+	}
+
+	/**
+	 * @param classNameFixMsgLoadPanel the classNameFixMsgLoadPanel to set
+	 */
+	public void setClassNameFixMsgLoadPanel(String classNameFixMsgLoadPanel)
+	{
+		this.classNameFixMsgLoadPanel = classNameFixMsgLoadPanel;
+	}
+
+	/**
+	 * @return the classNameFixMsgLoadPanel
+	 */
+	public String getClassNameFixMsgLoadPanel()
+	{
+		return classNameFixMsgLoadPanel;
+	}
+
+	/**
+	 * @param aFixMsgLoadPanel the aFixMsgLoadPanel to set
+	 */
+	public void setFixMsgLoadPanel(FixMsgLoadPanel aFixMsgLoadPanel)
+	{
+		this.fixMsgLoadPanel = aFixMsgLoadPanel;
+	}
+
+	/**
+	 * @return the FixMsgLoadPanel
+	 */
+	public FixMsgLoadPanel getFixMsgLoadPanel() 
+	{
+		if ( ( fixMsgLoadPanel == null ) && ( getClassNameFixMsgLoadPanel() != null ) )
+		{
+			String tempClassName = getClassNameFixMsgLoadPanel();
+			logger.debug( "getFixMsgLoadPanel() loading class named: " + tempClassName );
+			try
+			{
+				fixMsgLoadPanel = ((Class<FixMsgLoadPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return fixMsgLoadPanel;
+	}
+	
+	/**
+	 * @param classNameStrategiesPanel the classNameStrategiesPanel to set
+	 */
+	public void setClassNameStrategiesPanel(String classNameStrategiesPanel)
+	{
+		this.classNameStrategiesPanel = classNameStrategiesPanel;
+	}
+
+	/**
+	 * @return the classNameStrategiesPanel
+	 */
+	public String getClassNameStrategiesPanel()
+	{
+		return classNameStrategiesPanel;
+	}
+
+	/**
+	 * @param strategiesPanel the strategiesPanel to set
+	 */
+	public void setStrategiesPanel(StrategiesPanel strategiesPanel)
+	{
+		this.strategiesPanel = strategiesPanel;
+	}
+
+	/**
+	 * @return the StrategiesPanel
+	 */
+	public StrategiesPanel getStrategiesPanel() 
+	{
+		if ( ( strategiesPanel == null ) && ( getClassNameStrategiesPanel() != null ) )
+		{
+			String tempClassName = getClassNameStrategiesPanel();
+			logger.debug( "getStrategiesPanel() loading class named: " + tempClassName );
+			try
+			{
+				strategiesPanel = ((Class<StrategiesPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return strategiesPanel;
+	}
+
+	/**
+	 * @param classNameAtdl4jUserMessageHandler the classNameAtdl4jUserMessageHandler to set
+	 */
+	public void setClassNameAtdl4jUserMessageHandler(String classNameAtdl4jUserMessageHandler)
+	{
+		this.classNameAtdl4jUserMessageHandler = classNameAtdl4jUserMessageHandler;
+	}
+
+	/**
+	 * @return the classNameAtdl4jUserMessageHandler
+	 */
+	public String getClassNameAtdl4jUserMessageHandler()
+	{
+		return classNameAtdl4jUserMessageHandler;
+	}
+
+	/**
+	 * @param atdl4jUserMessageHandler the atdl4jUserMessageHandler to set
+	 */
+	public void setAtdl4jUserMessageHandler(Atdl4jUserMessageHandler atdl4jUserMessageHandler)
+	{
+		this.atdl4jUserMessageHandler = atdl4jUserMessageHandler;
+	}
+
+	/**
+	 * @param parentOrShell
+	 */
+	public void initAtdl4jUserMessageHandler( Object parentOrShell )
+	{
+		getAtdl4jUserMessageHandler().init(  parentOrShell, this );
+	}
+
+	/**
+	 * @return the Atdl4jUserMessageHandler
+	 */
+	public Atdl4jUserMessageHandler getAtdl4jUserMessageHandler() 
+	{
+		if ( ( atdl4jUserMessageHandler == null ) && ( getClassNameAtdl4jUserMessageHandler() != null ) )
+		{
+			String tempClassName = getClassNameAtdl4jUserMessageHandler();
+			logger.debug( "getAtdl4jUserMessageHandler() loading class named: " + tempClassName );
+			try
+			{
+				atdl4jUserMessageHandler = ((Class<Atdl4jUserMessageHandler>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return atdl4jUserMessageHandler;
+	}
+
+	/**
+	 * @param classNameAtdl4jTesterPanel the classNameAtdl4jTesterPanel to set
+	 */
+	public void setClassNameAtdl4jTesterPanel(String classNameAtdl4jTesterPanel)
+	{
+		this.classNameAtdl4jTesterPanel = classNameAtdl4jTesterPanel;
+	}
+
+	/**
+	 * @return the classNameAtdl4jTesterPanel
+	 */
+	public String getClassNameAtdl4jTesterPanel()
+	{
+		return classNameAtdl4jTesterPanel;
+	}
+
+	/**
+	 * @param atdl4jTesterPanel the atdl4jTesterPanel to set
+	 */
+	public void setAtdl4jTesterPanel(Atdl4jTesterPanel atdl4jTesterPanel)
+	{
+		this.atdl4jTesterPanel = atdl4jTesterPanel;
+	}
+
+	/**
+	 * @return the Atdl4jTesterPanel
+	 */
+	public Atdl4jTesterPanel getAtdl4jTesterPanel() 
+	{
+		if ( ( atdl4jTesterPanel == null ) && ( getClassNameAtdl4jTesterPanel() != null ) )
+		{
+			String tempClassName = getClassNameAtdl4jTesterPanel();
+			logger.debug( "getAtdl4jTesterPanel() loading class named: " + tempClassName );
+			try
+			{
+				atdl4jTesterPanel = ((Class<Atdl4jTesterPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return atdl4jTesterPanel;
+	}
+
+
+	/**
+	 * @param classNameAtdl4jInputAndFilterDataPanel the classNameAtdl4jInputAndFilterDataPanel to set
+	 */
+	public void setClassNameAtdl4jInputAndFilterDataPanel(String classNameAtdl4jInputAndFilterDataPanel)
+	{
+		this.classNameAtdl4jInputAndFilterDataPanel = classNameAtdl4jInputAndFilterDataPanel;
+	}
+
+	/**
+	 * @return the classNameAtdl4jInputAndFilterDataPanel
+	 */
+	public String getClassNameAtdl4jInputAndFilterDataPanel()
+	{
+		return classNameAtdl4jInputAndFilterDataPanel;
+	}
+
+	/**
+	 * @param atdl4jInputAndFilterDataPanel the atdl4jInputAndFilterDataPanel to set
+	 */
+	public void setAtdl4jInputAndFilterDataPanel(Atdl4jInputAndFilterDataPanel atdl4jInputAndFilterDataPanel)
+	{
+		this.atdl4jInputAndFilterDataPanel = atdl4jInputAndFilterDataPanel;
+	}
+
+	/**
+	 * @return the Atdl4jInputAndFilterDataPanel
+	 */
+	public Atdl4jInputAndFilterDataPanel getAtdl4jInputAndFilterDataPanel() 
+	{
+		if ( ( atdl4jInputAndFilterDataPanel == null ) && ( getClassNameAtdl4jInputAndFilterDataPanel() != null ) )
+		{
+			String tempClassName = getClassNameAtdl4jInputAndFilterDataPanel();
+			logger.debug( "getAtdl4jInputAndFilterDataPanel() loading class named: " + tempClassName );
+			try
+			{
+				atdl4jInputAndFilterDataPanel = ((Class<Atdl4jInputAndFilterDataPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return atdl4jInputAndFilterDataPanel;
+	}
+
+
+	/**
+	 * @param classNameAtdl4jInputAndFilterDataSelectionPanel the classNameAtdl4jInputAndFilterDataSelectionPanel to set
+	 */
+	public void setClassNameAtdl4jInputAndFilterDataSelectionPanel(String classNameAtdl4jInputAndFilterDataSelectionPanel)
+	{
+		this.classNameAtdl4jInputAndFilterDataSelectionPanel = classNameAtdl4jInputAndFilterDataSelectionPanel;
+	}
+
+	/**
+	 * @return the classNameAtdl4jInputAndFilterDataSelectionPanel
+	 */
+	public String getClassNameAtdl4jInputAndFilterDataSelectionPanel()
+	{
+		return classNameAtdl4jInputAndFilterDataSelectionPanel;
+	}
+
+	/**
+	 * @param atdl4jInputAndFilterDataSelectionPanel the atdl4jInputAndFilterDataSelectionPanel to set
+	 */
+	public void setAtdl4jInputAndFilterDataSelectionPanel(Atdl4jInputAndFilterDataSelectionPanel atdl4jInputAndFilterDataSelectionPanel)
+	{
+		this.atdl4jInputAndFilterDataSelectionPanel = atdl4jInputAndFilterDataSelectionPanel;
+	}
+
+	/**
+	 * @return the Atdl4jInputAndFilterDataSelectionPanel
+	 */
+	public Atdl4jInputAndFilterDataSelectionPanel getAtdl4jInputAndFilterDataSelectionPanel() 
+	{
+		if ( ( atdl4jInputAndFilterDataSelectionPanel == null ) && ( getClassNameAtdl4jInputAndFilterDataSelectionPanel() != null ) )
+		{
+			String tempClassName = getClassNameAtdl4jInputAndFilterDataSelectionPanel();
+			logger.debug( "getAtdl4jInputAndFilterDataSelectionPanel() loading class named: " + tempClassName );
+			try
+			{
+				atdl4jInputAndFilterDataSelectionPanel = ((Class<Atdl4jInputAndFilterDataSelectionPanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return atdl4jInputAndFilterDataSelectionPanel;
+	}
+
+
+	/**
+	 * @param classNameAtdl4jCompositePanel the classNameAtdl4jCompositePanel to set
+	 */
+	public void setClassNameAtdl4jCompositePanel(String classNameAtdl4jCompositePanel)
+	{
+		this.classNameAtdl4jCompositePanel = classNameAtdl4jCompositePanel;
+	}
+
+	/**
+	 * @return the classNameAtdl4jCompositePanel
+	 */
+	public String getClassNameAtdl4jCompositePanel()
+	{
+		return classNameAtdl4jCompositePanel;
+	}
+
+	/**
+	 * @param atdl4jCompositePanel the atdl4jCompositePanel to set
+	 */
+	public void setAtdl4jCompositePanel(Atdl4jCompositePanel atdl4jCompositePanel)
+	{
+		this.atdl4jCompositePanel = atdl4jCompositePanel;
+	}
+
+	/**
+	 * @return the Atdl4jCompositePanel
+	 */
+	public Atdl4jCompositePanel getAtdl4jCompositePanel() 
+	{
+		if ( ( atdl4jCompositePanel == null ) && ( getClassNameAtdl4jCompositePanel() != null ) )
+		{
+			String tempClassName = getClassNameAtdl4jCompositePanel();
+			logger.debug( "getAtdl4jCompositePanel() loading class named: " + tempClassName );
+			try
+			{
+				atdl4jCompositePanel = ((Class<Atdl4jCompositePanel>) Class.forName( tempClassName ) ).newInstance();
+			}
+			catch ( Exception e )
+			{
+				logger.warn( "Exception attempting to load Class.forName( " + tempClassName + " ).  Catching/Re-throwing as IllegalStateException", e );
+				throw new IllegalStateException( "Exception attempting to load Class.forName( " + tempClassName + " )", e );
+			}
+		}
+		
+		return atdl4jCompositePanel;
 	}
 
 	/**
@@ -1499,5 +1960,22 @@ public abstract class AbstractAtdl4jConfig
 	{
 		this.strategyDropDownItemDepth = aStrategyDropDownItemDepth;
 	}
+
+	/**
+	 * @return the selectedStrategyValidated
+	 */
+	public boolean isSelectedStrategyValidated()
+	{
+		return this.selectedStrategyValidated;
+	}
+
+	/**
+	 * @param aSelectedStrategyValidated the selectedStrategyValidated to set
+	 */
+	public void setSelectedStrategyValidated(boolean aSelectedStrategyValidated)
+	{
+		this.selectedStrategyValidated = aSelectedStrategyValidated;
+	}
+	
 
 }
