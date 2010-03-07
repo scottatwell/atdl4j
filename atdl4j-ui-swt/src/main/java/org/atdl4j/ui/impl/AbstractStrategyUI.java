@@ -9,21 +9,6 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.fixatdl.core.BooleanT;
-import org.atdl4j.fixatdl.core.MultipleCharValueT;
-import org.atdl4j.fixatdl.core.MultipleStringValueT;
-import org.atdl4j.fixatdl.core.ObjectFactory;
-import org.atdl4j.fixatdl.core.ParameterT;
-import org.atdl4j.fixatdl.core.StrategiesT;
-import org.atdl4j.fixatdl.core.StrategyT;
-import org.atdl4j.fixatdl.core.UseT;
-import org.atdl4j.fixatdl.layout.HiddenFieldT;
-import org.atdl4j.fixatdl.layout.StrategyPanelT;
-import org.atdl4j.fixatdl.validation.EditRefT;
-import org.atdl4j.fixatdl.validation.EditT;
-import org.atdl4j.fixatdl.validation.LogicOperatorT;
-import org.atdl4j.fixatdl.validation.OperatorT;
-import org.atdl4j.fixatdl.validation.StrategyEditT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.Atdl4jConstants;
@@ -40,6 +25,21 @@ import org.atdl4j.data.validation.PatternValidationRule;
 import org.atdl4j.data.validation.ReferencedValidationRule;
 import org.atdl4j.data.validation.ValidationRuleFactory;
 import org.atdl4j.data.validation.ValueOperatorValidationRule;
+import org.atdl4j.fixatdl.core.BooleanT;
+import org.atdl4j.fixatdl.core.MultipleCharValueT;
+import org.atdl4j.fixatdl.core.MultipleStringValueT;
+import org.atdl4j.fixatdl.core.ObjectFactory;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.StrategiesT;
+import org.atdl4j.fixatdl.core.StrategyT;
+import org.atdl4j.fixatdl.core.UseT;
+import org.atdl4j.fixatdl.layout.HiddenFieldT;
+import org.atdl4j.fixatdl.layout.StrategyPanelT;
+import org.atdl4j.fixatdl.validation.EditRefT;
+import org.atdl4j.fixatdl.validation.EditT;
+import org.atdl4j.fixatdl.validation.LogicOperatorT;
+import org.atdl4j.fixatdl.validation.OperatorT;
+import org.atdl4j.fixatdl.validation.StrategyEditT;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.StrategyUI;
 
@@ -124,6 +124,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 		createRadioGroups();
 
 		addHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );
+		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
 		
 		buildControlWithParameterMap();
 		attachGlobalStateRulesToControls();
@@ -460,6 +461,23 @@ public abstract class AbstractStrategyUI implements StrategyUI
 		}
 	}
 
+	public ControlUI getControlForParameter( ParameterT aParameterRef )
+	{
+		if ( ( aParameterRef != null ) && ( getControlUIWithParameterMap() != null ) )
+		{
+			Collection<ControlUI<?>> tempControlWithParameterMapValues = (Collection<ControlUI<?>>) getControlUIWithParameterMap().values();
+			
+			for ( ControlUI<?> widget : tempControlWithParameterMapValues )
+			{
+				if ( aParameterRef.equals( widget.getParameter() ) )
+				{
+					return widget;
+				}
+			}
+		}
+		
+		return null;
+	}
 
 
 	protected void addHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
@@ -493,6 +511,35 @@ public abstract class AbstractStrategyUI implements StrategyUI
 		
 	}
 
+	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
+		throws JAXBException
+	{
+		if ( aParameterMap != null )
+		{
+			ObjectFactory tempObjectFactory = new ObjectFactory();
+	
+			for ( Map.Entry<String, ParameterT> tempMapEntry : aParameterMap.entrySet() )
+			{
+				String tempName = tempMapEntry.getKey();
+				ParameterT tempParameter = tempMapEntry.getValue();
+
+				// -- If Parameter has const value and does not have a Control --
+				if ( ( ParameterHelper.getConstValue( tempParameter ) != null ) &&
+					  ( getControlForParameter( tempParameter ) == null ) )
+				{
+					// -- Add a HiddenField control for this parameter (to add to ControlWithParameters map used by StrategyEdit and FIX Message building) -- 
+					HiddenFieldT tempHiddenField = new HiddenFieldT();
+					tempHiddenField.setParameterRef( tempName );
+		
+					ControlUI hiddenFieldWidget = getAtdl4jConfig().getControlUIForHiddenFieldT( tempHiddenField, tempParameter );
+					addToControlMap( tempName, hiddenFieldWidget );
+				}
+			}
+		}
+	}
+
+	
+	
 	public void validate() throws ValidationException, JAXBException
 	{
 		if ( getStrategyRuleset() != null )

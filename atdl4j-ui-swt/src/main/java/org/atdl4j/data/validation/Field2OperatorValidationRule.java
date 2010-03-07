@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.atdl4j.ui.ControlUI;
+import org.atdl4j.ui.impl.HiddenFieldUI;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
@@ -87,8 +88,20 @@ if ( ( fieldValue != null ) &&
 	{
 		fieldValue2 = convertFieldValueToDesiredType( fieldValue, fieldValue2 );
 	}
+//TODO 3/6/2010 Scott Atwell
+	else if ( ( target != null ) && ( target instanceof HiddenFieldUI ) )
+	{
+		fieldValue = convertFieldValueToDesiredType( fieldValue2, fieldValue );
+	}
+	else if ( ( target2 != null ) && ( target2 instanceof HiddenFieldUI ) )
+	{
+		fieldValue2 = convertFieldValueToDesiredType( fieldValue, fieldValue2 );
+	}
 }
 		
+{
+	
+}
 		
 		// compare both values
 		validateValues(target, fieldValue, operator, fieldValue2);
