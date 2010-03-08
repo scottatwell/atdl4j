@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Vector;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -37,6 +38,8 @@ public abstract class AbstractAtdl4jCompositePanel
 
 	Atdl4jConfig atdl4jConfig;
 	Object parentOrShell;  // SWT: Shell, Swing: JFrame, etc
+	
+	private List<Atdl4jCompositePanelListener> listenerList = new Vector<Atdl4jCompositePanelListener>();
 
 	private String lastFixatdlFilename;
 	
@@ -47,6 +50,8 @@ public abstract class AbstractAtdl4jCompositePanel
 
 	abstract protected Object createValidateOutputSection();
 	abstract protected void setValidateOutputText(String aText);
+	abstract public void setVisibleValidateOutputSection( boolean aVisible );
+	abstract public void setVisibleOkCancelButtonSection( boolean aVisible );
 	abstract protected void packLayout();
 
 
@@ -69,7 +74,6 @@ public abstract class AbstractAtdl4jCompositePanel
 		{
 			getAtdl4jConfig().initAtdl4jUserMessageHandler( aParentOrShell );
 		}
-
 	
 		// ----- Setup internal components (the GUI-specific versions will be instantiated, and add listeners, but defer to concrete classes: "build____Panel()" ----
 		
@@ -86,10 +90,6 @@ public abstract class AbstractAtdl4jCompositePanel
 
 		// -- StrategiesPanel (GUI display of each strategy's parameters) - build() method called via concrete class --
 		setStrategiesPanel( getAtdl4jConfig().getStrategiesPanel() );
-// ????????????TODO TODO
-///	getStrategiesPanel().addListener( this );
-		
-		
 	}
 
 	/**
@@ -183,46 +183,7 @@ public abstract class AbstractAtdl4jCompositePanel
 
 		getStrategyDescriptionPanel().loadStrategyDescription( aStrategy );
 		getStrategiesPanel().adjustLayoutForSelectedStrategy( aIndex );
-/**		
-//TODO -- These were the remnants from selectDropDownStrategy(int index) that did not become part of StrategySelectionPanel
-		for (int i = 0; i < strategiesPanel.getChildren().length; i++) 
-		{
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != index) ? 0 : -1;
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != index) ? 0 : -1;
-		}
-***/		
 
-		
-// TODO 2/28/2010 ????		
-/***
-		if (getAtdl4jConfig().isShowStrategyDescription())
-		{
-			strategyDescription.setText("");
-		}
-		
-// 2/23/2010 Scott Atwell moved after StrategyDescription stuff		strategiesPanel.layout();
-// 2/23/2010 Scott Atwell moved after StrategyDescription stuff		shell.pack();
-//Strategy description must be updated after packing
-// 2/7/2010 Scott Atwell - had to add the not null check	to avoid SWT.error of Argument cannot be null	
-		if ( (getAtdl4jConfig().isShowStrategyDescription()) && 
-			  ( getAtdl4jConfig().getSelectedStrategy().getDescription() != null ) )
-		{
-			strategyDescription.setText(getAtdl4jConfig().getSelectedStrategy().getDescription());
-			strategyDescription.setVisible( true );
-		}
-		else if ( strategyDescription != null )
-		{
-//TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
-			strategyDescription.setVisible( false );
-		}
-***/
-		
-/***
-		strategiesPanel.layout();
-// 2/23/2010 Scott Atwell added shell.Layout()		
-		shell.layout();
-		shell.pack();
-***/
 		packLayout();
 	}
 
@@ -315,13 +276,9 @@ public abstract class AbstractAtdl4jCompositePanel
 				 NumberFormatException 
 	{
 		setLastFixatdlFilename( null );
-		// remove all dropdown items
-// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionPanel.loadStrategyList())		strategiesDropDown.removeAll();
 		
 		// remove all strategy panels
-// 2/26/2010		for (Control control : strategiesPanel.getChildren()) control.dispose();
 		getStrategiesPanel().removeAllStrategyPanels();
-		
 		
 		// parses the XML document and build an object model
 		JAXBContext jc = JAXBContext.newInstance(StrategiesT.class.getPackage().getName());
@@ -355,85 +312,7 @@ public abstract class AbstractAtdl4jCompositePanel
 		{
 			getStrategySelectionPanel().selectFirstDropDownStrategy();
 		}
-/**** [moved to SWTStrategiesPanel] *****
-// -- 2/7/2010 Eliminate SWT-specific Reference --		
-// 2/7/2010 this worked		StrategiesUIFactory factory = new SWTStrategiesUIFactory();
-		StrategiesUIFactory factory = getAtdl4jConfig().getStrategiesUIFactory();
-// 2/8/2010 Scott Atwell		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies());
-		StrategiesUI<?> strategiesUI = factory.create(getAtdl4jConfig().getStrategies(), getAtdl4jConfig());
-		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
-		
-		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
-		
-		for (StrategyT strategy : tempFilteredStrategyList) 
-		{
-			// create composite
-			Composite strategyParent = new Composite(strategiesPanel, SWT.NONE);
-			strategyParent.setLayout(new FillLayout());
-// 2/7/2010 Scott Atwell			SWTStrategyUI ui;
-			StrategyUI ui;
 
-			
-			// build strategy and catch strategy-specific errors
-			try {
-//TODO 1/17/2010 Scott Atwell				ui = strategiesUI.createUI(strategy, strategyParent);	
-// 2/8/2010 Scott Atwell StrategiesUI now already has Atdl4jConfig				ui = strategiesUI.createUI(strategy, strategyParent, getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap());	
-				ui = strategiesUI.createUI(strategy, strategyParent);	
-			} catch (JAXBException e1) {
-				MessageBox messageBox = new MessageBox(shell, SWT.OK
-						| SWT.ICON_ERROR);
-				// e1.getMessage() is null if there is a JAXB parse error 
-				String msg = "";
-				if (e1.getMessage() != null)
-				{
-					messageBox.setText("Strategy Load Error");
-					msg = e1.getMessage();
-				}
-				else if (e1.getLinkedException() != null && 
-					     e1.getLinkedException().getMessage() != null)
-				{
-					messageBox.setText(e1.getLinkedException().getClass().getSimpleName());
-					msg = e1.getLinkedException().getMessage();
-				}
-				messageBox.setMessage("Error in Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName(strategy) + "\":\n\n" +msg);
-				messageBox.open();
-				
-				// rollback changes
-				strategyParent.dispose();
-				
-				// skip to next strategy
-				continue;
-			}
-			
-			// create dropdown item for strategy
-// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionPanel.loadStrategyList())			strategiesDropDown.add(getStrategyName(strategy));
-			getAtdl4jConfig().getStrategyUIMap().put(strategy, ui);
-			
-//TODO Scott Atwell 1/17/2010 Added BEGIN
-			ui.setCxlReplaceMode( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );
-//TODO Scott Atwell 1/17/2010 Added END
-		}
-
-// 2/7/2010 Scott Atwell (this has been incorporated within StrategySelectionPanel.loadStrategyList())		if (strategiesDropDown.getItem(0) != null) strategiesDropDown.select(0);
-
-// 2/7/2010 Scott Atwell added
-		getStrategySelectionPanel().loadStrategyList( tempFilteredStrategyList );
-			
-			
-		// TODO: This flashes all parameters on the screen when we first load
-		// There's got to be a better way...
-		shell.pack();
-		for (int i = 0; i < strategiesPanel.getChildren().length; i++) {
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != 0) ? 0 : -1;
-			((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != 0) ? 0 : -1;
-		}
-		strategiesPanel.layout();
-		if (getAtdl4jConfig().getStrategies() != null) {
-			getAtdl4jConfig().setSelectedStrategy( getAtdl4jConfig().getStrategies().getStrategy().get(0) );
-		}
-**** [moved to SWTStrategiesPanel] *****/
-
-//		shell.pack();
 		packLayout();
 		
 		setLastFixatdlFilename( aFilename );
@@ -441,7 +320,6 @@ public abstract class AbstractAtdl4jCompositePanel
 
 	public boolean loadFixMessage( String aFixMessage ) 
 	{
-//		logger.info("Loading FIX string " + inputFixMessageText.getText());
 		logger.info("Loading FIX string " + aFixMessage);
 		try 
 		{
@@ -492,6 +370,7 @@ public abstract class AbstractAtdl4jCompositePanel
 			}
 			
 			StrategyUI ui = getAtdl4jConfig().getStrategyUIMap().get(getAtdl4jConfig().getSelectedStrategy());
+			
 			// -- Note available getAtdl4jConfig().getStrategies() may be filtered due to SecurityTypes, Markets, or Region/Country rules --  
 			if ( ui != null )
 			{
@@ -554,5 +433,45 @@ public abstract class AbstractAtdl4jCompositePanel
 			fixatdlFileSelected( getLastFixatdlFilename() );
 		}
 	}
+
+	protected void validateButtonSelected()
+	{
+		validateStrategy();
+	}
 	
+	protected void okButtonSelected()
+	{
+		fireOkButtonSelectedEvent();
+	}
+	
+	protected void cancelButtonSelected()
+	{
+		fireCancelButtonSelectedEvent();
+	}
+	
+	public void addListener( Atdl4jCompositePanelListener aAtdl4jCompositePanelListener )
+	{
+		listenerList.add( aAtdl4jCompositePanelListener );
+	}
+
+	public void removeListener( Atdl4jCompositePanelListener aAtdl4jCompositePanelListener )
+	{
+		listenerList.remove( aAtdl4jCompositePanelListener );
+	}	
+	
+	protected void fireOkButtonSelectedEvent()
+	{
+		for ( Atdl4jCompositePanelListener tempListener : listenerList )
+		{
+			tempListener.okButtonSelected();
+		}
+	}	
+	
+	protected void fireCancelButtonSelectedEvent()
+	{
+		for ( Atdl4jCompositePanelListener tempListener : listenerList )
+		{
+			tempListener.cancelButtonSelected();
+		}
+	}	
 }

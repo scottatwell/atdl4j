@@ -2,6 +2,8 @@ package org.atdl4j.ui.app;
 
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
+import org.atdl4j.data.Atdl4jHelper;
+import org.atdl4j.ui.StrategyUI;
 
 /**
  * Represents the base, non-GUI system-specific "TesterApp" core GUI component (without a main() line).
@@ -13,6 +15,7 @@ import org.atdl4j.config.InputAndFilterData;
  */
 public abstract class AbstractAtdl4jTesterPanel
 	implements Atdl4jTesterPanel,
+			Atdl4jCompositePanelListener,
 			FixMsgLoadPanelListener,
 			Atdl4jInputAndFilterDataPanelListener
 {
@@ -43,11 +46,7 @@ public abstract class AbstractAtdl4jTesterPanel
 
 		// -- Init the Atdl4jCompositePanel --
 		setAtdl4jCompositePanel( getAtdl4jConfig().getAtdl4jCompositePanel() );
-		
-// moved to within Atdl4jInputAndFilterDataSelectionPanel		
-//		// -- FixMsgLoadPanel (Load Message button/text field) - build() method called via concrete class --
-//		setFixMsgLoadPanel( getAtdl4jConfig().getFixMsgLoadPanel() );
-//		getFixMsgLoadPanel().addListener( this );
+		getAtdl4jCompositePanel().addListener( this );
 	}
 
 	/**
@@ -136,5 +135,46 @@ public abstract class AbstractAtdl4jTesterPanel
 		getAtdl4jCompositePanel().reloadFixatdlFile();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.app.Atdl4jCompositePanelListener#cancelButtonSelected()
+	 */
+	@Override
+	public void cancelButtonSelected()
+	{
+//		getAtdl4jCompositePanel().setVisible(  false );
+		closePanel();
+	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.app.Atdl4jCompositePanelListener#okButtonSelected()
+	 */
+	@Override
+	public void okButtonSelected()
+	{
+		if ( getAtdl4jConfig().getSelectedStrategy() != null )
+		{
+			try
+			{
+				StrategyUI ui = getAtdl4jConfig().getStrategyUIMap().get( getAtdl4jConfig().getSelectedStrategy() );
+				ui.validate();
+				String tempFixMsgFragment = ui.getFIXMessage();
+
+				getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Strategy Selected", 
+						"Strategy selected: " + Atdl4jHelper.getStrategyUiRepOrName( getAtdl4jConfig().getSelectedStrategy() ) 
+						+ "\nFIX msg: " + tempFixMsgFragment );
+				
+				closePanel();
+			}
+			catch ( Throwable e )
+			{
+				getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Validation/FIX Message Extraction Error", 
+						"Error during Validation/FIX Message extraction.", e );
+			}
+		}
+		else
+		{
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Select Strategy", "Please select a Strategy" );
+		}
+	}
+	
 }

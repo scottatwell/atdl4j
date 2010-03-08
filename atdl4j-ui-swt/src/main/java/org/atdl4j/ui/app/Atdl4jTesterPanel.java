@@ -1,10 +1,6 @@
 package org.atdl4j.ui.app;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.config.Atdl4jConfig;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 
 /**
@@ -19,4 +15,5 @@ public interface Atdl4jTesterPanel
 
 	public Atdl4jConfig getAtdl4jConfig();
 
+	public void closePanel();
 }

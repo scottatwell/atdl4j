@@ -93,4 +93,12 @@ public interface Atdl4jCompositePanel
 	public StrategyT validateStrategy();
 	
 	public void reloadFixatdlFile();
+	
+	public void setVisibleValidateOutputSection( boolean aVisible );
+	
+	public void setVisibleOkCancelButtonSection( boolean aVisible );
+	
+	public void addListener(Atdl4jCompositePanelListener aAtdl4jCompositePanelListener);
+	
+	public void removeListener(Atdl4jCompositePanelListener aAtdl4jCompositePanelListener);
 }

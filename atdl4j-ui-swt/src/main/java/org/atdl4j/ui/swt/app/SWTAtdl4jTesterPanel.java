@@ -75,4 +75,12 @@ public class SWTAtdl4jTesterPanel
 //		return tempComposite;
 		return parentComposite;
 	}
+	
+	public void closePanel()
+	{
+		if ( ( parentComposite != null ) && ( ! parentComposite.getShell().isDisposed() ) )
+		{
+			parentComposite.getShell().dispose();
+		}
+	}
 }

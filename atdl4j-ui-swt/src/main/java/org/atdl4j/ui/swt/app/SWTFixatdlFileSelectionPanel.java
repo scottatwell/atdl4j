@@ -37,7 +37,6 @@ public class SWTFixatdlFileSelectionPanel
 	
 	public Object buildFixatdlFileSelectionPanel(Object parentOrShell, Atdl4jConfig atdl4jConfig)
 	{
-//		return buildFixatdlFileSelectionPanel( (Shell) parentOrShell, atdl4jConfig );
 		return buildFixatdlFileSelectionPanel( (Composite) parentOrShell, atdl4jConfig );
 	}
 	
@@ -46,8 +45,9 @@ public class SWTFixatdlFileSelectionPanel
 		setAtdl4jConfig( atdl4jConfig );
 		setParentComposite( aParentComposite );
 		
-// 3/2/2010 Scott Atwell		Composite composite = new Composite(aParentComposite, SWT.NONE);
-		composite = new Group(aParentComposite, SWT.NONE);
+// 3/8/2010 Scott Atwell		composite = new Group(aParentComposite, SWT.NONE);
+		// -- SWTVisibleGroup avoids consuming vertical space when hidden via setVisible(false) --
+		composite = new SWTVisibleGroup(aParentComposite, SWT.NONE);
 		((Group) composite).setText("Load FIXatdl XML File");
 		
 		GridLayout tempLayout = new GridLayout(3, false);
@@ -55,7 +55,6 @@ public class SWTFixatdlFileSelectionPanel
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		filepathText = new Text(composite, SWT.BORDER);
 
-// 2/25/2010 Scott Atwell added
 		// -- Handle Enter key within Text field --
 		filepathText.addListener( SWT.DefaultSelection, new Listener()
 		{
@@ -135,4 +134,15 @@ public class SWTFixatdlFileSelectionPanel
 		this.parentComposite = aParentComposite;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.app.FixatdlFileSelectionPanel#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean aVisible)
+	{
+		if ( ( composite != null ) && ( ! composite.isDisposed() ) )
+		{
+			composite.setVisible( aVisible );
+		}
+	}	
 }

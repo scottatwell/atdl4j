@@ -37,8 +37,9 @@ public class SWTStrategyDescriptionPanel
 	public Composite buildStrategyDescriptionPanel(Composite aParentComposite, Atdl4jConfig atdl4jConfig)
 	{
 		setAtdl4jConfig( atdl4jConfig );
-		
-		composite = new Group(aParentComposite, SWT.NONE);
+	
+//		composite = new Group(aParentComposite, SWT.NONE);
+		composite = new SWTVisibleGroup(aParentComposite, SWT.NONE);
 		((Group) composite).setText("Strategy Description");
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -46,12 +47,11 @@ public class SWTStrategyDescriptionPanel
   		strategyDescription = new Text(composite, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL );
   	   strategyDescription.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
   		strategyDescription.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		
   		
-  		
-//  		GridData descData = new GridData(SWT.FILL, SWT.FILL, true, false);
   		GridData descData = new GridData(SWT.FILL, SWT.FILL, true, false);
  		descData.heightHint = DEFAULT_STRATEGY_DESCRIPTION_HEIGHT_HINT;
-  		strategyDescription.setLayoutData(descData);
+		strategyDescription.setLayoutData(descData);
 	
 		return composite;
 	}
@@ -74,7 +74,7 @@ public class SWTStrategyDescriptionPanel
 	@Override
 	public void setVisible(boolean aVisible)
 	{
-		
+/*** 3/8/2010 Scott Atwell - replaced all of this with custom SWTVisibleGroup vs. Group as this handles setVisible() better (without consuming vertical space in GridLayout) 		
 // TODO TODO -- !!!! This helps, however, excess VERTICAL SPACE is still being consumed even when setVisible(false) !!!!
 		
 		if ( ( composite != null ) && ( strategyDescription != null ) )
@@ -82,40 +82,67 @@ public class SWTStrategyDescriptionPanel
 			strategyDescription.setVisible( aVisible );
 			composite.setVisible( aVisible );
 			
+// expandItem.setHeight(expandItem.getControl().computeSize(expandBar.getSize().x, SWT.DEFAULT, true).y); 
+		
 			// -- Adjust Grid Height of Text control --
 			if ( strategyDescription.getLayoutData() instanceof GridData )
 			{
 				GridData tempGridData = (GridData) strategyDescription.getLayoutData();
+				GridData tempNewGridData = new GridData( tempGridData.horizontalAlignment,
+																		tempGridData.verticalAlignment,
+																		tempGridData.grabExcessHorizontalSpace,
+																		tempGridData.grabExcessVerticalSpace,
+																		tempGridData.horizontalSpan,
+																		tempGridData.verticalSpan );
 				if ( aVisible )
 				{
-					tempGridData.heightHint = DEFAULT_STRATEGY_DESCRIPTION_HEIGHT_HINT;
+					tempNewGridData.heightHint = DEFAULT_STRATEGY_DESCRIPTION_HEIGHT_HINT;
 				}
 				else  // -- hide --
 				{
-					tempGridData.heightHint = 0;
+					tempNewGridData.heightHint = 0;
+					tempNewGridData.verticalIndent = 0;
 				}
-					
-				strategyDescription.setLayoutData( tempGridData );
+
+//				strategyDescription.setLayoutData( tempGridData );
+				strategyDescription.setLayoutData( tempNewGridData );
+				strategyDescription.getParent().layout();
 			}
 
 			// -- Adjust Grid Height of Composite container --
 			if ( composite.getLayoutData() instanceof GridData )
 			{
 				GridData tempGridData = (GridData) composite.getLayoutData();
+				GridData tempNewGridData = new GridData( tempGridData.horizontalAlignment,
+																		tempGridData.verticalAlignment,
+																		tempGridData.grabExcessHorizontalSpace,
+																		tempGridData.grabExcessVerticalSpace,
+																		tempGridData.horizontalSpan,
+																		tempGridData.verticalSpan );
+				
 				if ( aVisible )
 				{
-					tempGridData.heightHint = DEFAULT_COMPOSITE_HEIGHT_HINT;
+					tempNewGridData.heightHint = DEFAULT_COMPOSITE_HEIGHT_HINT;
 				}
 				else  // -- hide --
 				{
-					tempGridData.heightHint = 0;
+					tempNewGridData.heightHint = 0;
+					tempNewGridData.verticalIndent = 0;
 				}
 					
-				composite.setLayoutData( tempGridData );
+				composite.setLayoutData( tempNewGridData );
+				composite.layout();
 			}
+//TODO 3/5/2010 Scott Atwell -- STILL NOT WORKING WITH THIS....
+composite.layout( true );
+//composite.getShell().layout( true );
+SWTStrategyPanelHelper.revalidateLayoutAsync( strategyDescription );	
+		}
+***/
 			
+		if ( ( composite != null ) && ( ! composite.isDisposed() ) )
+		{
+			composite.setVisible( aVisible );
 		}
 	}
-
-
 }

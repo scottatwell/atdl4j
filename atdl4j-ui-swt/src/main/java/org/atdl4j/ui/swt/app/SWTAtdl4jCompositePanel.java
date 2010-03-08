@@ -28,6 +28,7 @@ public class SWTAtdl4jCompositePanel
 	private Composite parentComposite;
 	
 	private Composite validateOutputSection;
+	private Composite okCancelButtonSection;
 	private Text outputFixMessageText;
 	
 	
@@ -48,7 +49,7 @@ public class SWTAtdl4jCompositePanel
 
 		// -- Delegate back to AbstractAtdl4jCompositePanel -- 
 		init( aParentComposite, aAtdl4jConfig );
-		
+
 		// -- Build the SWT.Composite from FixatdlFileSelectionPanel (filename / file dialog) --
 		getFixatdlFileSelectionPanel().buildFixatdlFileSelectionPanel( getParentOrShell(), getAtdl4jConfig() );
 
@@ -65,6 +66,8 @@ public class SWTAtdl4jCompositePanel
 		// -- Build the SWT.Composite containing "Validate Output" button and outputFixMessageText --
 		createValidateOutputSection();
 		
+		// -- Build the SWT.Composite containing "OK" and "Cancel" buttons --
+		createOkCancelButtonSection();
 		
 //		return tempComposite;
 		return aParentComposite;
@@ -72,7 +75,9 @@ public class SWTAtdl4jCompositePanel
 
 	protected Composite createValidateOutputSection()
 	{
-		validateOutputSection = new Group(getShell(), SWT.NONE);
+// 3/8/2010	Scott Atwell 	validateOutputSection = new Group(getShell(), SWT.NONE);
+		// -- SWTVisibleGroup avoids consuming vertical space when hidden via setVisible(false) --
+		validateOutputSection = new SWTVisibleGroup(getShell(), SWT.NONE);
 		((Group) validateOutputSection).setText("Validation");
 		validateOutputSection.setLayout(new GridLayout(2, false));
 		validateOutputSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -83,22 +88,95 @@ public class SWTAtdl4jCompositePanel
 		validateButton.setText("Validate Output");
 		validateButton.addSelectionListener(new SelectionAdapter() 
 		{
-			@Override
 			public void widgetSelected(SelectionEvent e) 
 			{
-				validateStrategy();
+				validateButtonSelected();
 			}
 		});
 		
 		outputFixMessageText = new Text(validateOutputSection, SWT.BORDER);
 		outputFixMessageText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
+		// -- triggers getAtdl4jConfig().isShowValidateOutputSection() check and setVisibleValidateOutputSection() --
+		setValidateOutputText( "" );
+		
 		return validateOutputSection;
+	}
+	
+	public void setVisibleValidateOutputSection( boolean aVisible )
+	{
+		 if ( ( validateOutputSection != null ) && ( ! validateOutputSection.isDisposed() ) )
+		 {
+			 validateOutputSection.setVisible( aVisible );
+		 }
 	}
 	
 	protected void setValidateOutputText(String aText)
 	{
-		outputFixMessageText.setText( aText );
+		if ( ( getAtdl4jConfig() != null ) && ( getAtdl4jConfig().isShowValidateOutputSection() ) )
+		{
+			if ( aText != null )
+			{
+				outputFixMessageText.setText( aText );
+				setVisibleValidateOutputSection( true );
+			}
+			else
+			{
+				outputFixMessageText.setText( "" );
+				setVisibleValidateOutputSection( false );
+			}
+		}
+		else
+		{
+			outputFixMessageText.setText( aText );
+			setVisibleValidateOutputSection( false );
+		}	
+	}
+
+	protected Composite createOkCancelButtonSection()
+	{
+		// -- SWTVisibleComposite avoids consuming vertical space when hidden via setVisible(false) --
+		okCancelButtonSection = new SWTVisibleComposite(getShell(), SWT.NONE);
+		okCancelButtonSection.setLayout(new GridLayout(2, true));
+		okCancelButtonSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		// OK button
+		Button okButton = new Button(okCancelButtonSection, SWT.NONE);
+		okButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		okButton.setText("OK");
+		okButton.setToolTipText( "Validate and accept the specified strategy and parameters" );
+		okButton.addSelectionListener(new SelectionAdapter() 
+		{
+			public void widgetSelected(SelectionEvent e) 
+			{
+				okButtonSelected();
+			}
+		});
+		
+		// Cancel button
+		Button cancelButton = new Button(okCancelButtonSection, SWT.NONE);
+		cancelButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		cancelButton.setText("Cancel");
+		cancelButton.setToolTipText( "Cancel ignoring any specified changes" );
+		cancelButton.addSelectionListener(new SelectionAdapter() 
+		{
+			public void widgetSelected(SelectionEvent e) 
+			{
+				cancelButtonSelected();
+			}
+		});
+		
+		setVisibleOkCancelButtonSection( getAtdl4jConfig().isShowCompositePanelOkCancelButtonSection() );
+		
+		return okCancelButtonSection;
+	}
+	
+	public void setVisibleOkCancelButtonSection( boolean aVisible )
+	{
+		 if ( ( okCancelButtonSection != null ) && ( ! okCancelButtonSection.isDisposed() ) )
+		 {
+			 okCancelButtonSection.setVisible( aVisible );
+		 }
 	}
 
 	protected void packLayout()

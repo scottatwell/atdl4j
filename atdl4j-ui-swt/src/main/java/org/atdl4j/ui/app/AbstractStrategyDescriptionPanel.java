@@ -1,11 +1,6 @@
 package org.atdl4j.ui.app;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 import org.atdl4j.config.Atdl4jConfig;
-import org.atdl4j.data.Atdl4jHelper;
 import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
@@ -30,7 +25,7 @@ public abstract class AbstractStrategyDescriptionPanel
 	 */
 	public void loadStrategyDescription( StrategyT aStrategy )
 	{
-		if ( getAtdl4jConfig().isShowStrategyDescription() )
+		if ( ( getAtdl4jConfig() != null ) && ( getAtdl4jConfig().isShowStrategyDescription() ) )
 		{
 			if ( ( aStrategy != null ) && ( aStrategy.getDescription() != null ) )
 			{

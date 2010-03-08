@@ -130,10 +130,10 @@ public abstract class AbstractAtdl4jConfig
 	
 	private InputAndFilterData inputAndFilterData;
 	
-//TODO 2/23/2010 -- the vertical height used by strategyDescription remains "taken" even after setVisible(false) and layout()/pack() below !!!!!!			
 	private boolean showStrategyDescription = true;
-//	private boolean showStrategyDescription = false;
 	private boolean showTimezoneSelector = false;
+	private boolean showValidateOutputSection = true;
+	private boolean showCompositePanelOkCancelButtonSection = true;
 	private Integer strategyDropDownItemDepth = new Integer( 15 );  // ComboBox drop down 'depth' (aka VisibleItemCount)
 	private boolean selectedStrategyValidated = false;
 	
@@ -1352,6 +1352,38 @@ public abstract class AbstractAtdl4jConfig
 	public boolean isShowTimezoneSelector()
 	{
 		return showTimezoneSelector;
+	}
+
+	/**
+	 * @param showValidateOutputSection the showValidateOutputSection to set
+	 */
+	public void setShowValidateOutputSection(boolean showValidateOutputSection)
+	{
+		this.showValidateOutputSection = showValidateOutputSection;
+	}
+
+	/**
+	 * @return the showValidateOutputSection
+	 */
+	public boolean isShowValidateOutputSection()
+	{
+		return showValidateOutputSection;
+	}
+
+	/**
+	 * @param showCompositePanelOkCancelButtonSection the showCompositePanelOkCancelButtonSection to set
+	 */
+	public void setShowCompositePanelOkCancelButtonSection(boolean showCompositePanelOkCancelButtonSection)
+	{
+		this.showCompositePanelOkCancelButtonSection = showCompositePanelOkCancelButtonSection;
+	}
+
+	/**
+	 * @return the showCompositePanelOkCancelButtonSection
+	 */
+	public boolean isShowCompositePanelOkCancelButtonSection()
+	{
+		return showCompositePanelOkCancelButtonSection;
 	}
 
 	public List<StrategyT> getStrategiesFilteredStrategyList()

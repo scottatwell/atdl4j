@@ -16,6 +16,8 @@ public interface FixatdlFileSelectionPanel
 
 	public Atdl4jConfig getAtdl4jConfig();
 	
+	public void setVisible( boolean aVisible );
+	
 	public void addListener(FixatdlFileSelectionPanelListener aFixatdlFileSelectionPanelListener);
 	
 	public void removeListener(FixatdlFileSelectionPanelListener aFixatdlFileSelectionPanelListener);

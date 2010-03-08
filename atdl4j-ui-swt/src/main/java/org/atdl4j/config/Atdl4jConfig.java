@@ -141,6 +141,12 @@ public interface Atdl4jConfig
 	public void setShowTimezoneSelector(boolean showTimezoneSelector);
 	public boolean isShowTimezoneSelector();
 	
+	public void setShowValidateOutputSection(boolean showValidateOutputSection);
+	public boolean isShowValidateOutputSection();
+
+	public void setShowCompositePanelOkCancelButtonSection(boolean showCompositePanelOkCancelButtonSection);
+	public boolean isShowCompositePanelOkCancelButtonSection();
+
 	public List<StrategyT> getStrategiesFilteredStrategyList();
 
 	public boolean isTreatControlVisibleFalseAsNull();
