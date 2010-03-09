@@ -126,11 +126,13 @@ public abstract class AbstractStrategyUI
 		createRadioGroups();
 
 		addHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );
-		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
+// 3/9/2010 Scott Atwell moved after buildControlWithParameterMap		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
 		
 		buildControlWithParameterMap();
 		attachGlobalStateRulesToControls();
 		
+		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
+
 		attachStateListenersToAllControls();
 	}
 
