@@ -64,9 +64,14 @@ public class SWTAtdl4jTesterApp
 			
 	
 			// -- SWT-specific stuff to improve layout --
-			shell.pack();
+//	screen sizing works better with pack() after open()		shell.pack();
 			shell.open();
+			shell.pack();
+
+// 3/8/2010 Scott Atwell added to avoid postage stamp size at start		
+			shell.setSize( shell.computeSize( 400, 500 ) );
 			
+
 			// -- SWT-specific stuff to keep Display and Shell active --
 			while (!shell.isDisposed()) 
 			{
