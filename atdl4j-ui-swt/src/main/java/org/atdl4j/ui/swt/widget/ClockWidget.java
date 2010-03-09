@@ -224,15 +224,24 @@ public class ClockWidget
 
 	public DateTime getControlValueRaw()
 	{
+/*** 3/9/2010 Scott Atwell changed to handle UTCTimeOnly (dateClock is null) or DateOnly (timeClock is null)		
 		if ( ( dateClock == null ) || ( timeClock == null ) )
+***/		
+		if ( ( dateClock == null ) && ( timeClock == null ) )
 		{
 			return null; // disabled, no value to use
 		}
 
-		DateTime result = new DateTime( showMonthYear ? dateClock.getYear() : 1970, showMonthYear ? dateClock.getMonth() + 1 : 1, showDay ? dateClock
-				.getDay() : 1, showTime ? timeClock.getHours() : 0, showTime ? timeClock.getMinutes() : 0,
-				showTime ? timeClock.getSeconds() : 0, 0, DateTimeZone.getDefault() );
+		DateTime result = new DateTime( showMonthYear ? dateClock.getYear() : 1970,
+				showMonthYear ? dateClock.getMonth() + 1 : 1,
+				showDay ? dateClock.getDay() : 1,
+				showTime ? timeClock.getHours() : 0,
+				showTime ? timeClock.getMinutes() : 0,
+				showTime ? timeClock.getSeconds() : 0, 
+				0, 
+				DateTimeZone.getDefault() );
 		
+
 		// Convert to UTC time for UTCTimestampT and UTCTimeOnlyT.
 		// Performing UTCDateT and MonthYearT coversion could produce an unexpected result.
 		// No conversion is needed for LocalMktTimeT, TZTimestampT, and TZTimeOnlyT.
