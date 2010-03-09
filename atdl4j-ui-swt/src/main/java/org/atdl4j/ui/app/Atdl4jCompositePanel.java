@@ -82,9 +82,18 @@ public interface Atdl4jCompositePanel
 
 	public Atdl4jConfig getAtdl4jConfig();
 	
+	/* 
+	 * Parses the FIXatdl file aFilename into StrategiesT storing the result via Atdl4jConfig().setStrategies().
+	 */
 	public void parseFixatdlFile( String aFilename ) 
 		throws JAXBException, IOException, NumberFormatException; 
 
+	/**
+	 * Can be invoked/re-invoked at anytime provided that parseFixatdlFile() has successfully parsed the
+	 * FIXatdl file contents into Atdl4jConfig().setStrategies().  Re-generates the display.
+	 */
+	public void loadScreenWithFilteredStrategies();
+	
 	public boolean loadFixMessage( String aFixMessage );
 
 	/* 
@@ -92,6 +101,11 @@ public interface Atdl4jCompositePanel
 	 */
 	public StrategyT validateStrategy();
 	
+
+	/* 
+	 * Invokes fixatdlFileSelected() with getLastFixatdlFilename() if non-null.  
+	 * Re-reads the FIXatdl XML file and then re-loads the screen for StrategiesT.
+	 */
 	public void reloadFixatdlFile();
 	
 	public void setVisibleValidateOutputSection( boolean aVisible );

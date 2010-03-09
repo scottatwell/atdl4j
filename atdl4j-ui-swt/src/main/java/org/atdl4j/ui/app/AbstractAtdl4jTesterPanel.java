@@ -131,8 +131,10 @@ public abstract class AbstractAtdl4jTesterPanel
 	@Override
 	public void inputAndFilterDataSpecified(InputAndFilterData aInputAndFilterData)
 	{
-//TODO ?? no action necessary, simply letting us know that Atdl4jConfig and its nested InputAndFilterData have been set.
-		getAtdl4jCompositePanel().reloadFixatdlFile();
+//TODO ?? need better way to refresh a pre-loaded/cached FIXatdl file
+//		getAtdl4jCompositePanel().reloadFixatdlFile();
+		// -- Reloads the screen for the pre-loaded/cached FIXatdl file
+		getAtdl4jCompositePanel().loadScreenWithFilteredStrategies();
 	}
 
 	/* (non-Javadoc)

@@ -196,10 +196,12 @@ public abstract class AbstractAtdl4jCompositePanel
 		try
 		{
 			parseFixatdlFile( aFilename );
+			
+			loadScreenWithFilteredStrategies();
 		}
 		catch (Exception e)
 		{
-			logger.warn( "parseFixatdlFile exception", e );
+			logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
 			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl File Parse Exception", "", e );
 		}
 	}
@@ -270,6 +272,7 @@ public abstract class AbstractAtdl4jCompositePanel
 		}
 	}
 	
+/*** 3/8/2010 Scott Atwell refactored	
 	public void parseFixatdlFile( String aFilename ) 
 		throws JAXBException,
 				 IOException, 
@@ -296,7 +299,8 @@ public abstract class AbstractAtdl4jCompositePanel
 			// try to parse as file
 			File file = new File( aFilename );		
 			JAXBElement<?> element = (JAXBElement<?>)um.unmarshal(file);
-			getAtdl4jConfig().setStrategies( (StrategiesT)element.getValue() );
+//			getAtdl4jConfig().setStrategies( (StrategiesT)element.getValue() );
+			getAtdl4jConfig().setStrategies( null );
 		}
 
 		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
@@ -317,7 +321,80 @@ public abstract class AbstractAtdl4jCompositePanel
 		
 		setLastFixatdlFilename( aFilename );
 	}
+****/
+	/* 
+	 * Parses the FIXatdl file aFilename into StrategiesT storing the result via Atdl4jConfig().setStrategies().
+	 */
+	public void parseFixatdlFile( String aFilename ) 
+		throws JAXBException,
+				 IOException, 
+				 NumberFormatException 
+	{
+		setLastFixatdlFilename( null );
+		getAtdl4jConfig().setStrategies( null );
+		
+		// parses the XML document and build an object model
+		JAXBContext jc = JAXBContext.newInstance(StrategiesT.class.getPackage().getName());
+		Unmarshaller um = jc.createUnmarshaller();
+	
+		try 
+		{
+			// try to parse as URL
+			URL url = new URL( aFilename );
+			
+			JAXBElement<?> element = (JAXBElement<?>) um.unmarshal(url);
 
+			getAtdl4jConfig().setStrategies( (StrategiesT) element.getValue() );
+			
+			setLastFixatdlFilename( aFilename );
+		} 
+		catch (MalformedURLException e) 
+		{
+			// try to parse as file
+			File file = new File( aFilename );		
+			
+			JAXBElement<?> element = (JAXBElement<?>) um.unmarshal(file);
+			
+			getAtdl4jConfig().setStrategies( (StrategiesT) element.getValue() );
+			
+			setLastFixatdlFilename( aFilename );
+		}
+	}
+	
+	/**
+	 * Can be invoked/re-invoked at anytime provided that parseFixatdlFile() has successfully parsed the
+	 * FIXatdl file contents into Atdl4jConfig().setStrategies().  Re-generates the display.
+	 */
+	public void loadScreenWithFilteredStrategies()
+	{
+		// remove all strategy panels
+		getStrategiesPanel().removeAllStrategyPanels();
+		
+		// obtain filtered StrategyList
+		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
+		
+		if ( tempFilteredStrategyList == null )
+		{
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Unexpected Error", "Unexpected Error: Atdl4jConfig().getStrategiesFilteredStrategyList() was null." );
+			return;
+		}
+		
+		getStrategiesPanel().createStrategyPanels( tempFilteredStrategyList );
+		getStrategySelectionPanel().loadStrategyList( tempFilteredStrategyList );
+		
+		if ( ( getAtdl4jConfig().getInputAndFilterData() != null ) && 
+			  ( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() != null ) )
+		{
+			getStrategySelectionPanel().selectDropDownStrategy( getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );
+		}
+		else
+		{
+			getStrategySelectionPanel().selectFirstDropDownStrategy();
+		}
+	
+		packLayout();
+	}
+	
 	public boolean loadFixMessage( String aFixMessage ) 
 	{
 		logger.info("Loading FIX string " + aFixMessage);
@@ -424,7 +501,8 @@ public abstract class AbstractAtdl4jCompositePanel
 	}
 	
 	/* 
-	 * Invokes fixatdlFileSelected() with getLastFixatdlFilename() if non-null.
+	 * Invokes fixatdlFileSelected() with getLastFixatdlFilename() if non-null.  
+	 * Re-reads the FIXatdl XML file and then re-loads the screen for StrategiesT.
 	 */
 	public void reloadFixatdlFile() 
 	{

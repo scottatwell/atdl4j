@@ -75,6 +75,10 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	public static String[] DEFAULT_FIX_FIELD_TIME_IN_FORCE_SUBSET_LIST = new String[] { "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };  // just to seed it with some  
 	public static String FIX_FIELD_NAME_TIME_IN_FORCE = "FIX_TimeInForce";  // tag 59
 	
+	private Button checkboxAtd4ljShowStrategyDescription;
+	private Button checkboxAtd4ljShowValidateOutputSection;
+	private Button checkboxAtd4ljShowCompositePanelOkCancelButtonSection;
+	
 	public Object buildAtdl4jInputAndFilterDataPanel(Object aParentOrShell, Atdl4jConfig aAtdl4jConfig)
 	{
 		return buildAtdl4jInputAndFilterDataPanel( (Composite) aParentOrShell, aAtdl4jConfig );
@@ -106,13 +110,14 @@ public class SWTAtdl4jInputAndFilterDataPanel
 
 		buildStrategyFilterPanel( tempCoreAtdl4jSettingsPanel );
 		
-		Composite tempTwoColPanel = new Composite( tempCoreAtdl4jSettingsPanel, SWT.NONE );
-		GridLayout tempTwoColLayout = new GridLayout(2, false);
-		tempTwoColPanel.setLayout(tempTwoColLayout);
-		tempTwoColPanel.setLayoutData(new GridData(SWT.NONE, SWT.FILL, false, false));
+		Composite tempThreeColPanel = new Composite( tempCoreAtdl4jSettingsPanel, SWT.NONE );
+		GridLayout tempTwoColLayout = new GridLayout(3, false);
+		tempThreeColPanel.setLayout(tempTwoColLayout);
+		tempThreeColPanel.setLayoutData(new GridData(SWT.NONE, SWT.FILL, false, false));
 		
-		buildStandardFixFieldsPanel( tempTwoColPanel );
-		buildSelectStrategyPanel( tempTwoColPanel );
+		buildStandardFixFieldsPanel( tempThreeColPanel );
+		buildSelectStrategyPanel( tempThreeColPanel );
+		buildAtdl4jConfigSettingsPanel( tempThreeColPanel );
 		
 		return tempCoreAtdl4jSettingsPanel;
 	}
@@ -280,6 +285,32 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		return tempStandardFixFieldsGroup;
 	}
 	
+	protected Composite buildAtdl4jConfigSettingsPanel( Composite aParent )
+	{
+		Group tempAtdl4jConfigSettingsGroup = new Group( aParent, SWT.NONE );
+		tempAtdl4jConfigSettingsGroup.setText( "Atdl4j Settings" );
+		GridLayout tempAtdl4jConfigSettingsGroupLayout = new GridLayout( 1, true );
+		tempAtdl4jConfigSettingsGroup.setLayout(tempAtdl4jConfigSettingsGroupLayout);
+		tempAtdl4jConfigSettingsGroup.setLayoutData(new GridData(SWT.TOP, SWT.FILL, false, false));
+		
+		checkboxAtd4ljShowStrategyDescription = new Button( tempAtdl4jConfigSettingsGroup, SWT.CHECK );
+		checkboxAtd4ljShowStrategyDescription.setText( "Show Strategy Description" );
+		checkboxAtd4ljShowStrategyDescription.setToolTipText( "When checked, Strategy Description panel will be shown when Strategy's Description has been specified." );
+		checkboxAtd4ljShowStrategyDescription.setSelection( getAtdl4jConfig().isShowStrategyDescription() );
+		
+		checkboxAtd4ljShowValidateOutputSection = new Button( tempAtdl4jConfigSettingsGroup, SWT.CHECK );
+		checkboxAtd4ljShowValidateOutputSection.setText( "Show Validation Section" );
+		checkboxAtd4ljShowValidateOutputSection.setToolTipText( "When checked, Validation panel will be shown providing \"Validate\" button and output text field." );
+		checkboxAtd4ljShowValidateOutputSection.setSelection( getAtdl4jConfig().isShowValidateOutputSection() );
+		
+		checkboxAtd4ljShowCompositePanelOkCancelButtonSection = new Button( tempAtdl4jConfigSettingsGroup, SWT.CHECK );
+		checkboxAtd4ljShowCompositePanelOkCancelButtonSection.setText( "Show OK/Close" );
+		checkboxAtd4ljShowCompositePanelOkCancelButtonSection.setToolTipText( "When checked, \"OK\" and \"Close\" buttons will be displayed and available." );
+		checkboxAtd4ljShowCompositePanelOkCancelButtonSection.setSelection( getAtdl4jConfig().isShowCompositePanelOkCancelButtonSection() );
+		
+		return tempAtdl4jConfigSettingsGroup;
+	}
+	
 	/*
 	 */
 	public boolean extractAtdl4jConfigFromScreen()
@@ -302,7 +333,11 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		addFixFieldToInputAndFilterData( FIX_FIELD_NAME_HANDL_INST, dropDownListFixFieldHandlInst );
 		addFixFieldToInputAndFilterData( FIX_FIELD_NAME_EXEC_INST, dropDownListFixFieldExecInst );
 		addFixFieldToInputAndFilterData( FIX_FIELD_NAME_TIME_IN_FORCE, dropDownListFixFieldTimeInForce );
-		
+	
+		getAtdl4jConfig().setShowStrategyDescription( getCheckboxValue( checkboxAtd4ljShowStrategyDescription, null ).booleanValue() );
+		getAtdl4jConfig().setShowValidateOutputSection( getCheckboxValue( checkboxAtd4ljShowValidateOutputSection, null ).booleanValue() );
+		getAtdl4jConfig().setShowCompositePanelOkCancelButtonSection( getCheckboxValue( checkboxAtd4ljShowCompositePanelOkCancelButtonSection, null ).booleanValue() );
+
 		return true;
 	}
 

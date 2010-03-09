@@ -46,7 +46,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		{
 			public void widgetSelected(SelectionEvent e)
 			{
-				processButtonInputAndFilterData();
+				buttonInputAndFilterDataSelected();
 			}
 		});
 
@@ -63,7 +63,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		}
 	}
 	
-	private void processButtonInputAndFilterData()
+	private void buttonInputAndFilterDataSelected()
 	{
 		if ( ( atdl4jInputAndFilterDataPanelShell == null ) || 
 			  ( atdl4jInputAndFilterDataPanelShell.isDisposed() ) )
@@ -77,7 +77,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		atdl4jInputAndFilterDataPanelShell.open();	
 	}
 	
-	private void processButtonOk()
+	private void buttonOkSelected()
 	{
 		// -- Atdl4jInputAndFilterDataPanel.extractAtdl4jConfigFromScreen() populates/overlays data members within our Atdl4jConfig -- 
 		if ( ! getAtdl4jInputAndFilterDataPanel().extractAtdl4jConfigFromScreen() )
@@ -89,7 +89,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		closeAtdl4jInputAndFilterDataPanelShell();
 	}
 	
-	private void processButtonCancel()
+	private void buttonCancelSelected()
 	{
 		closeAtdl4jInputAndFilterDataPanelShell();
 	}
@@ -111,7 +111,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		{
 			public void widgetSelected(SelectionEvent e)
 			{
-				processButtonOk();
+				buttonOkSelected();
 			}
 		} );
 		
@@ -121,7 +121,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		{
 			public void widgetSelected(SelectionEvent e)
 			{
-				processButtonCancel();
+				buttonCancelSelected();
 			}
 		} );
 		
