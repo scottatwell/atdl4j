@@ -3,6 +3,8 @@ package org.atdl4j.ui.swt.app;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.Atdl4jHelper;
@@ -25,7 +27,6 @@ import org.eclipse.swt.widgets.Control;
  *
  */
 public class SWTStrategiesPanel
-		// implements StrategiesPanel
 		extends AbstractStrategiesPanel
 {
 	private final Logger logger = Logger.getLogger( SWTStrategiesPanel.class );
@@ -67,7 +68,8 @@ public class SWTStrategiesPanel
 	public void createStrategyPanels(List<StrategyT> aFilteredStrategyList)
 	{
 		StrategiesUI<?> strategiesUI = null;
-		
+		setPreCached( false );
+	
 		try
 		{
 			StrategiesUIFactory factory = getAtdl4jConfig().getStrategiesUIFactory();
@@ -116,95 +118,10 @@ public class SWTStrategiesPanel
 		{
 			adjustLayoutForSelectedStrategy( 0 );
 		}
-	}
+		
+		setPreCached( true );
+	}  
 
-/**** ???? ****
-	private void initStrategiesUI()
-	{
-		StrategiesUIFactory factory = getAtdl4jConfig().getStrategiesUIFactory();
-		StrategiesUI<?> strategiesUI = factory.create( getAtdl4jConfig().getStrategies(), getAtdl4jConfig() );
-		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
-
-		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
-
-		for ( StrategyT strategy : tempFilteredStrategyList )
-		{
-			// create composite
-			Composite strategyParent = new Composite( strategiesPanel, SWT.NONE );
-			strategyParent.setLayout( new FillLayout() );
-			// 2/7/2010 Scott Atwell SWTStrategyUI ui;
-			StrategyUI ui;
-
-			// build strategy and catch strategy-specific errors
-			try
-			{
-				// TODO 1/17/2010 Scott Atwell ui = strategiesUI.createUI(strategy,
-				// strategyParent);
-				// 2/8/2010 Scott Atwell StrategiesUI now already has Atdl4jConfig
-				// ui = strategiesUI.createUI(strategy, strategyParent,
-				// getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap());
-				ui = strategiesUI.createUI( strategy, strategyParent );
-			}
-			catch (JAXBException e1)
-			{
-				MessageBox messageBox = new MessageBox( shell, SWT.OK | SWT.ICON_ERROR );
-				// e1.getMessage() is null if there is a JAXB parse error
-				String msg = "";
-				if ( e1.getMessage() != null )
-				{
-					messageBox.setText( "Strategy Load Error" );
-					msg = e1.getMessage();
-				}
-				else if ( e1.getLinkedException() != null && e1.getLinkedException().getMessage() != null )
-				{
-					messageBox.setText( e1.getLinkedException().getClass().getSimpleName() );
-					msg = e1.getLinkedException().getMessage();
-				}
-				messageBox.setMessage( "Error in Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName( strategy ) + "\":\n\n" + msg );
-				messageBox.open();
-
-				// rollback changes
-				strategyParent.dispose();
-
-				// skip to next strategy
-				continue;
-			}
-
-			// create dropdown item for strategy
-			// 2/7/2010 Scott Atwell (this has been incorporated within
-			// StrategySelectionPanel.loadStrategyList())
-			// strategiesDropDown.add(getStrategyName(strategy));
-			getAtdl4jConfig().getStrategyUIMap().put( strategy, ui );
-
-			// TODO Scott Atwell 1/17/2010 Added BEGIN
-			ui.setCxlReplaceMode( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );
-			// TODO Scott Atwell 1/17/2010 Added END
-		}
-
-		// 2/7/2010 Scott Atwell (this has been incorporated within
-		// StrategySelectionPanel.loadStrategyList()) if
-		// (strategiesDropDown.getItem(0) != null) strategiesDropDown.select(0);
-
-		// 2/7/2010 Scott Atwell added
-		getStrategySelectionPanel().loadStrategyList( tempFilteredStrategyList );
-
-		// TODO: This flashes all parameters on the screen when we first load
-		// There's got to be a better way...
-		shell.pack();
-		for ( int i = 0; i < strategiesPanel.getChildren().length; i++ )
-		{
-			( (GridData) strategiesPanel.getChildren()[ i ].getLayoutData() ).heightHint = ( i != 0 ) ? 0 : -1;
-			( (GridData) strategiesPanel.getChildren()[ i ].getLayoutData() ).widthHint = ( i != 0 ) ? 0 : -1;
-		}
-		strategiesPanel.layout();
-		if ( getAtdl4jConfig().getStrategies() != null )
-		{
-			getAtdl4jConfig().setSelectedStrategy( getAtdl4jConfig().getStrategies().getStrategy().get( 0 ) );
-		}
-	}
-**** ???? ****/	
-	
-	
 	public void adjustLayoutForSelectedStrategy(int aIndex)
 	{
 		if ( strategiesPanel != null )
@@ -223,4 +140,27 @@ public class SWTStrategiesPanel
 			strategiesPanel.layout();
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.app.StrategiesPanel#reinitStrategyPanels()
+	 */
+	@Override
+	public void reinitStrategyPanels()
+		throws JAXBException
+	{
+		for ( StrategyUI tempStrategyUI : getAtdl4jConfig().getStrategyUIMap().values() )
+		{
+			logger.info( "Invoking StrategyUI.reinitStrategyPanel() for: " + Atdl4jHelper.getStrategyUiRepOrName( tempStrategyUI.getStrategy() ) );
+
+			tempStrategyUI.reinitStrategyPanel();
+		}
+		
+		// -- Force the display to only show the Composite panels for the first strategy, otherwise the first screen is a jumbled mess of all strategy's parameters sequentially --
+		if ( getAtdl4jConfig().getStrategyUIMap().size() > 0 )
+		{
+			adjustLayoutForSelectedStrategy( 0 );
+		}
+	}
+
+
 }

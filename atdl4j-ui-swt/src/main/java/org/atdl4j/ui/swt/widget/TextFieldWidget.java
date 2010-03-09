@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.fixatdl.layout.TextFieldT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -170,6 +169,18 @@ This is prone to issues:
 		if ( Boolean.FALSE.equals( aNewNullValueInd ) )
 		{
 			textField.setText( "" );
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( textField != null ) && ( ! textField.isDisposed() ) )
+		{
+			textField.setText( (aControlInitValue != null ) ? (String) aControlInitValue : "" );
 		}
 	}
 }

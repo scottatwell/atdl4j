@@ -48,4 +48,12 @@ public class HiddenFieldWidget
 		// do nothing
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		// do nothing
+	}
 }

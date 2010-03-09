@@ -48,7 +48,8 @@ import org.atdl4j.ui.StrategyUI;
  * 
  * @param <E>
  */
-public abstract class AbstractStrategyUI implements StrategyUI 
+public abstract class AbstractStrategyUI 
+	implements StrategyUI 
 {
 	protected static final Logger logger = Logger.getLogger( AbstractStrategyUI.class );
 	
@@ -87,6 +88,7 @@ public abstract class AbstractStrategyUI implements StrategyUI
 	abstract protected void addToControlMap( String aName, ControlUI aControlUI );
 	abstract public void setCxlReplaceMode(boolean cxlReplaceMode);
 	abstract protected void fireStateListeners();
+	abstract protected void applyRadioGroupRules();
 	
 	/**
 	 * @param strategy
@@ -692,5 +694,29 @@ public abstract class AbstractStrategyUI implements StrategyUI
 		for ( SWTStateListener stateListener : getStateListenerList() )
 			stateListener.handleEvent( null );
 **/			
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.StrategyUI#reinitStrategyPanel()
+	 */
+	@Override
+	public void reinitStrategyPanel()
+		throws JAXBException
+	{
+		for ( ControlUI tempControlUI : getControlUIMap().values() )
+		{
+			logger.debug( "Invoking ControlUI.reinit() for: " + tempControlUI.getControl().getID() );
+
+			tempControlUI.reinit();
+		}
+
+		// -- Set Strategy's CxlReplaceMode --
+		setCxlReplaceMode( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );;
+		
+		// -- Execute StateRules --
+		fireStateListeners();
+		
+		// -- If no RadioButtons within a radioGroup are selected, then first one in list will be selected --
+		applyRadioGroupRules();
 	}
 }

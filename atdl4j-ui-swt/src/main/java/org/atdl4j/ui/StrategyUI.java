@@ -4,13 +4,13 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.fixatdl.core.ParameterT;
-import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.StrategyRuleset;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.StrategyT;
 
 public interface StrategyUI {
 
@@ -49,4 +49,5 @@ public interface StrategyUI {
 	public StrategyRuleset getStrategyRuleset();
 	public Map<String, ValidationRule> getCompleteValidationRuleMap();
 
+	public void reinitStrategyPanel() throws JAXBException;
 }

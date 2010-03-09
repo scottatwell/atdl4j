@@ -6,6 +6,8 @@ package org.atdl4j.ui;
 
 import java.math.BigInteger;
 
+import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.fixatdl.layout.CheckBoxListT;
 import org.atdl4j.fixatdl.layout.CheckBoxT;
 import org.atdl4j.fixatdl.layout.ClockT;
@@ -22,8 +24,6 @@ import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.fixatdl.layout.TextFieldT;
-import org.atdl4j.config.Atdl4jConfig;
-import org.atdl4j.data.Atdl4jConstants;
 
 /**
  * 
@@ -252,5 +252,116 @@ public class ControlHelper
 		
 		return null;
 	}
+
+/*** 3/9/2010 Scott Atwell - moved away from using this via common, AbstractControlUI, and rather forcing each Control concrete instance to support reinit()	
+	/ **
+	 * Like getInitValue() although it returns a non-null value for each aControl type (avoid issues with Control's setValue(null) ). 
+	 * @param aControl
+	 * @param aAtdl4jConfig
+	 * @return 
+	 * /
+	public static Object getReinitValue( ControlT aControl, Atdl4jConfig aAtdl4jConfig )
+	{
+		// -- note that this returns null if initValue is Atdl4jConstants.VALUE_NULL_INDICATOR --
+		Object tempReinitValue = getInitValue( aControl, aAtdl4jConfig );
+		
+		if ( tempReinitValue != null )
+		{
+			return tempReinitValue;
+		}
+		else
+		{
+			// -- (aOkToReturnValueNullIndicatorString=false) --
+			return getReinitValueRaw( aControl, false );
+		}
+	}
+	
+	/ **
+	 * Returns raw/actual value (if aOkToReturnValueNullIndicatorString=true then could be "{NULL}" string) from ControlT/@initValue
+	 * Ensures that Object value returned is not null by 'defaulting' to a value of datatype compatible with the Control
+	 * 
+	 * @param aControl
+	 * @return 
+	 * /
+	public static Object getReinitValueRaw( ControlT aControl, boolean aOkToReturnValueNullIndicatorString )
+	{
+		Object tempInitValueRaw = getInitValueRaw( aControl );
+		
+		if ( tempInitValueRaw != null )
+		{
+			// -- Special handling to check for VALUE_NULL_INDICATOR -- 
+			if ( ( ! aOkToReturnValueNullIndicatorString ) ||
+				  ( ! Atdl4jConstants.VALUE_NULL_INDICATOR.equals( tempInitValueRaw ) ) )
+			{
+				return tempInitValueRaw;
+			}
+		}
+		
+
+		// -- Need to return a non-null value to force the Control to display/re-display in an initialized state --
+		if ( aControl instanceof CheckBoxT )
+		{
+			return Boolean.FALSE;
+		}
+		else if ( aControl instanceof CheckBoxListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof ClockT )
+		{
+			return DateTimeConverter.constructNewXmlGregorianCalendar();
+		}
+		else if ( aControl instanceof DoubleSpinnerT )
+		{
+			return new Double( 0.0d );
+		}
+		else if ( aControl instanceof DropDownListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof EditableDropDownListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof HiddenFieldT )
+		{
+// leave as-is			return "";
+		}
+		else if ( aControl instanceof LabelT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof MultiSelectListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof RadioButtonT )
+		{
+			return Boolean.FALSE;
+		}
+		else if ( aControl instanceof RadioButtonListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof SingleSelectListT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof SingleSpinnerT )
+		{
+			return new Double( 0.0d );
+		}
+		else if ( aControl instanceof SliderT )
+		{
+			return "";
+		}
+		else if ( aControl instanceof TextFieldT )
+		{
+			return "";
+		}
+		
+		return null;
+	}
+****/
 
 }

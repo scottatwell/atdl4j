@@ -205,6 +205,30 @@ public class DropDownListWidget
 		dropDownList.removeListener( SWT.Modify, listener );
 		dropDownList.removeListener( SWT.Selection, listener );
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( dropDownList != null ) && ( ! dropDownList.isDisposed() ) )
+		{
+			if ( aControlInitValue != null )
+			{
+				// -- apply initValue if one has been specified --
+				setValue( (String) aControlInitValue, true );
+			}
+			else
+			{
+				// -- set to first when no initValue exists --
+				if ( dropDownList.getItemCount() > 0 )
+				{
+					dropDownList.select( 0 );
+				}
+			}
+		}
+	}
 
 	/* 
 	 * 

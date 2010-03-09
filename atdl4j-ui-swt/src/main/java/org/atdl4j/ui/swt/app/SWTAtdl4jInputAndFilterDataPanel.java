@@ -75,6 +75,7 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	public static String[] DEFAULT_FIX_FIELD_TIME_IN_FORCE_SUBSET_LIST = new String[] { "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };  // just to seed it with some  
 	public static String FIX_FIELD_NAME_TIME_IN_FORCE = "FIX_TimeInForce";  // tag 59
 	
+	private Button checkboxAtdl4jUsePreCachedStrategyPanels;
 	private Button checkboxAtd4ljShowStrategyDescription;
 	private Button checkboxAtd4ljShowValidateOutputSection;
 	private Button checkboxAtd4ljShowCompositePanelOkCancelButtonSection;
@@ -293,6 +294,11 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		tempAtdl4jConfigSettingsGroup.setLayout(tempAtdl4jConfigSettingsGroupLayout);
 		tempAtdl4jConfigSettingsGroup.setLayoutData(new GridData(SWT.TOP, SWT.FILL, false, false));
 		
+		checkboxAtdl4jUsePreCachedStrategyPanels = new Button( tempAtdl4jConfigSettingsGroup, SWT.CHECK );
+		checkboxAtdl4jUsePreCachedStrategyPanels.setText( "Pre-Cache Strategy Panels" );
+		checkboxAtdl4jUsePreCachedStrategyPanels.setToolTipText( "When checked, Strategy Panels are built once when FIXatdl XML file is loaded and then re-used/re-init'd upon subsequent 'load' operations (Improves performance)" );
+		checkboxAtdl4jUsePreCachedStrategyPanels.setSelection( getAtdl4jConfig().isUsePreCachedStrategyPanels() );
+		
 		checkboxAtd4ljShowStrategyDescription = new Button( tempAtdl4jConfigSettingsGroup, SWT.CHECK );
 		checkboxAtd4ljShowStrategyDescription.setText( "Show Strategy Description" );
 		checkboxAtd4ljShowStrategyDescription.setToolTipText( "When checked, Strategy Description panel will be shown when Strategy's Description has been specified." );
@@ -334,6 +340,7 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		addFixFieldToInputAndFilterData( FIX_FIELD_NAME_EXEC_INST, dropDownListFixFieldExecInst );
 		addFixFieldToInputAndFilterData( FIX_FIELD_NAME_TIME_IN_FORCE, dropDownListFixFieldTimeInForce );
 	
+		getAtdl4jConfig().setUsePreCachedStrategyPanels( getCheckboxValue( checkboxAtdl4jUsePreCachedStrategyPanels, null ).booleanValue() );
 		getAtdl4jConfig().setShowStrategyDescription( getCheckboxValue( checkboxAtd4ljShowStrategyDescription, null ).booleanValue() );
 		getAtdl4jConfig().setShowValidateOutputSection( getCheckboxValue( checkboxAtd4ljShowValidateOutputSection, null ).booleanValue() );
 		getAtdl4jConfig().setShowCompositePanelOkCancelButtonSection( getCheckboxValue( checkboxAtd4ljShowCompositePanelOkCancelButtonSection, null ).booleanValue() );

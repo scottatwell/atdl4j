@@ -167,4 +167,16 @@ public class ButtonWidget
 		// TODO ?? adjust the visual appearance of the control ??
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( button != null ) && ( ! button.isDisposed() ) )
+		{
+			button.setSelection( (aControlInitValue != null ) ? ((Boolean) aControlInitValue).booleanValue() : false );
+		}
+	}
+	
 }

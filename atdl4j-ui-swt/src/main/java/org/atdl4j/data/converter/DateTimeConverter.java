@@ -1,8 +1,12 @@
 package org.atdl4j.data.converter;
 
+import java.util.GregorianCalendar;
+
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.atdl4j.data.ParameterHelper;
 import org.atdl4j.fixatdl.core.LocalMktDateT;
 import org.atdl4j.fixatdl.core.MonthYearT;
 import org.atdl4j.fixatdl.core.ParameterT;
@@ -10,7 +14,6 @@ import org.atdl4j.fixatdl.core.UTCDateOnlyT;
 import org.atdl4j.fixatdl.core.UTCTimeOnlyT;
 import org.atdl4j.fixatdl.core.UTCTimestampT;
 import org.atdl4j.fixatdl.timezones.Timezone;
-import org.atdl4j.data.ParameterHelper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -21,6 +24,9 @@ public class DateTimeConverter
 {
 // 2/15/2010 Scott Atwell added	
 	Timezone timezone = null;
+// 3/8/2010 Scott Atwell added
+	public static DatatypeFactory javaxDatatypeFactory;
+
 	
 	public DateTimeConverter(ParameterT parameter)
 	{
@@ -225,4 +231,33 @@ public class DateTimeConverter
 	{
 		this.timezone = aTimezone;
 	}
+	
+	protected static DatatypeFactory getJavaxDatatypeFactory()
+	{
+		// -- Lazy init --
+		if ( javaxDatatypeFactory == null )
+		{
+			try
+			{
+				javaxDatatypeFactory = DatatypeFactory.newInstance();
+			}
+			catch (Exception e)
+			{
+				// swallow, likely generate NPE
+			}
+		}
+		
+		return javaxDatatypeFactory;
+	}
+	
+	/**
+	 * @return javax.xml.datatype.DatatypeFactory.newXMLGregorianCalendar()
+	 */
+	public static XMLGregorianCalendar constructNewXmlGregorianCalendar()
+	{
+// com.sun.jdi.InvocationException ???		return getJavaxDatatypeFactory().newXMLGregorianCalendar();
+		return getJavaxDatatypeFactory().newXMLGregorianCalendar( new GregorianCalendar() );
+	}
+	
+	
 }

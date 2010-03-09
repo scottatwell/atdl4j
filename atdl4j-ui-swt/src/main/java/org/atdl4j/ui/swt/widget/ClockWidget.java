@@ -7,6 +7,8 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
+import org.atdl4j.data.Atdl4jConstants;
+import org.atdl4j.data.converter.DateTimeConverter;
 import org.atdl4j.fixatdl.core.LocalMktDateT;
 import org.atdl4j.fixatdl.core.MonthYearT;
 import org.atdl4j.fixatdl.core.UTCDateOnlyT;
@@ -14,8 +16,6 @@ import org.atdl4j.fixatdl.core.UTCTimeOnlyT;
 import org.atdl4j.fixatdl.core.UTCTimestampT;
 import org.atdl4j.fixatdl.core.UseT;
 import org.atdl4j.fixatdl.layout.ClockT;
-import org.atdl4j.data.Atdl4jConstants;
-import org.atdl4j.data.converter.DateTimeConverter;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -439,6 +439,24 @@ public class ClockWidget
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( aControlInitValue != null )
+		{
+			// -- apply initValue if one has been specified --
+			setAndRenderInitValue( (XMLGregorianCalendar ) aControlInitValue, ((ClockT) control).getInitValueMode() );
+		}
+		else
+		{
+			// -- reinit the time to present time --
+			setValue( new DateTime() );
+		}
+	}
+
 	/* 
 	 * 
 	 */

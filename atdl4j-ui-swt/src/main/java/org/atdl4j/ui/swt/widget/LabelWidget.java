@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.fixatdl.layout.LabelT;
 import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.impl.LabelUI;
 import org.atdl4j.ui.swt.SWTWidget;
@@ -132,5 +131,17 @@ public class LabelWidget
 		}
 
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( label != null ) && ( ! label.isDisposed() ) )
+		{
+			label.setText( (aControlInitValue != null ) ? (String) aControlInitValue : "" );
+		}
 	}
 }

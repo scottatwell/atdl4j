@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.atdl4j.fixatdl.layout.DoubleSpinnerT;
-import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.data.converter.DecimalConverter;
 import org.atdl4j.data.converter.IntegerConverter;
+import org.atdl4j.fixatdl.layout.DoubleSpinnerT;
+import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -277,6 +277,29 @@ public class SpinnerWidget
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( spinner != null ) && ( ! spinner.isDisposed() ) )
+		{
+			if ( aControlInitValue != null )
+			{
+				// -- apply initValue if one has been specified --
+				Double initValue = (Double) aControlInitValue;
+				if ( initValue != null )
+					spinner.setSelection( initValue.intValue() * (int) Math.pow( 10, spinner.getDigits() ) );
+			}
+			else
+			{
+				// -- set to minimum when no initValue exists --
+				spinner.setSelection( spinner.getMinimum() );
+			}
+		}
+	}
+	
 	/* 
 	 * 
 	 */

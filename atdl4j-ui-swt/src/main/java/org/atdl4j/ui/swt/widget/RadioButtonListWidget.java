@@ -8,7 +8,6 @@ import org.atdl4j.fixatdl.core.EnumPairT;
 import org.atdl4j.fixatdl.layout.ListItemT;
 import org.atdl4j.fixatdl.layout.PanelOrientationT;
 import org.atdl4j.fixatdl.layout.RadioButtonListT;
-import org.atdl4j.fixatdl.layout.StrategyPanelT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -194,6 +193,30 @@ public class RadioButtonListWidget
 		for ( Button b : buttons )
 		{
 			b.removeListener( SWT.Selection, listener );
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( aControlInitValue != null )
+		{
+			// -- apply initValue if one has been specified --
+			setValue( (String) aControlInitValue, true );
+		}
+		else
+		{
+			// -- reset each when no initValue exists --
+			for ( Button tempButton : buttons )
+			{
+				if ( ( tempButton != null ) && ( ! tempButton.isDisposed() ) )
+				{
+					tempButton.setSelection( false );
+				}
+			}
 		}
 	}
 

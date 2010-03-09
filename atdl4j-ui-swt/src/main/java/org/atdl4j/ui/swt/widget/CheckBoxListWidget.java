@@ -206,6 +206,30 @@ public class CheckBoxListWidget
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( aControlInitValue != null )
+		{
+			// -- apply initValue if one has been specified --
+			setValue( (String) aControlInitValue, true );
+		}
+		else
+		{
+			// -- reset each when no initValue exists --
+			for ( Button tempButton : multiCheckBox )
+			{
+				if ( ( tempButton != null ) && ( ! tempButton.isDisposed() ) )
+				{
+					tempButton.setSelection( false );
+				}
+			}
+		}
+	}
+
 	/* 
 	 * 
 	 */

@@ -152,6 +152,26 @@ public class SliderWidget
 		slider.removeListener( SWT.Selection, listener );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( slider != null ) && ( ! slider.isDisposed() ) )
+		{
+			if ( aControlInitValue != null )
+			{
+				// -- apply initValue if one has been specified --
+				setValue( (String) aControlInitValue, true );
+			}
+			else
+			{
+				// -- set to minimum when no initValue exists --
+				slider.setSelection( slider.getMinimum() );
+			}
+		}
+	}
 
 	/* 
 	 * 

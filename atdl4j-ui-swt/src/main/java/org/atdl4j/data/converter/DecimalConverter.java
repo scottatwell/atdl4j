@@ -90,7 +90,8 @@ public class DecimalConverter
 				}
 				catch (NumberFormatException e)
 				{
-					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
 				}
 			}
 		}
@@ -155,7 +156,8 @@ public class DecimalConverter
 				}
 				catch (NumberFormatException e)
 				{
-					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
 				}
 			}
 		}
@@ -458,5 +460,17 @@ public class DecimalConverter
 		{
 			return null;
 		}
-	}	
+	}
+	
+	protected String getParameterName()
+	{
+		if ( getParameter() != null )
+		{
+			return getParameter().getName();
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

@@ -56,4 +56,34 @@ public class RadioButtonListener implements Listener
 	}
 	return null;
     }*/
+    
+    /**
+    * If no RadioButtons within the radioGroup are selected, then first one in list will be selected.
+    */
+   public void processReinit()
+   {
+   	Button tempSelectedButton = null;
+   	
+   	for (Button b : buttons)
+   	{
+   		if ( b.getSelection() )
+   		{
+   			if ( tempSelectedButton == null )
+   			{
+   				tempSelectedButton = b;
+   			}
+   			else
+   			{
+   				// -- there is already a selected button!! --
+   				b.setSelection( false );
+   			}
+   		}
+   	}
+
+   	// -- Select first in list if no buttons are selected --
+   	if ( tempSelectedButton == null )
+   	{
+   		buttons.get( 0 ).setSelection( true );
+   	}
+   }
 }

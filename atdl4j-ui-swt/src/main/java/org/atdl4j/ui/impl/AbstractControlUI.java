@@ -5,6 +5,14 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.config.InputAndFilterData;
+import org.atdl4j.data.Atdl4jConstants;
+import org.atdl4j.data.FIXMessageBuilder;
+import org.atdl4j.data.ParameterHelper;
+import org.atdl4j.data.converter.AbstractTypeConverter;
+import org.atdl4j.data.fix.PlainFIXMessageBuilder;
+import org.atdl4j.data.fix.Tag959Helper;
 import org.atdl4j.fixatdl.core.EnumPairT;
 import org.atdl4j.fixatdl.core.ParameterT;
 import org.atdl4j.fixatdl.layout.CheckBoxListT;
@@ -18,14 +26,7 @@ import org.atdl4j.fixatdl.layout.RadioButtonListT;
 import org.atdl4j.fixatdl.layout.RadioButtonT;
 import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SliderT;
-import org.atdl4j.config.Atdl4jConfig;
-import org.atdl4j.config.InputAndFilterData;
-import org.atdl4j.data.Atdl4jConstants;
-import org.atdl4j.data.FIXMessageBuilder;
-import org.atdl4j.data.ParameterHelper;
-import org.atdl4j.data.converter.AbstractTypeConverter;
-import org.atdl4j.data.fix.PlainFIXMessageBuilder;
-import org.atdl4j.data.fix.Tag959Helper;
+import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 
 /**
@@ -84,11 +85,47 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	{
 	}
 
+/*** 3/8/2010 Scott Atwell first attempt to do it within AbstractControlUI, for now have pushed the reinit() implementation to each concrete class
+	public void reinit() throws JAXBException
+	{
+		// -- clear our "last value" state --
+		setLastNonNullStateControlValueRaw( null );
+	
+		// -- reset what is displayed to the user --
+// no good		
+//		init( getControl(), getParameter(), getAtdl4jConfig() );
+//		
+// too many come in with null and blow up with NPEs		setValue( (E) ControlHelper.getInitValue( getControl(), getAtdl4jConfig() ) );
+//		setValue( (E) ControlHelper.getReinitValue( getControl(), getAtdl4jConfig() ) );
+
+// better, though SliderT with initValue="Neutral" was not handled by IntegerConverter.convertValueToParameterComparable() expecting Integer-based strings...
+		Object tempReinitValue = ControlHelper.getReinitValue( getControl(), getAtdl4jConfig() );
+		setValue( (E) controlConverter.convertValueToControlComparable( tempReinitValue ) );
+	}
+***/
+	public void reinit() throws JAXBException
+	{
+		// -- clear our "last value" state --
+		setLastNonNullStateControlValueRaw( null );
+	
+		// -- check for Controls containing Parameter with constValue --
+		if ( applyConstValue() )
+		{
+			return;  // -- return if constValue has been applied --
+		}
+		
+		// -- reset what is displayed to the user --
+		processReinit( ControlHelper.getInitValue( getControl(), getAtdl4jConfig() ) );
+	}
+	
+	protected abstract void processReinit( Object aControlInitValue );
+	
 	/**
 	 * Should be invoked after Control's Widget has been fully established.  Applies Parameter's constValue to the Control
+	 * @return true if const value set
 	 * @throws JAXBException
 	 */
-	private void applyConstValue()
+	private boolean applyConstValue()
 		throws JAXBException
 	{
 // Parameter/@const has been removed		
@@ -104,6 +141,7 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 				{
 					setValue( tempComparable );
 					processConstValueHasBeenSet();
+					return true;
 				}
 				else
 				{
@@ -117,6 +155,7 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 //			}
 		}
 	
+		return false;
 	}
 	
 	/**

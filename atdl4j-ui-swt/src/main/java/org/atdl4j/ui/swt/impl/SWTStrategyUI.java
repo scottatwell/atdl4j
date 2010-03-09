@@ -517,4 +517,19 @@ public class SWTStrategyUI
 			stateListener.handleEvent( null );
 	}
 
+// 3/8/2010 Scott Atwell added	
+	/* If no RadioButtons within a radioGroup are selected, then first one in list will be selected
+	 * @see org.atdl4j.ui.impl.AbstractStrategyUI#applyRadioGroupRules()
+	 */
+	protected void applyRadioGroupRules()
+	{
+		if ( getRadioGroupMap() != null )
+		{
+			for ( RadioButtonListener tempRadioButtonListener : getRadioGroupMap().values() )
+			{
+				// -- If no RadioButtons within the radioGroup are selected, then first one in list will be selected --
+				tempRadioButtonListener.processReinit();
+			}
+		}
+	}
 }

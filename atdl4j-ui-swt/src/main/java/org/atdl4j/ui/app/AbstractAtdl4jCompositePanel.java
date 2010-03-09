@@ -332,6 +332,7 @@ public abstract class AbstractAtdl4jCompositePanel
 	{
 		setLastFixatdlFilename( null );
 		getAtdl4jConfig().setStrategies( null );
+		getStrategiesPanel().setPreCached( false );
 		
 		// parses the XML document and build an object model
 		JAXBContext jc = JAXBContext.newInstance(StrategiesT.class.getPackage().getName());
@@ -366,9 +367,12 @@ public abstract class AbstractAtdl4jCompositePanel
 	 * FIXatdl file contents into Atdl4jConfig().setStrategies().  Re-generates the display.
 	 */
 	public void loadScreenWithFilteredStrategies()
+		throws JAXBException
 	{
+/*** 3/8/2010 Scott Atwell		
 		// remove all strategy panels
 		getStrategiesPanel().removeAllStrategyPanels();
+***/
 		
 		// obtain filtered StrategyList
 		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
@@ -378,8 +382,37 @@ public abstract class AbstractAtdl4jCompositePanel
 			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Unexpected Error", "Unexpected Error: Atdl4jConfig().getStrategiesFilteredStrategyList() was null." );
 			return;
 		}
-		
+
+/*** 3/8/2010 Scott Atwell		
 		getStrategiesPanel().createStrategyPanels( tempFilteredStrategyList );
+***/
+		if ( getAtdl4jConfig().isUsePreCachedStrategyPanels() )
+		{
+			if ( getStrategiesPanel().isPreCached() )
+			{
+				// -- Use Pre-cached panels, simply re-init each one's displayed values/state --
+				getStrategiesPanel().reinitStrategyPanels();
+			}
+			else
+			{
+				// remove all strategy panels
+				getStrategiesPanel().removeAllStrategyPanels();
+				
+				List<StrategyT> tempUnfilteredStrategyList = getAtdl4jConfig().getStrategies().getStrategy();
+				
+				// -- Need to Pre-cached panels, load complete, unfiltered list --
+				getStrategiesPanel().createStrategyPanels( tempUnfilteredStrategyList );
+			}
+		}
+		else
+		{
+			// remove all strategy panels
+			getStrategiesPanel().removeAllStrategyPanels();
+			
+			// -- Always build StrategyPanels anew (can be time intensive) --
+			getStrategiesPanel().createStrategyPanels( tempFilteredStrategyList );
+		}
+		
 		getStrategySelectionPanel().loadStrategyList( tempFilteredStrategyList );
 		
 		if ( ( getAtdl4jConfig().getInputAndFilterData() != null ) && 

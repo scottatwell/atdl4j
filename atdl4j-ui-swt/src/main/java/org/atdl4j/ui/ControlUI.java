@@ -3,10 +3,10 @@ package org.atdl4j.ui;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.fixatdl.core.ParameterT;
-import org.atdl4j.fixatdl.layout.ControlT;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.layout.ControlT;
 
 /**
  * An interface for an UI widget which will be 
@@ -16,6 +16,10 @@ public interface ControlUI<E extends Comparable<?>>
 {
 // 2/9/2010 Scott Atwell added
 	public void init(ControlT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
+		throws JAXBException;
+
+// 3/8/2010 Scott Atwell added
+	public void reinit()
 		throws JAXBException;
 
 // 2/10/2010 Scott Atwell added	

@@ -187,6 +187,30 @@ public class ListBoxWidget
 		listBox.removeListener( SWT.Selection, listener );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.ControlUI#reinit()
+	 */
+	@Override
+	public void processReinit( Object aControlInitValue )
+	{
+		if ( ( listBox != null ) && ( ! listBox.isDisposed() ) )
+		{
+			if ( aControlInitValue != null )
+			{
+				// -- apply initValue if one has been specified --
+				setValue( (String) aControlInitValue, true );
+			}
+			else
+			{
+				// -- set to first when no initValue exists --
+				if ( listBox.getItemCount() > 0 )
+				{
+					listBox.select( 0 );
+				}
+			}
+		}
+	}
+
 	/* 
 	 * 
 	 */

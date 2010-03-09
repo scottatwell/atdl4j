@@ -133,8 +133,17 @@ public abstract class AbstractAtdl4jTesterPanel
 	{
 //TODO ?? need better way to refresh a pre-loaded/cached FIXatdl file
 //		getAtdl4jCompositePanel().reloadFixatdlFile();
-		// -- Reloads the screen for the pre-loaded/cached FIXatdl file
-		getAtdl4jCompositePanel().loadScreenWithFilteredStrategies();
+// 3/8/2010 Scott Atwell added		
+		try
+		{
+			// -- Reloads the screen for the pre-loaded/cached FIXatdl file (if specified and cached) --
+			getAtdl4jCompositePanel().loadScreenWithFilteredStrategies();
+		}
+		catch (Throwable e)
+		{
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Error", "ERROR during loadScreenWithFilteredStrategies()", e );
+			return;
+		}
 	}
 
 	/* (non-Javadoc)

@@ -6,6 +6,8 @@ package org.atdl4j.ui.app;
 
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.fixatdl.core.StrategyT;
 
@@ -29,6 +31,13 @@ public interface StrategiesPanel
 	public void adjustLayoutForSelectedStrategy(int aIndex);
 	
 	public Atdl4jConfig getAtdl4jConfig();
+
+	public boolean isPreCached();
+	
+	public void setPreCached( boolean aPreCached );
+	
+	public void reinitStrategyPanels() 
+		throws JAXBException;
 	
 	public void addListener(StrategiesPanelListener strategiesUIListener);
 	

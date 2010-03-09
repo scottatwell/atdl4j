@@ -24,7 +24,7 @@ public abstract class AbstractStrategiesPanel
 
 	private List<StrategiesPanelListener> listenerList = new Vector<StrategiesPanelListener>();
 
-
+	private boolean preCached = false;
 
 	/**
 	 * @param atdl4jConfig the atdl4jConfig to set
@@ -59,5 +59,23 @@ public abstract class AbstractStrategiesPanel
 		{
 			tempListener.strategySelected( aStrategy, index );
 		}
+	}
+
+
+	/**
+	 * @return the preCached
+	 */
+	public boolean isPreCached()
+	{
+		return this.preCached;
+	}
+
+
+	/**
+	 * @param aPreCached the preCached to set
+	 */
+	public void setPreCached(boolean aPreCached)
+	{
+		this.preCached = aPreCached;
 	}
 }
