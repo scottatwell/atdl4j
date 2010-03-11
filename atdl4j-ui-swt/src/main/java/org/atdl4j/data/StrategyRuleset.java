@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.xml.bind.JAXBException;
 
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.fixatdl.validation.StrategyEditT;
 
@@ -75,9 +76,10 @@ public class StrategyRuleset
 			}
 			catch (ValidationException e)
 			{
-				ControlUI<?> target = e.getTarget();
-				String name = target.getParameter().getName();
-				throw new ValidationException( target, "Parameter \"" + name + "\" is required." );
+// 3/10/2010 Scott Atwell				ControlUI<?> target = e.getTarget();
+// 3/10/2010 Scott Atwell				String name = target.getParameter().getName();
+// 3/10/2010 Scott Atwell				throw new ValidationException( target, "Parameter \"" + name + "\" is required." );
+				throw buildValidationException( e, " is required." );
 			}
 		}
 
@@ -89,9 +91,10 @@ public class StrategyRuleset
 			}
 			catch (ValidationException e)
 			{
-				ControlUI<?> target = e.getTarget();
-				String name = target.getParameter().getName();
-				throw new ValidationException( target, "Parameter \"" + name + "\" must remain a constant value." );
+// 3/10/2010 Scott Atwell				ControlUI<?> target = e.getTarget();
+// 3/10/2010 Scott Atwell				String name = target.getParameter().getName();
+// 3/10/2010 Scott Atwell			throw new ValidationException( target, "Parameter \"" + name + "\" must remain a constant value." );
+				throw buildValidationException( e, " must remain a constant value." );
 			}
 		}
 
@@ -103,9 +106,10 @@ public class StrategyRuleset
 			}
 			catch (ValidationException e)
 			{
-				ControlUI<?> target = e.getTarget();
-				String name = target.getParameter().getName();
-				throw new ValidationException( target, "Parameter \"" + name + "\" is out of range (min/max bounds)." );
+// 3/10/2010 Scott Atwell				ControlUI<?> target = e.getTarget();
+// 3/10/2010 Scott Atwell				String name = target.getParameter().getName();
+// 3/10/2010 Scott Atwell				throw new ValidationException( target, "Parameter \"" + name + "\" is out of range (min/max bounds)." );
+				throw buildValidationException( e, " is out of range (min/max bounds)." );
 			}
 		}
 
@@ -117,9 +121,10 @@ public class StrategyRuleset
 			}
 			catch (ValidationException e)
 			{
-				ControlUI<?> target = e.getTarget();
-				String name = target.getParameter().getName();
-				throw new ValidationException( target, "Parameter \"" + name + "\" length is out of range (min/max bounds)." );
+// 3/10/2010 Scott Atwell				ControlUI<?> target = e.getTarget();
+// 3/10/2010 Scott Atwell				String name = target.getParameter().getName();
+// 3/10/2010 Scott Atwell				throw new ValidationException( target, "Parameter \"" + name + "\" length is out of range (min/max bounds)." );
+				throw buildValidationException( e, " length is out of range (min/max bounds)." );
 			}
 		}
 
@@ -132,9 +137,10 @@ public class StrategyRuleset
 			catch (ValidationException e)
 			{
 				ControlUI<?> target = e.getTarget();
-				String name = target.getParameter().getName();
+// 3/10/2010 Scott Atwell				String name = target.getParameter().getName();
 				String type = target.getClass().toString();
-				throw new ValidationException( target, "Field \"" + name + "\" of type " + type + " does not follow the required pattern." );
+// 3/10/2010 Scott Atwell				throw new ValidationException( target, "Field \"" + name + "\" of type " + type + " does not follow the required pattern." );
+				throw buildValidationException( e, " of type " + type + " does not follow the required pattern." );
 			}
 		}
 
@@ -148,14 +154,38 @@ public class StrategyRuleset
 			}
 			catch (ValidationException e)
 			{
-				throw new ValidationException( e.getTarget(), strategyEdit.getErrorMessage() );
+//				throw new ValidationException( e.getTarget(), strategyEdit.getErrorMessage() );
+				String tempValuesChecked = "";
+				if ( e.getMessage() != null )
+				{
+					tempValuesChecked = "  " + e.getMessage();
+				}
+				throw new ValidationException( e.getTarget(), strategyEdit.getErrorMessage() + tempValuesChecked );
 			}
 		}
 	}
 
-	/*
-	 * private String getText(ControlT control) { return control.getUiRep() !=
-	 * null ? control.getUiRep() : parameter .getName(); }
-	 */
+	
+	protected ValidationException buildValidationException( ValidationException aOriginalValidationException, String aMsgText )
+	{
+		ControlUI<?> tempControlUI = aOriginalValidationException.getTarget();
+		
+		return new ValidationException( tempControlUI, buildValidationExceptionText( aOriginalValidationException, aMsgText, tempControlUI ) );
+	}
+
+	protected String buildValidationExceptionText( ValidationException aOriginalValidationException, String aMsgText, ControlUI<?> aControlUI )
+	{
+		StringBuffer tempStringBuffer = new StringBuffer();
+		
+		tempStringBuffer.append( "Parameter \"" + aControlUI.getParameter().getName() + "\"" );
+		tempStringBuffer.append( " (\"" + ControlHelper.getUiRepOrID( aControlUI.getControl() ) + "\") " );
+		tempStringBuffer.append(  aMsgText );
+		if ( aOriginalValidationException.getMessage() != null )
+		{
+			tempStringBuffer.append( "  " + aOriginalValidationException.getMessage() );
+		}
+		
+		return tempStringBuffer.toString();
+	}
 
 }

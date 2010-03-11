@@ -78,56 +78,56 @@ public class LengthValidationRule
 			case NE :
 				if ( aValue.length() == length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " NE " + length.intValue() + "]" );
 				}
 				break;
 
 			case EX :
 				if ( ( aValue != null ) && ( aValue.length() != length.intValue() ) )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " EX " + length.intValue() + "]" );
 				}
 				break;
 
 			case LT :
 				if ( aValue.length() >= length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " LT " + length.intValue() + "]" );
 				}
 				break;
 
 			case LE :
 				if ( aValue.length() > length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " LE " + length.intValue() + "]" );
 				}
 				break;
 
 			case GT :
 				if ( aValue.length() <= length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " GT " + length.intValue() + "]" );
 				}
 				break;
 
 			case GE :
 				if ( aValue.length() < length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " GE " + length.intValue() + "]" );
 				}
 				break;
 
 			case EQ :
 				if ( aValue.length() != length.intValue() )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " EQ " + length.intValue() + "]" );
 				}
 				break;
 
 			case NX :
 				if ( ( aValue != null ) && ( aValue.length() == length.intValue() ) )
 				{
-					throw new ValidationException( aTarget );
+					throw new ValidationException( aTarget, "Rule tested: [for: " + aValue + " length: " + aValue.length() + " NX " + length.intValue() + "]" );
 				}
 				break;
 

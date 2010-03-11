@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.xml.bind.JAXBException;
 
 import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
@@ -64,8 +65,21 @@ public abstract class AbstractAtdl4jUserMessageHandler
 	 */
 	public static String extractExceptionMessage( Throwable e )
 	{
-		// e.getMessage() is null if there is a JAXB parse error 
-		if (e.getMessage() != null)
+		if ( e instanceof ValidationException )
+		{
+			ValidationException tempValidationException = (ValidationException) e;
+			if ( tempValidationException.getMessage() != null )
+			{
+				// -- Add new lines after sentence (eg before "Rule Tested: [______]") --
+				return tempValidationException.getMessage().replace( ".  ", "\n\n" );
+			}
+			else
+			{
+				return tempValidationException.getMessage();
+			}
+		}
+			// e.getMessage() is null if there is a JAXB parse error 
+		else if (e.getMessage() != null)
 		{
 			return e.getMessage();
 		}
@@ -79,6 +93,7 @@ public abstract class AbstractAtdl4jUserMessageHandler
 				return tempJAXBException.getLinkedException().getMessage();
 			}
 		}
+		
 			
 		return e.toString();
 	}
