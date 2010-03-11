@@ -15,7 +15,7 @@ import org.atdl4j.fixatdl.validation.StrategyEditT;
 
 public class StrategyRuleset
 {
-
+ 
 	private Map<StrategyEditT, ValidationRule> refRules;
 
 	private List<ValidationRule> requiredFieldRules;

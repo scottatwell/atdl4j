@@ -15,7 +15,7 @@ import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
  * Represents the base, non-GUI system-specific GUI pop-up message screen support.
- * 
+ *  
  * Creation date: (Feb 26, 2010 11:09:19 PM)
  * @author Scott Atwell
  * @version 1.0, Feb 26, 2010
