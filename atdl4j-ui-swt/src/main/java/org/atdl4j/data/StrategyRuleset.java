@@ -181,7 +181,7 @@ public class StrategyRuleset
 		tempStringBuffer.append( " (\"" + ControlHelper.getUiRepOrID( aControlUI.getControl() ) + "\") " );
 		tempStringBuffer.append(  aMsgText );
 		if ( aOriginalValidationException.getMessage() != null )
-		{
+		{ 
 			tempStringBuffer.append( "  " + aOriginalValidationException.getMessage() );
 		}
 		

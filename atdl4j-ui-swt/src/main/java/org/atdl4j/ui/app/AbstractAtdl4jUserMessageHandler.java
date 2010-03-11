@@ -89,7 +89,7 @@ public abstract class AbstractAtdl4jUserMessageHandler
 			
 			if ( ( tempJAXBException.getLinkedException() != null ) &&
 				  ( tempJAXBException.getLinkedException().getMessage() != null ) )
-			{
+			{ 
 				return tempJAXBException.getLinkedException().getMessage();
 			}
 		}
