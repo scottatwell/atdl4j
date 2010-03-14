@@ -325,6 +325,12 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		getAtdl4jConfig().getInputAndFilterData().setInputCxlReplaceMode( getCheckboxValue( checkboxInputCxlReplaceMode, null ).booleanValue() );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterRegion_name( getDropDownItemSelected( dropDownListStrategyFilterRegion ) );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterCountry_CountryCode( getDropDownItemSelected( dropDownListStrategyFilterCountry ) );
+		if ( ( getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterCountry_CountryCode() != null ) &&
+			  ( getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterRegion_name() == null ) )
+		{
+			throw new IllegalArgumentException("Region is required when Country is specified.");
+		}
+		
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterMarket_MICCode( getDropDownItemSelected( dropDownListStrategyFilterMICCode ) );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterSecurityType_name( getDropDownItemSelected( dropDownListStrategyFilterSecurityType ) );
  

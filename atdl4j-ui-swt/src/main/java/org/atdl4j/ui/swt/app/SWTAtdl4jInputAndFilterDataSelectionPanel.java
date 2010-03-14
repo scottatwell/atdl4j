@@ -94,6 +94,16 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		closeAtdl4jInputAndFilterDataPanelShell();
 	}
 	
+	/* 
+	 * Overriden to ensure panel is closed ("OK" will reset the parameters).
+	 */
+	public void fixMsgLoadSelected(String aFixMsg)
+	{
+		closeAtdl4jInputAndFilterDataPanelShell();
+		
+		super.fixMsgLoadSelected( aFixMsg );
+	}
+	
 	private Shell createAtdl4jInputAndFilterDataPanelShell()
 	{
 		Shell tempAtdl4jInputAndFilterDataPanelShell = new Shell( ( (Composite) getParentOrShell()).getDisplay(), SWT.APPLICATION_MODAL | SWT.TITLE | SWT.RESIZE );
