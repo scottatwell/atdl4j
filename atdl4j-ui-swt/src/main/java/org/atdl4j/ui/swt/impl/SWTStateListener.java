@@ -5,11 +5,11 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.validation.ValidationRuleFactory;
+import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.swt.SWTWidget;
 import org.eclipse.swt.widgets.Event;
@@ -95,15 +95,7 @@ public class SWTStateListener
 				if ( state )
 				{
 					String value = stateRule.getValue();
-					try
-					{
-						affectedWidget.setValueAsString( value );
-					}
-					catch (JAXBException e)
-					{
-						// TODO: Clean up this
-						throw new RuntimeException( e );
-					}
+					affectedWidget.setValueAsString( value );
 				}
 // 2/10/2010 Scott Atwell added the else clause
 				//  -- state arg is false and value involved is VALUE_NULL_INDICATOR --
@@ -120,6 +112,14 @@ public class SWTStateListener
 	public void setCxlReplaceMode(boolean cxlReplaceMode)
 	{
 		this.cxlReplaceMode = cxlReplaceMode;
+	}
+
+	/**
+	 * @return the affectedWidget
+	 */
+	public SWTWidget<?> getAffectedWidget()
+	{
+		return this.affectedWidget;
 	}
 
 }

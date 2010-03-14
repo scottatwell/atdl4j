@@ -116,11 +116,6 @@ This is prone to issues:
 		}
 	}
 
-	public String getParameterValue()
-	{
-		return (String) getControlValue();
-	}
-
 	public void setValue(String value)
 	{
 		textField.setText( ( value == null ) ? "" : value.toString() );

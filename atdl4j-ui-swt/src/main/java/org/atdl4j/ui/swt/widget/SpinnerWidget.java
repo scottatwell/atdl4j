@@ -221,11 +221,6 @@ public class SpinnerWidget
 		}
 	}
 
-	public BigDecimal getParameterValue()
-	{
-		return (BigDecimal) getControlValue();
-	}
-
 	public void setValue(BigDecimal value)
 	{
 		spinner.setSelection( value.unscaledValue().intValue() );

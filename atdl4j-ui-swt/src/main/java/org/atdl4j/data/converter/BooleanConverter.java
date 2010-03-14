@@ -3,6 +3,7 @@ package org.atdl4j.data.converter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.atdl4j.data.ParameterTypeConverter;
 import org.atdl4j.fixatdl.core.BooleanT;
 
 public class BooleanConverter
@@ -12,29 +13,31 @@ public class BooleanConverter
 	public static final String BOOLEAN_FALSE = "N";
 	public static final String BOOLEAN_TRUE = "Y";
 
-	public BooleanConverter()
+	public BooleanConverter(BooleanT aParameter)
 	{
+		super( aParameter );
 	}
 
-	public BooleanConverter(BooleanT parameter)
+	public BooleanConverter(ParameterTypeConverter<?> aParameterTypeConverter)
 	{
-		this.parameter = parameter;
+		super( aParameterTypeConverter );
 	}
-
-	// TODO: improve handling of null values (null is a valid output)
-	// 2/12/2010 public Boolean convertValueToComparable(Object value)
-	public Boolean convertValueToParameterComparable(Object value)
+	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToControlComparable(java.lang.Object)
+	 */
+	public Boolean convertControlValueToControlComparable(Object aValue)
 	{
-		if ( value == null )
+		if ( aValue == null )
 			return null;
 
-		if ( value instanceof Boolean )
+		if ( aValue instanceof Boolean )
 		{
-			return (Boolean) value;
+			return (Boolean) aValue;
 		}
-		if ( value instanceof String )
+		else if ( aValue instanceof String )
 		{
-			String str = (String) value;
+			String str = (String) aValue;
 			if ( str.equalsIgnoreCase( "true" ) || str.equals( "1" ) || str.equals( BooleanConverter.BOOLEAN_TRUE ) )
 			{
 				return new Boolean( true );
@@ -52,9 +55,9 @@ public class BooleanConverter
 				return new Boolean( false );
 			}
 		}
-		if ( value instanceof BigDecimal || value instanceof BigInteger )
+		else if ( aValue instanceof BigDecimal || aValue instanceof BigInteger )
 		{
-			BigDecimal num = (BigDecimal) value;
+			BigDecimal num = (BigDecimal) aValue;
 			if ( num.intValue() == 1 )
 			{
 				return new Boolean( true );
@@ -68,31 +71,109 @@ public class BooleanConverter
 				return new Boolean( false );
 			}
 		}
+//		else
+//			return new Boolean( false );
 		else
-			return new Boolean( false );
-		// TODO: is this an error??--I think it should be.
-		// Dates are always false
+		{
+			return null;
+		}
 	}
 
-	public Boolean convertValueToControlComparable(Object value)
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToParameterValue(java.lang.Object)
+	 */
+	public Object convertControlValueToParameterValue(Object aValue)
 	{
-		return convertValueToParameterComparable( value );
+// 3/12/2010 Scott Atwell		return (Boolean) aValue;
+		// -- aDatatypeIfNull=DATATYPE_BOOLEAN --
+		return DatatypeConverter.convertValueToDatatype( aValue, getParameterDatatype( DatatypeConverter.DATATYPE_BOOLEAN ) );
 	}
 
-	// 2/12/2010 public String convertValueToString(Object value)
-	public String convertValueToParameterString(Object value)
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertParameterValueToControlValue(java.lang.Object)
+	 */
+	@Override
+	public Boolean convertParameterValueToControlValue(Object aValue)
+	{
+//	3/12/2010 Scott Atwell	return (Boolean) aValue;
+		return DatatypeConverter.convertValueToBooleanDatatype( aValue );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertStringToControlValue(java.lang.String)
+	 */
+	@Override
+	public Boolean convertStringToControlValue(String aString)
+	{
+		return convertControlValueToControlComparable( aString );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertFixWireValueToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Boolean convertFixWireValueToParameterValue(String aFixWireValue)
+	{
+		return convertStringToParameterValue( aFixWireValue );
+	}
+
+	/**
+	 * Supports either FixWireValue or ParameterString values
+	 * @param aValue
+	 * @return
+	 */
+	protected Boolean convertStringToParameterValue(String aValue)
+	{
+		if ( aValue != null )
+		{
+			String str = (String) aValue;
+			if ( str.equalsIgnoreCase( "true" ) || str.equals( "1" ) || str.equals( BOOLEAN_TRUE ) )
+			{
+				return new Boolean( true );
+			}
+			else if ( str.equalsIgnoreCase( "false" ) || str.equals( "0" ) || str.equals( BOOLEAN_FALSE ) )
+			{
+				return new Boolean( false );
+			}
+			else if ( str.equals( "" ) )
+			{
+				return null;
+			}
+			else
+			{
+				return new Boolean( false );
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterStringToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Boolean convertParameterStringToParameterValue(String aParameterString)
+	{
+		return convertStringToParameterValue( aParameterString );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToFixWireValue(java.lang.Object)
+	 */
+	@Override
+	public String convertParameterValueToFixWireValue(Object aParameterValue)
 	{
 		// TODO: cleanup
 		BooleanT booleanT = null;
-		if ( parameter != null && parameter instanceof BooleanT )
+		if ( getParameter() != null && getParameter() instanceof BooleanT )
 		{
-			booleanT = (BooleanT) parameter;
+			booleanT = (BooleanT) getParameter();
 		}
 
-		Boolean bool = convertValueToParameterComparable( value ); // TODO: this
-																						// doesn't
-																						// currently
-																						// return null
+//	3/10/2010 Scott Atwell	Boolean bool = convertValueToParameterComparable( aParameterValue ); 
+		Boolean bool = convertParameterValueToParameterComparable( aParameterValue ); 
 
 		// 2/1/2010 John Shields added
 		if ( bool != null )
@@ -102,8 +183,8 @@ public class BooleanConverter
 		else
 			return null;
 
-		// 2/1/2010 John Shields deleted
-		// trueWireValue and falseWireValue are deprecated
+// 2/1/2010 John Shields deleted
+// trueWireValue and falseWireValue are deprecated
 		/*
 		 * if (bool != null) { if (bool.booleanValue()) { if (booleanT != null &&
 		 * booleanT.getTrueWireValue() != null) return
@@ -114,37 +195,61 @@ public class BooleanConverter
 		 */
 	}
 
-	public String convertValueToControlString(Object value)
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToParameterComparable(java.lang.Object)
+	 */
+	@Override
+	public Boolean convertParameterValueToParameterComparable(Object aParameterValue)
 	{
-		// TODO: cleanup
-		BooleanT booleanT = null;
-		if ( parameter != null && parameter instanceof BooleanT )
-		{
-			booleanT = (BooleanT) parameter;
-		}
-
-		Boolean bool = convertValueToControlComparable( value ); // TODO: this
-																					// doesn't
-																					// currently
-																					// return null
-
-		// 2/1/2010 John Shields added
-		if ( bool != null )
-		{
-			return bool.booleanValue() ? BOOLEAN_TRUE : BOOLEAN_FALSE;
-		}
-		else
+		if ( aParameterValue == null )
 			return null;
 
-		// 2/1/2010 John Shields deleted
-		// trueWireValue and falseWireValue are deprecated
-		/*
-		 * if (bool != null) { if (bool.booleanValue()) { if (booleanT != null &&
-		 * booleanT.getTrueWireValue() != null) return
-		 * booleanT.getTrueWireValue(); else return BOOLEAN_TRUE; } else { if
-		 * (booleanT != null && booleanT.getFalseWireValue() != null) return
-		 * booleanT.getFalseWireValue(); else return BOOLEAN_FALSE; } } else {
-		 * return null; }
-		 */
+		if ( aParameterValue instanceof Boolean )
+		{
+			return (Boolean) aParameterValue;
+		}
+		else if ( aParameterValue instanceof String )
+		{
+			String str = (String) aParameterValue;
+			if ( str.equalsIgnoreCase( "true" ) || str.equals( "1" ) || str.equals( BooleanConverter.BOOLEAN_TRUE ) )
+			{
+				return new Boolean( true );
+			}
+			else if ( str.equalsIgnoreCase( "false" ) || str.equals( "0" ) || str.equals( BooleanConverter.BOOLEAN_FALSE ) )
+			{
+				return new Boolean( false );
+			}
+			else if ( str.equals( "" ) )
+			{
+				return null;
+			}
+			else
+			{
+				return new Boolean( false );
+			}
+		}
+		else if ( aParameterValue instanceof BigDecimal || aParameterValue instanceof BigInteger )
+		{
+			BigDecimal num = (BigDecimal) aParameterValue;
+			if ( num.intValue() == 1 )
+			{
+				return new Boolean( true );
+			}
+			else if ( num.intValue() == 0 )
+			{
+				return new Boolean( false );
+			}
+			else
+			{
+				return new Boolean( false );
+			}
+		}
+//		else
+//			return new Boolean( false );
+		else
+		{
+			return null;
+		}
 	}
+
 }

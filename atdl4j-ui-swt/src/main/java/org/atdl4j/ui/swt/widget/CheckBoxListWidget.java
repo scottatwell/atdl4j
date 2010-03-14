@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.fixatdl.core.EnumPairT;
 import org.atdl4j.fixatdl.layout.CheckBoxListT;
 import org.atdl4j.fixatdl.layout.ListItemT;
@@ -43,11 +41,11 @@ public class CheckBoxListWidget
 	 * this.control = control; this.parameter = parameter; init(); }
 	 **/
 	// -- Overriden --
-	protected void initPreCheck() throws JAXBException
+	protected void initPreCheck()
 	{
 		// validate ListItems and EnumPairs
 		if ( parameter != null && ( (CheckBoxListT) control ).getListItem().size() != parameter.getEnumPair().size() )
-			throw new JAXBException( "ListItems for Control \"" + control.getID() + "\" and EnumPairs for Parameter \"" + parameter.getName()
+			throw new IllegalArgumentException( "ListItems for Control \"" + control.getID() + "\" and EnumPairs for Parameter \"" + parameter.getName()
 					+ "\" are not equal in number." );
 	}
 

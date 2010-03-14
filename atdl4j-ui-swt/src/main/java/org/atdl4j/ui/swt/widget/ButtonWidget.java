@@ -128,7 +128,8 @@ public class ButtonWidget
 		{
 			return getControlValue(); // Short-circuit for Boolean parameters
 		}
-		else if ( getControlValue() == Boolean.TRUE )
+// 3/11/2010 Scott Atwell		else if ( getControlValue() == Boolean.TRUE )
+		else if ( getControlValue().equals( Boolean.TRUE ) )
 		{
 			String checkedEnumRef = control instanceof RadioButtonT ? ( (RadioButtonT) control ).getCheckedEnumRef() : ( (CheckBoxT) control )
 					.getCheckedEnumRef();
@@ -142,7 +143,8 @@ public class ButtonWidget
 			else
 				return Boolean.TRUE;
 		}
-		else if ( getControlValue() == Boolean.FALSE )
+// 3/11/2010 Scott Atwell		else if ( getControlValue() == Boolean.FALSE )
+		else if ( getControlValue().equals( Boolean.FALSE ) )
 		{
 			String uncheckedEnumRef = control instanceof RadioButtonT ? ( (RadioButtonT) control ).getUncheckedEnumRef() : ( (CheckBoxT) control )
 					.getUncheckedEnumRef();

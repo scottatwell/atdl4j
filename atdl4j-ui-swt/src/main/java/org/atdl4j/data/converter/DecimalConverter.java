@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import org.atdl4j.data.ParameterTypeConverter;
 import org.atdl4j.fixatdl.core.AmtT;
 import org.atdl4j.fixatdl.core.FloatT;
 import org.atdl4j.fixatdl.core.NumericT;
@@ -30,16 +31,16 @@ import org.atdl4j.fixatdl.core.QtyT;
 public class DecimalConverter
 		extends AbstractTypeConverter<BigDecimal>
 {
-
-	public DecimalConverter()
+	public DecimalConverter(ParameterT aParameter)
 	{
+		super( aParameter );
 	}
 
-	public DecimalConverter(ParameterT parameter)
+	public DecimalConverter(ParameterTypeConverter<?> aParameterTypeConverter)
 	{
-		this.parameter = parameter;
+		super( aParameterTypeConverter );
 	}
-
+	
 	public static NumberFormat DECIMAL_FORMAT_0dp = new DecimalFormat( "#;-#" );
 	public static NumberFormat DECIMAL_FORMAT_1dp = new DecimalFormat( "#.0;-#.0" );
 	public static NumberFormat DECIMAL_FORMAT_2dp = new DecimalFormat( "#.00;-#.00" );
@@ -55,168 +56,6 @@ public class DecimalConverter
 	public static NumberFormat DECIMAL_FORMAT_12dp = new DecimalFormat( "#.000000000000;-#.000000000000" );
 	public static NumberFormat DECIMAL_FORMAT_13dp = new DecimalFormat( "#.0000000000000;-#.0000000000000" );
 	
-	/* 
-	 * Note that if isMultiplyBy100() is true and value is BigDecial, the value returned will be / 100.d
-	 */
-	public BigDecimal convertValueToParameterComparable(Object value)
-	{
-		BigDecimal tempBigDecimal = null;
-		
-		if ( value instanceof BigDecimal )
-		{
-		// 2/12/2010			return (BigDecimal) value;
-			tempBigDecimal = (BigDecimal) value;
-		}
-		else if ( value instanceof String )
-		{
-			String str = (String) value;
-// 2/12/2010			try
-//			{
-//				return new BigDecimal( str );
-//			}
-//			catch (NumberFormatException e)
-//			{
-//				return null;
-//			}
-			if ( ( str == null ) || ( str.trim().length() == 0 ) )
-			{
-				return null;
-			}
-			else
-			{
-				try
-				{
-					tempBigDecimal = new BigDecimal( str );
-				}
-				catch (NumberFormatException e)
-				{
-// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
-					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
-				}
-			}
-		}
-		else if ( value instanceof Boolean )
-		{
-			Boolean bool = (Boolean) value;
-			if ( bool != null )
-			{
-				if ( bool )
-					tempBigDecimal = new BigDecimal( 1 );
-				else
-					tempBigDecimal = new BigDecimal( 0 );
-			}
-			else
-				return null;
-		}
-		
-// 2/12/2010 Scott Atwell		
-		if ( ( tempBigDecimal != null ) && ( isMultiplyBy100() ) )
-		{
-// 2/12/2010 avoid stray decimal precision			return new BigDecimal( tempBigDecimal.doubleValue() / 100.0d );
-			return tempBigDecimal.scaleByPowerOfTen( -2 );
-		}
-		else
-		{
-			return tempBigDecimal;
-		}
-	}
-
-	/* 
-	 * Note that if isMultiplyBy100() is true and value is BigDecial, the value returned will be * 100.d
-	 */
-	public BigDecimal convertValueToControlComparable(Object value)
-	{
-		BigDecimal tempBigDecimal = null;
-		
-		if ( value instanceof BigDecimal )
-		{
-		// 2/12/2010			return (BigDecimal) value;
-			tempBigDecimal = (BigDecimal) value;
-		}
-		else if ( value instanceof String )
-		{
-			String str = (String) value;
-// 2/12/2010			try
-//			{
-//				return new BigDecimal( str );
-//			}
-//			catch (NumberFormatException e)
-//			{
-//				return null;
-//			}
-			if ( ( str == null ) || ( str.trim().length() == 0 ) )
-			{
-				return null;
-			}
-			else
-			{
-				try
-				{
-					tempBigDecimal = new BigDecimal( str );
-				}
-				catch (NumberFormatException e)
-				{
-// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
-					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
-				}
-			}
-		}
-		else if ( value instanceof Boolean )
-		{
-			Boolean bool = (Boolean) value;
-			if ( bool != null )
-			{
-				if ( bool )
-					tempBigDecimal = new BigDecimal( 1 );
-				else
-					tempBigDecimal = new BigDecimal( 0 );
-			}
-			else
-				return null;
-		}
-		
-// 2/12/2010 Scott Atwell		
-		if ( ( tempBigDecimal != null ) && ( isMultiplyBy100() ) )
-		{
-// 2/12/2010 avoid stray decimal precision			return new BigDecimal( tempBigDecimal.doubleValue() * 100.0d );
-			return tempBigDecimal.scaleByPowerOfTen( 2 );
-		}
-		else
-		{
-			return tempBigDecimal;
-		}
-	}
-
-	/* 
-	 * Returns string value, formatted with getPrecision() decimal places if so specified and applicable.
-	 */
-	public String convertValueToParameterString(Object value)
-	{
-		BigDecimal num = convertValueToParameterComparable( value ); 
-/** 2/12/2010 Scott Atwell		
-		if ( num == null )
-			return null;
-		else
-			return num.toPlainString();
-**/
-		return toString( num, getPrecision() );
-	}
-
-	/* 
-	 * Returns string value, formatted with getPrecision() decimal places if so specified and applicable.
-	 */
-	public String convertValueToControlString(Object value)
-	{
-		BigDecimal num = convertValueToControlComparable( value ); 
-/** 2/12/2010 Scott Atwell		
-		if ( num == null )
-			return null;
-		else
-			return num.toPlainString();
-**/
-		return toString( num, getPrecision() );
-	}
-
 	/**
 	 * Applies precision rules, if specified, up to 13 decimal places.
 	 * 
@@ -295,33 +134,19 @@ public class DecimalConverter
 	 */
 	public BigInteger getPrecision()
 	{
-		if ( parameter instanceof NumericT )
+		if ( getParameter() instanceof NumericT )
 		{
-			return ( (NumericT) parameter ).getPrecision();
+			return ( (NumericT) getParameter() ).getPrecision();
+		}
+		else if ( ( getParameterTypeConverter() != null ) &&
+				    ( getParameterTypeConverter().getParameter() instanceof NumericT ) )
+		{
+			return ( (NumericT) getParameterTypeConverter().getParameter() ).getPrecision();
 		}
 		else
 		{
 			// -- Return null if Parameter does not have this value set --
 			return null; 
-		}
-	}
-
-	/**
-	 * Returns the value of Parameter.getMultiplyBy100() for PercentageT assuming it has been set,
-	 * otherwise returns false.
-	 * 
-	 * @return
-	 */
-	public boolean isMultiplyBy100()
-	{
-		if ( parameter instanceof PercentageT )
-		{
-			return ( (PercentageT) parameter ).isMultiplyBy100();
-		}
-		else
-		{
-			// -- Return null if Parameter does not have this value set --
-			return false; 
 		}
 	}
 
@@ -333,34 +158,34 @@ public class DecimalConverter
 	 */
 	public BigDecimal getMinValue()
 	{
-		if ( parameter instanceof FloatT )
+		if ( getParameter() instanceof FloatT )
 		{
-			return ( (FloatT) parameter ).getMinValue();
+			return ( (FloatT) getParameter() ).getMinValue();
 		}
-		else if ( parameter instanceof AmtT )
+		else if ( getParameter() instanceof AmtT )
 		{
-			return ( (AmtT) parameter ).getMinValue();
+			return ( (AmtT) getParameter() ).getMinValue();
 		}
-		else if ( parameter instanceof PercentageT )
+		else if ( getParameter() instanceof PercentageT )
 		{
-			return ( (PercentageT) parameter ).getMinValue();
+			return ( (PercentageT) getParameter() ).getMinValue();
 		}
-		else if ( parameter instanceof PriceOffsetT )
+		else if ( getParameter() instanceof PriceOffsetT )
 		{
-			return ( (PriceOffsetT) parameter ).getMinValue();
+			return ( (PriceOffsetT) getParameter() ).getMinValue();
 		}
-		else if ( parameter instanceof PriceT )
+		else if ( getParameter() instanceof PriceT )
 		{
-			return ( (PriceT) parameter ).getMinValue();
+			return ( (PriceT) getParameter() ).getMinValue();
 		}
-		else if ( parameter instanceof QtyT )
+		else if ( getParameter() instanceof QtyT )
 		{
-			return ( (QtyT) parameter ).getMinValue();
+			return ( (QtyT) getParameter() ).getMinValue();
 		}
-//		else if ( parameter instanceof IntT )
+//		else if ( getParameter() instanceof IntT )
 //		{
 //			
-//			IntT intT = (IntT) parameter;
+//			IntT intT = (IntT) getParameter();
 //
 //			if ( intT.getMinValue() != null )
 //			{
@@ -383,34 +208,34 @@ public class DecimalConverter
 	 */
 	public BigDecimal getMaxValue()
 	{
-		if ( parameter instanceof FloatT )
+		if ( getParameter() instanceof FloatT )
 		{
-			return ( (FloatT) parameter ).getMaxValue();
+			return ( (FloatT) getParameter() ).getMaxValue();
 		}
-		else if ( parameter instanceof AmtT )
+		else if ( getParameter() instanceof AmtT )
 		{
-			return ( (AmtT) parameter ).getMaxValue();
+			return ( (AmtT) getParameter() ).getMaxValue();
 		}
-		else if ( parameter instanceof PercentageT )
+		else if ( getParameter() instanceof PercentageT )
 		{
-			return ( (PercentageT) parameter ).getMaxValue();
+			return ( (PercentageT) getParameter() ).getMaxValue();
 		}
-		else if ( parameter instanceof PriceOffsetT )
+		else if ( getParameter() instanceof PriceOffsetT )
 		{
-			return ( (PriceOffsetT) parameter ).getMaxValue();
+			return ( (PriceOffsetT) getParameter() ).getMaxValue();
 		}
-		else if ( parameter instanceof PriceT )
+		else if ( getParameter() instanceof PriceT )
 		{
-			return ( (PriceT) parameter ).getMaxValue();
+			return ( (PriceT) getParameter() ).getMaxValue();
 		}
-		else if ( parameter instanceof QtyT )
+		else if ( getParameter() instanceof QtyT )
 		{
-			return ( (QtyT) parameter ).getMaxValue();
+			return ( (QtyT) getParameter() ).getMaxValue();
 		}
-//		else if ( parameter instanceof IntT )
+//		else if ( getParameter() instanceof IntT )
 //		{
 //			
-//			IntT intT = (IntT) parameter;
+//			IntT intT = (IntT) getParameter();
 //
 //			if ( intT.getMaxValue() != null )
 //			{
@@ -432,45 +257,311 @@ public class DecimalConverter
 	 */
 	public BigDecimal getConstValue()
 	{
-		if ( parameter instanceof FloatT )
+		if ( getParameter() instanceof FloatT )
 		{
-			return ( (FloatT) parameter ).getConstValue();
+			return ( (FloatT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof AmtT )
+		else if ( getParameter() instanceof AmtT )
 		{
-			return ( (AmtT) parameter ).getConstValue();
+			return ( (AmtT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof PercentageT )
+		else if ( getParameter() instanceof PercentageT )
 		{
-			return ( (PercentageT) parameter ).getConstValue();
+			return ( (PercentageT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof PriceOffsetT )
+		else if ( getParameter() instanceof PriceOffsetT )
 		{
-			return ( (PriceOffsetT) parameter ).getConstValue();
+			return ( (PriceOffsetT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof PriceT )
+		else if ( getParameter() instanceof PriceT )
 		{
-			return ( (PriceT) parameter ).getConstValue();
+			return ( (PriceT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof QtyT )
+		else if ( getParameter() instanceof QtyT )
 		{
-			return ( (QtyT) parameter ).getConstValue();
+			return ( (QtyT) getParameter() ).getConstValue();
 		}
 		else
 		{
 			return null;
 		}
 	}
-	
-	protected String getParameterName()
+
+	/* If isControlMultiplyBy100() then converted value will be multiplied by 100 
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToControlComparable(java.lang.Object)
+	 */
+	@Override
+	public BigDecimal convertControlValueToControlComparable(Object aValue)
 	{
-		if ( getParameter() != null )
+		BigDecimal tempBigDecimal = null;
+		
+		if ( aValue instanceof BigDecimal )
 		{
-			return getParameter().getName();
+		// 2/12/2010			return (BigDecimal) aValue;
+			tempBigDecimal = (BigDecimal) aValue;
+		}
+		else if ( aValue instanceof String )
+		{
+			String str = (String) aValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					tempBigDecimal = new BigDecimal( str );
+				}
+				catch (NumberFormatException e)
+				{
+// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+		}
+		else if ( aValue instanceof Boolean )
+		{
+			Boolean bool = (Boolean) aValue;
+			if ( bool != null )
+			{
+				if ( bool )
+					tempBigDecimal = new BigDecimal( 1 );
+				else
+					tempBigDecimal = new BigDecimal( 0 );
+			}
+			else
+				return null;
+		}
+		
+// 2/12/2010 Scott Atwell		
+// 3/9/2010 Scott Atwell		if ( ( tempBigDecimal != null ) && ( isMultiplyBy100() ) )
+		if ( ( tempBigDecimal != null ) && ( isControlMultiplyBy100() ) )
+		{
+// 2/12/2010 avoid stray decimal precision			return new BigDecimal( tempBigDecimal.doubleValue() / 100.0d );
+// 3/9/2010 Scott Atwell			return tempBigDecimal.scaleByPowerOfTen( -2 );
+			return tempBigDecimal.scaleByPowerOfTen( 2 );
 		}
 		else
 		{
-			return null;
+			return tempBigDecimal;
 		}
 	}
+
+	/* If Control represents PercentageT getParameter(), then Control's value will be returned divided by 100.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToParameterValue(java.lang.Object)
+	 */
+	@Override
+	public Object convertControlValueToParameterValue(Object aValue)
+	{
+/*** 3/12/2010 Scott Atwell 		
+		if ( ( aValue != null ) && ( isControlMultiplyBy100() ) )
+		{
+			// -- divide Control's value by 100 --
+			return ((BigDecimal) aValue).scaleByPowerOfTen( -2 );
+		}
+		
+		return (BigDecimal) aValue;
+***/		
+		BigDecimal tempBigDecimal = DatatypeConverter.convertValueToBigDecimalDatatype( aValue );
+		if ( ( tempBigDecimal != null ) && ( isControlMultiplyBy100() ) )
+		{
+			// -- divide Control's value by 100 --
+			return tempBigDecimal.scaleByPowerOfTen( -2 );
+		}
+		else
+		{
+			// -- aDatatypeIfNull=DATATYPE_BIG_DECIMAL --
+			return DatatypeConverter.convertValueToDatatype( tempBigDecimal, getParameterDatatype( DatatypeConverter.DATATYPE_BIG_DECIMAL ) );
+		}
+	}
+
+	/* If Control represents PercentageT getParameter(), then Parameter's value will be returned multiplied by 100.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertParameterValueToControlValue(java.lang.Object)
+	 */
+	@Override
+	public BigDecimal convertParameterValueToControlValue(Object aValue)
+	{
+/*** 3/12/2010 Scott Atwell		
+		if ( ( aValue != null ) && ( isControlMultiplyBy100() ) )
+		{
+			// -- multiply Control's value by 100 --
+			return ((BigDecimal) aValue).scaleByPowerOfTen( 2 );
+		}
+		
+		return (BigDecimal) aValue;
+***/
+		BigDecimal tempBigDecimal = DatatypeConverter.convertValueToBigDecimalDatatype( aValue );
+		
+		if ( ( tempBigDecimal != null ) && ( isControlMultiplyBy100() ) )
+		{
+			// -- multiply Control's value by 100 --
+			return tempBigDecimal.scaleByPowerOfTen( 2 );
+		}
+		else
+		{	
+			return tempBigDecimal;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertStringToControlValue(java.lang.String)
+	 */
+	@Override
+	public BigDecimal convertStringToControlValue(String aString)
+	{
+		return convertControlValueToControlComparable( aString );
+	}
+
+	/* 
+	 * If isParameterMultiplyBy100() then the wire value (which is represented on wire as x100 from original parameter value) 
+	 * will be divided by 100 to get Parameter value.
+	 * 
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertFixWireValueToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertFixWireValueToParameterValue(String aFixWireValue)
+	{
+		BigDecimal tempBigDecimal = null;
+		
+		if ( aFixWireValue != null )
+		{
+			String str = (String) aFixWireValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					tempBigDecimal = new BigDecimal( str );
+				}
+				catch (NumberFormatException e)
+				{
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+		}
+
+		if ( ( tempBigDecimal != null ) && ( isParameterMultiplyBy100() ) )
+		{
+			// -- divide the wire value (which is set to x100 from original parameter value) by 100 to get Parameter value --
+			return tempBigDecimal.scaleByPowerOfTen( -2 );
+		}
+		else
+		{
+			return tempBigDecimal;
+		}
+	}
+
+	
+	/* Converts aParameterString to BigDecimal with no scaling changes.
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterStringToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertParameterStringToParameterValue(String aParameterString)
+	{
+		BigDecimal tempBigDecimal = null;
+		
+		if ( aParameterString != null )
+		{
+			String str = (String) aParameterString;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					tempBigDecimal = new BigDecimal( str );
+				}
+				catch (NumberFormatException e)
+				{
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+		}
+
+		return tempBigDecimal;
+	}
+
+
+	/* If isParameterMultiplyBy100() the Parameter value will be multiplied x100 for its wire value
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToFixWireValue(java.lang.Object)
+	 */
+	@Override
+	public String convertParameterValueToFixWireValue(Object aParameterValue)
+	{
+		BigDecimal tempBigDecimal = convertParameterValueToParameterComparable( aParameterValue );
+		
+		if ( ( tempBigDecimal != null ) && ( isParameterMultiplyBy100() ) )
+		{
+			// -- multiply the parameter value x100 for its wire value --
+			tempBigDecimal = tempBigDecimal.scaleByPowerOfTen( 2 );
+		}
+		
+		return toString( tempBigDecimal, getPrecision() );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToParameterComparable(java.lang.Object)
+	 */
+	@Override
+	public BigDecimal convertParameterValueToParameterComparable(Object aParameterValue)
+	{
+		BigDecimal tempBigDecimal = null;
+		
+		if ( aParameterValue instanceof BigDecimal )
+		{
+// 2/12/2010			return (BigDecimal) aParameterValue;
+			tempBigDecimal = (BigDecimal) aParameterValue;
+		}
+		else if ( aParameterValue instanceof String )
+		{
+			String str = (String) aParameterValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					tempBigDecimal = new BigDecimal( str );
+				}
+				catch (NumberFormatException e)
+				{
+// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+					throw new NumberFormatException( "Invalid Decimal Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+		}
+//		else if ( aParameterValue instanceof Boolean )
+//		{
+//			Boolean bool = (Boolean) aParameterValue;
+//			if ( bool != null )
+//			{
+//				if ( bool )
+//					tempBigDecimal = new BigDecimal( 1 );
+//				else
+//					tempBigDecimal = new BigDecimal( 0 );
+//			}
+//			else
+//				return null;
+//		}
+//		
+//// 2/12/2010 Scott Atwell		
+//// 3/9/2010 Scott Atwell		if ( ( tempBigDecimal != null ) && ( isMultiplyBy100() ) )
+//		if ( ( tempBigDecimal != null ) && ( isParameterMultiplyBy100() ) )
+//		{
+//// 2/12/2010 avoid stray decimal precision			return new BigDecimal( tempBigDecimal.doubleValue() / 100.0d );
+//// 3/9/2010 Scott Atwell			return tempBigDecimal.scaleByPowerOfTen( -2 );
+//			return tempBigDecimal.scaleByPowerOfTen( 2 );
+//		}
+		
+		return tempBigDecimal;
+	}
+
 }

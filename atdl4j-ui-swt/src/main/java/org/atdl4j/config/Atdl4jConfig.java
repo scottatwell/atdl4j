@@ -89,8 +89,7 @@ public interface Atdl4jConfig
 	 * @return
 	 * @throws JAXBException
 	 */
-	public TypeConverterFactory getTypeConverterFactory()
-		throws JAXBException;
+	public TypeConverterFactory getTypeConverterFactory();
 	
 	
 	// -- Controls/Widgets (first arg is of type ControlT -- 

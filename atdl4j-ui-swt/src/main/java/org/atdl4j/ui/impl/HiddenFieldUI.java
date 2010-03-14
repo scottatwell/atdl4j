@@ -1,9 +1,7 @@
 package org.atdl4j.ui.impl;
 
-import javax.xml.bind.JAXBException;
-
-import org.atdl4j.fixatdl.layout.HiddenFieldT;
 import org.atdl4j.data.ParameterHelper;
+import org.atdl4j.fixatdl.layout.HiddenFieldT;
 
 public abstract class HiddenFieldUI
 		extends AbstractControlUI<String>
@@ -19,7 +17,7 @@ public abstract class HiddenFieldUI
 	 * this.setValue(getConstInitValue()); init(); }
 	 **/
 	// -- Overriden --
-	protected void initPreCheck() throws JAXBException
+	protected void initPreCheck()
 	{
 		this.setValue( getConstInitValue() );
 	}
@@ -42,10 +40,12 @@ public abstract class HiddenFieldUI
 
 	public Object getParameterValue()
 	{
-		// TODO add this for all controls
 		if ( ParameterHelper.getConstValue( parameter ) != null )
 			return ParameterHelper.getConstValue( parameter );
-		return value;
+		
+// 3/9/2010 Scott Atwell		return value;
+		// -- Better handles cases where Control may display a value differently than Parameter (eg PercentageT appearing "12.34%" in Control but 0.1234 in Parameter) --
+		return controlConverter.convertControlValueToParameterValue( value );
 	}
 
 	public void setValue(String value)

@@ -1,6 +1,5 @@
 package org.atdl4j.ui.impl;
 
-import javax.xml.bind.JAXBException;
 
 /* 
  * This class intentionally does not support parameterRef or initValue
@@ -18,7 +17,7 @@ public abstract class LabelUI extends AbstractControlUI<String> {
 	}
 **/
 	// -- Overriden --
-	protected void initPreCheck() throws JAXBException
+	protected void initPreCheck()
 	{
 		this.parameter = null;
 	}

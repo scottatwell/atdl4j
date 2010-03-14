@@ -14,8 +14,8 @@ import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.ParameterHelper;
+import org.atdl4j.data.ParameterTypeConverter;
 import org.atdl4j.data.StrategyRuleset;
-import org.atdl4j.data.TypeConverter;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.fix.PlainFIXMessageBuilder;
@@ -65,7 +65,6 @@ public abstract class AbstractStrategyUI
 	protected StrategyT strategy;
 // 2/9/2010 Atdl4jConfig has the getStrategies()	protected StrategiesT strategies;
 	
-	
 	abstract	protected void buildControlMap( List<StrategyPanelT> aStrategyPanelList )
 		throws JAXBException;
 	
@@ -86,8 +85,13 @@ public abstract class AbstractStrategyUI
 	abstract protected void initEnd() throws JAXBException;
 
 	abstract protected void addToControlMap( String aName, ControlUI aControlUI );
+	abstract protected void addToControlWithParameterMap( String aName, ControlUI aControlUI );
+	abstract protected void removeFromControlMap( String aName );
+	abstract protected void removeFromControlWithParameterMap( String aName );
 	abstract public void setCxlReplaceMode(boolean cxlReplaceMode);
 	abstract protected void fireStateListeners();
+	abstract protected void fireStateListenersForControl( ControlUI aControl );
+
 	abstract protected void applyRadioGroupRules();
 	
 	/**
@@ -252,13 +256,16 @@ public abstract class AbstractStrategyUI
 			}
 			
 // 2/12/2010 Scott Atwell added
-			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory().create( parameter );
+// 3/10/2010 Scott Atwell			TypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory().create( parameter );
+			ParameterTypeConverter tempTypeConverter = getAtdl4jConfig().getTypeConverterFactory().createParameterTypeConverter( parameter );
 			
 // Parameter/@const has been removed 			if ( ( parameter.isConst() ) && ( ParameterHelper.getConstValue( parameter ) != null ) )
 			if ( ParameterHelper.getConstValue( parameter ) != null )
 			{
 // 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
-				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getConstValue( parameter ) ); 
+// 3/9/2010 Scott Atwell renamed/changed x100 behavior				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getConstValue( parameter ) ); 
+// 3/10/2010 Scott Atwell				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertParameterValueToComparisonString( ParameterHelper.getConstValue( parameter ) ); 
 				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.EQ, tempStringValue, strategy );
 				
 				if ( tempIsRequired )
@@ -278,7 +285,9 @@ public abstract class AbstractStrategyUI
 			if ( ParameterHelper.getMinValue( parameter ) != null )
 			{
 // 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getConstValue( parameter ) ); 
-				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMinValue( parameter ) ); 
+// 3/9/2010 Scott Atwell renamed/changed x100 behavior				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMinValue( parameter ) ); 
+// 3/10/2010 Scott Atwell				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getMinValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertParameterValueToComparisonString( ParameterHelper.getMinValue( parameter ) ); 
 				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.GE, tempStringValue, strategy );
 				
 				if ( tempIsRequired )
@@ -298,7 +307,9 @@ public abstract class AbstractStrategyUI
 			if ( ParameterHelper.getMaxValue( parameter ) != null )
 			{
 // 2/12/2010 only difference is Parameter one adjusts for multiplyBy100 (use "ToControl" to avoid doing this twice)				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getMaxValue( parameter ) ); 
-				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMaxValue( parameter ) ); 
+// 3/9/2010 Scott Atwell renamed/changed x100 behavior				String tempStringValue = tempTypeConverter.convertValueToControlString( ParameterHelper.getMaxValue( parameter ) ); 
+// 3/10/2010 Scott Atwell				String tempStringValue = tempTypeConverter.convertValueToParameterString( ParameterHelper.getMaxValue( parameter ) ); 
+				String tempStringValue = tempTypeConverter.convertParameterValueToComparisonString( ParameterHelper.getMaxValue( parameter ) ); 
 				ValidationRule tempFieldRule = new ValueOperatorValidationRule( parameter.getName(), OperatorT.LE, tempStringValue, strategy );
 				
 				if ( tempIsRequired )
@@ -508,13 +519,37 @@ public abstract class AbstractStrategyUI
 				hiddenField.setParameterRef( tempName );
 	
 				ControlUI hiddenFieldWidget = getAtdl4jConfig().getControlUIForHiddenFieldT( hiddenField, parameter );
+				hiddenFieldWidget.setHiddenFieldForInputAndFilterData( true );
+				
 //			getControlMap().put( tempName, (SWTWidget<?>) hiddenFieldWidget );
 				addToControlMap( tempName, hiddenFieldWidget );
+				addToControlWithParameterMap( tempName, hiddenFieldWidget );
 			}
 		}
 		
 	}
 
+	protected void clearHiddenFieldsForInputAndFilterData()
+		throws JAXBException
+	{
+		for ( Map.Entry<String,ControlUI<?>> tempEntry : getControlUIMap().entrySet() )
+		{
+			if ( tempEntry.getValue().isHiddenFieldForInputAndFilterData() )
+			{
+				removeFromControlMap( tempEntry.getKey() );
+				removeFromControlWithParameterMap( tempEntry.getKey() );
+			}
+		}
+	}
+
+	protected void reloadHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
+		throws JAXBException
+	{
+		clearHiddenFieldsForInputAndFilterData();
+		addHiddenFieldsForInputAndFilterData( aInputAndFilterData );
+	}
+	
+	
 	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
 		throws JAXBException
 	{
@@ -537,6 +572,7 @@ public abstract class AbstractStrategyUI
 		
 					ControlUI hiddenFieldWidget = getAtdl4jConfig().getControlUIForHiddenFieldT( tempHiddenField, tempParameter );
 					addToControlMap( tempName, hiddenFieldWidget );
+					addToControlWithParameterMap( tempName, hiddenFieldWidget );
 				}
 			}
 		}
@@ -663,6 +699,8 @@ public abstract class AbstractStrategyUI
 					{
 // 2/14/2010 Scott Atwell						widget.setValueAsString( value );
 						widget.setFIXValue( value );
+// 3/10/2010 Scott Atwell
+						fireStateListenersForControl( widget );
 					}
 				}
 			}
@@ -683,6 +721,8 @@ public abstract class AbstractStrategyUI
 						{
 // 2/14/2010 Scott Atwell							widget.setValueAsString( value2 );
 							widget.setFIXValue( value2 );
+// 3/10/2010 Scott Atwell
+							fireStateListenersForControl( widget );
 						}
 					}
 					i = i + 3;
@@ -705,6 +745,9 @@ public abstract class AbstractStrategyUI
 	public void reinitStrategyPanel()
 		throws JAXBException
 	{
+// 3/13/2010 Scott Atwell added to accept/incorporate changes specified via "OK" button on InputAndFilterDataPanel
+		reloadHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );
+		
 		for ( ControlUI tempControlUI : getControlUIMap().values() )
 		{
 			logger.debug( "Invoking ControlUI.reinit() for: " + tempControlUI.getControl().getID() );
@@ -721,4 +764,5 @@ public abstract class AbstractStrategyUI
 		// -- If no RadioButtons within a radioGroup are selected, then first one in list will be selected --
 		applyRadioGroupRules();
 	}
+
 }

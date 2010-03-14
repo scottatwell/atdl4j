@@ -2,6 +2,7 @@ package org.atdl4j.data.converter;
 
 import java.math.BigInteger;
 
+import org.atdl4j.data.ParameterTypeConverter;
 import org.atdl4j.fixatdl.core.IntT;
 import org.atdl4j.fixatdl.core.LengthT;
 import org.atdl4j.fixatdl.core.NumInGroupT;
@@ -22,101 +23,16 @@ import org.atdl4j.fixatdl.core.TagNumT;
 public class IntegerConverter
 		extends AbstractTypeConverter<BigInteger>
 {
-
-	public IntegerConverter()
+	public IntegerConverter(ParameterT aParameter)
 	{
+		super( aParameter );
 	}
 
-	public IntegerConverter(ParameterT parameter)
+	public IntegerConverter(ParameterTypeConverter<?> aParameterTypeConverter)
 	{
-		this.parameter = parameter;
-	}
-
-// 2/12/2010	public BigInteger convertValueToComparable(Object value)
-	public BigInteger convertValueToParameterComparable(Object value)
-	{
-		if ( value instanceof BigInteger )
-		{
-			return (BigInteger) value;
-		}
-		else if ( value instanceof Integer )
-		{
-			return new BigInteger( ((Integer) value).toString() );
-		}
-		else if ( value instanceof String )
-		{
-			String str = (String) value;
-// 2/12/2010			try
-//			{
-//				return new BigInteger( str );
-//			}
-//			catch (NumberFormatException e)
-//			{
-//				return null;
-//			}
-			if ( ( str == null ) || ( str.trim().length() == 0 ) )
-			{
-				return null;
-			}
-			else
-			{
-				try
-				{
-					return new BigInteger( str );
-				}
-				catch (NumberFormatException e)
-				{
-// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
-					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameterName() );
-				}
-			}
-
-		}
-		else if ( value instanceof Boolean )
-		{
-			Boolean bool = (Boolean) value;
-			if ( bool != null )
-			{
-				if ( bool )
-					return new BigInteger( "1" );
-				else
-					return new BigInteger( "0" );
-			}
-			else
-				return null;
-		}
-		return null;
-	}
-
-	public BigInteger convertValueToControlComparable(Object value)
-	{
-		return convertValueToParameterComparable(value);
-	}
-
-	/* 
-	 * Returns string value, formatted if so specified and applicable.
-	 */
-	public String convertValueToParameterString(Object value)
-	{
-		BigInteger num = convertValueToParameterComparable( value ); 
-		if ( num == null )
-			return null;
-		else
-			return num.toString();
+		super( aParameterTypeConverter );
 	}
 	
-	/* 
-	 * Returns string value, formatted so specified and applicable.
-	 */
-	public String convertValueToControlString(Object value)
-	{
-		BigInteger num = convertValueToControlComparable( value ); 
-		if ( num == null )
-			return null;
-		else
-			return num.toString();
-	}
-
 	/**
 	 * Returns the value of Parameter.getMinValue() for the specific NumericT types for which this is
 	 * applicable, assuming it has been set, otherwise returns null.
@@ -125,13 +41,13 @@ public class IntegerConverter
 	 */
 	public BigInteger getMinValue()
 	{
-		if ( parameter instanceof IntT )
+		if ( getParameter() instanceof IntT )
 		{
-//			return ( (IntT) parameter ).getMinValue();
+//			return ( (IntT) getParameter() ).getMinValue();
 			// -- upcast IntT from Integer to BigInteger --
-			if ( ( (IntT) parameter ).getMinValue() != null )
+			if ( ( (IntT) getParameter() ).getMinValue() != null )
 			{
-				return new BigInteger( ( (IntT) parameter ).getMinValue().toString() );
+				return new BigInteger( ( (IntT) getParameter() ).getMinValue().toString() );
 			}
 			else
 			{
@@ -153,13 +69,13 @@ public class IntegerConverter
 	 */
 	public BigInteger getMaxValue()
 	{
-		if ( parameter instanceof IntT )
+		if ( getParameter() instanceof IntT )
 		{
-//			return ( (IntT) parameter ).getMaxValue();
+//			return ( (IntT) getParameter() ).getMaxValue();
 			// -- upcast IntT from Integer to BigInteger --
-			if ( ( (IntT) parameter ).getMaxValue() != null )
+			if ( ( (IntT) getParameter() ).getMaxValue() != null )
 			{
-				return new BigInteger( ( (IntT) parameter ).getMaxValue().toString() );
+				return new BigInteger( ( (IntT) getParameter() ).getMaxValue().toString() );
 			}
 			else
 			{
@@ -180,49 +96,243 @@ public class IntegerConverter
 	 */
 	public BigInteger getConstValue()
 	{
-		if ( parameter instanceof IntT )
+		if ( getParameter() instanceof IntT )
 		{
 			// -- upcast IntT from Integer to BigInteger --
-			if ( ( (IntT) parameter ).getConstValue() != null )
+			if ( ( (IntT) getParameter() ).getConstValue() != null )
 			{
-				return new BigInteger( ( (IntT) parameter ).getConstValue().toString() );
+				return new BigInteger( ( (IntT) getParameter() ).getConstValue().toString() );
 			}
 			else
 			{
 				return null;
 			}
 		}
-		else if ( parameter instanceof NumInGroupT )
+		else if ( getParameter() instanceof NumInGroupT )
 		{
-			return ( (NumInGroupT) parameter ).getConstValue();
+			return ( (NumInGroupT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof SeqNumT )
+		else if ( getParameter() instanceof SeqNumT )
 		{
-			return ( (SeqNumT) parameter ).getConstValue();
+			return ( (SeqNumT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof TagNumT )
+		else if ( getParameter() instanceof TagNumT )
 		{
-			return ( (TagNumT) parameter ).getConstValue();
+			return ( (TagNumT) getParameter() ).getConstValue();
 		}
-		else if ( parameter instanceof LengthT )
+		else if ( getParameter() instanceof LengthT )
 		{
-			return ( (LengthT) parameter ).getConstValue();
-		}
-		else
-		{
-			return null;
-		}
-	}	
-	
-	protected String getParameterName()
-	{
-		if ( getParameter() != null )
-		{
-			return getParameter().getName();
+			return ( (LengthT) getParameter() ).getConstValue();
 		}
 		else
 		{
 			return null;
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertFixWireValueToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertFixWireValueToParameterValue(String aFixWireValue)
+	{
+		return convertStringToParameterValue( aFixWireValue );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterStringToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertParameterStringToParameterValue(String aParameterString)
+	{
+		return convertStringToParameterValue( aParameterString );
+	}
+
+	/**
+	 * Supports either FixWireValue or ParameterString values
+	 * @param aValue
+	 * @return
+	 */
+	protected BigInteger convertStringToParameterValue(String aValue)
+	{
+		if ( aValue != null )
+		{
+			String str = (String) aValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					return new BigInteger( str );
+				}
+				catch (NumberFormatException e)
+				{
+// 3/8/2010 Scott Atwell					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameter().getName() );
+					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToFixWireValue(java.lang.Object)
+	 */
+	@Override
+	public String convertParameterValueToFixWireValue(Object aParameterValue)
+	{
+		BigInteger tempBigInteger = convertParameterValueToParameterComparable( aParameterValue ); 
+		if ( tempBigInteger != null )
+		{
+			return tempBigInteger.toString();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToParameterComparable(java.lang.Object)
+	 */
+	@Override
+	public BigInteger convertParameterValueToParameterComparable(Object aParameterValue)
+	{
+		if ( aParameterValue instanceof BigInteger )
+		{
+			return (BigInteger) aParameterValue;
+		}
+		else if ( aParameterValue instanceof Integer )
+		{
+			return new BigInteger( ((Integer) aParameterValue).toString() );
+		}
+		else if ( aParameterValue instanceof String )
+		{
+			String str = (String) aParameterValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					return new BigInteger( str );
+				}
+				catch (NumberFormatException e)
+				{
+					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+
+		}
+//		else if ( aParameterValue instanceof Boolean )
+//		{
+//			Boolean bool = (Boolean) aParameterValue;
+//			if ( bool != null )
+//			{
+//				if ( bool )
+//					return new BigInteger( "1" );
+//				else
+//					return new BigInteger( "0" );
+//			}
+//			else
+//				return null;
+//		}
+//		return null;
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToControlComparable(java.lang.Object)
+	 */
+	@Override
+	public BigInteger convertControlValueToControlComparable(Object aValue)
+	{
+		if ( aValue instanceof BigInteger )
+		{
+			return (BigInteger) aValue;
+		}
+		else if ( aValue instanceof Integer )
+		{
+			return new BigInteger( ((Integer) aValue).toString() );
+		}
+		else if ( aValue instanceof String )
+		{
+			String str = (String) aValue;
+			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			{
+				return null;
+			}
+			else
+			{
+				try
+				{
+					return new BigInteger( str );
+				}
+				catch (NumberFormatException e)
+				{
+					throw new NumberFormatException( "Invalid Integer Number Format: [" + str + "] for Parameter: " + getParameterName() );
+				}
+			}
+
+		}
+		else if ( aValue instanceof Boolean )
+		{
+			Boolean bool = (Boolean) aValue;
+			if ( bool != null )
+			{
+				if ( bool )
+					return new BigInteger( "1" );
+				else
+					return new BigInteger( "0" );
+			}
+			else
+				return null;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToParameterValue(java.lang.Object)
+	 */
+	@Override
+	public Object convertControlValueToParameterValue(Object aValue)
+	{
+// 3/12/2010 Scott Atwell return (BigInteger) aValue;
+		// -- aDatatypeIfNull=DATATYPE_BIG_INTEGER --
+		return DatatypeConverter.convertValueToDatatype( aValue, getParameterDatatype( DatatypeConverter.DATATYPE_BIG_INTEGER ) );
+	}
+
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertParameterValueToControlValue(java.lang.Object)
+	 */
+	@Override
+	public BigInteger convertParameterValueToControlValue(Object aValue)
+	{
+//		3/12/2010 Scott Atwell	return (BigInteger) BigInteger;
+		return DatatypeConverter.convertValueToBigIntegerDatatype( aValue );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertStringToControlValue(java.lang.String)
+	 */
+	@Override
+	public BigInteger convertStringToControlValue(String aString)
+	{
+		return convertControlValueToControlComparable( aString );
+	}	
+	
 }

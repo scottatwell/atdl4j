@@ -7,8 +7,8 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.atdl4j.data.ValidationRule;
-import org.atdl4j.ui.ControlUI;
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.ui.ControlUI;
 
 /**
  * Validator that validates input against a regular expression.
@@ -52,7 +52,8 @@ public class PatternValidationRule
 
 		// PatternRules always validate against a parameter,
 		// so no need to fetch control value
-		String value = target.getParameterValueAsString();
+// 3/10/2010 Scott Atwell		String value = target.getParameterValueAsString();
+		String value = target.getParameterFixWireValue();
 		if ( value != null && !Pattern.matches( this.pattern, value ) )
 		{
 			throw new ValidationException( target, "Rule tested: [" + value + " pattern match: " + this.pattern + "]" );

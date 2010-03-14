@@ -1,7 +1,11 @@
 package org.atdl4j.data;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.data.converter.BooleanConverter;
+import org.atdl4j.data.converter.DatatypeConverter;
+import org.atdl4j.data.converter.DateTimeConverter;
+import org.atdl4j.data.converter.DecimalConverter;
+import org.atdl4j.data.converter.IntegerConverter;
+import org.atdl4j.data.converter.StringConverter;
 import org.atdl4j.fixatdl.core.BooleanT;
 import org.atdl4j.fixatdl.core.CharT;
 import org.atdl4j.fixatdl.core.CurrencyT;
@@ -38,11 +42,6 @@ import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.fixatdl.layout.TextFieldT;
-import org.atdl4j.data.converter.BooleanConverter;
-import org.atdl4j.data.converter.DateTimeConverter;
-import org.atdl4j.data.converter.DecimalConverter;
-import org.atdl4j.data.converter.IntegerConverter;
-import org.atdl4j.data.converter.StringConverter;
 
 /*
  * NumericT subclasses
@@ -55,8 +54,8 @@ import org.atdl4j.data.converter.StringConverter;
  */
 
 /**
- * Factory that creates the appropriate ParameterUI depending on the parameter
- * control type and value type.
+ * Factory that creates the appropriate ParameterTypeConveter depending on the parameter
+ * or creates the appropriate ControlTypeConveter depending upon the control type.
  * 
  * Note that all UI widgets in ATDL are strongly typed.
  * 
@@ -68,7 +67,8 @@ public class TypeConverterFactory
 	/*
 	 * Create adapter based on ParameterT
 	 */
-	public static TypeConverter<?> create(ParameterT parameter) throws JAXBException
+// 3/10/2010 Scott Atwell	public static TypeConverter<?> create(ParameterT parameter) throws JAXBException
+	public static ParameterTypeConverter<?> createParameterTypeConverter(ParameterT parameter)
 	{
 		if ( parameter instanceof StringT || parameter instanceof CharT || parameter instanceof MultipleCharValueT
 				|| parameter instanceof MultipleStringValueT || parameter instanceof CurrencyT || parameter instanceof ExchangeT
@@ -97,13 +97,18 @@ public class TypeConverterFactory
 			return new DateTimeConverter( parameter );
 		}
 		else
-			throw new JAXBException( "Unsupported ParameterT type: " + parameter.getClass().getName() );
+		{
+// 3/10/2010 Scott Atwell			throw new JAXBException( "Unsupported ParameterT type: " + parameter.getClass().getName() );
+			throw new IllegalArgumentException( "Unsupported ParameterT type: " + parameter.getClass().getName() );
+		}
 	}
 
 	/*
 	 * Create adapter based on ControlT (native type for each control)
 	 */
-	public static TypeConverter<?> create(ControlT control, ParameterT parameter) throws JAXBException
+// 3/10/2010 Scott Atwell	public static TypeConverter<?> create(ControlT control, ParameterT parameter) throws JAXBException
+// 3/11/2010 Scott Atwell	public static ControlTypeConverter<?> createControlTypeConverter(ControlT control, ParameterT parameter)
+	public static ControlTypeConverter<?> createControlTypeConverter(ControlT control, ParameterTypeConverter<?> aParameterTypeConverter)
 	{
 //TODO 2/21/2010 Scott Atwell Added
 //		TypeConverter<?> tempParameterConverter = create( parameter );
@@ -120,29 +125,110 @@ public class TypeConverterFactory
 //			}
 //TODO 2/12/2010 -- TODO Need to handle adjusting a PercentageT of "9999=.1234" from loadFixMessage() to put "12.34" in TextFieldT if PercentageT@multiplyBy100 is true. 
 			
-			return new StringConverter();
+// 3/10/2010 Scott Atwell			return new StringConverter();
+// 3/11/2010 Scott Atwell			return new StringConverter( parameter );
+			return new StringConverter( aParameterTypeConverter );
 		}
+/*** 3/14/2010 Scott Atwell SliderWidget takes a "String" for enumID
 		else if ( control instanceof SliderT || control instanceof SingleSpinnerT || control instanceof DoubleSpinnerT )
 		{
 // 2/12/2010 Scott Atwell			return new NumberConverter();
-			if ( parameter instanceof NumericT )  // all of the Decimal types presently extend NumericT
+// ??? 3/11/2010 Scott Atwell			if ( parameter instanceof NumericT )  // all of the Decimal types presently extend NumericT
+			if ( ( aParameterTypeConverter != null ) &&
+					( aParameterTypeConverter.getParameter() instanceof NumericT ) )  // all of the Decimal types presently extend NumericT
 			{
-				return new DecimalConverter();
+// 3/10/2010 Scott Atwell				return new DecimalConverter();
+// 3/11/2010 Scott Atwell				return new DecimalConverter( parameter );
+				return new DecimalConverter( aParameterTypeConverter );
 			}
 			else
 			{
-				return new IntegerConverter();
+// 3/10/2010 Scott Atwell				return new IntegerConverter();
+// 3/11/2010 Scott Atwell				return new IntegerConverter( parameter );
+				return new IntegerConverter( aParameterTypeConverter );
+			}
+***/			
+		else if ( control instanceof SliderT )
+		{
+			return new StringConverter( aParameterTypeConverter );
+		}
+		else if ( control instanceof SingleSpinnerT || control instanceof DoubleSpinnerT )
+		{
+// 2/12/2010 Scott Atwell			return new NumberConverter();
+// ??? 3/11/2010 Scott Atwell			if ( parameter instanceof NumericT )  // all of the Decimal types presently extend NumericT
+			if ( ( aParameterTypeConverter != null ) &&
+					( aParameterTypeConverter.getParameter() instanceof NumericT ) )  // all of the Decimal types presently extend NumericT
+			{
+// 3/10/2010 Scott Atwell				return new DecimalConverter();
+// 3/11/2010 Scott Atwell				return new DecimalConverter( parameter );
+				return new DecimalConverter( aParameterTypeConverter );
+			}
+			else
+			{
+// 3/10/2010 Scott Atwell				return new IntegerConverter();
+// 3/11/2010 Scott Atwell				return new IntegerConverter( parameter );
+				return new IntegerConverter( aParameterTypeConverter );
 			}
 		}
 		else if ( control instanceof CheckBoxT || control instanceof RadioButtonT )
 		{
-			return new BooleanConverter();
+// 3/10/2010 Scott Atwell			return new BooleanConverter();
+// 3/11/2010 Scott Atwell			return new BooleanConverter( (BooleanT) parameter );
+			return new BooleanConverter( (BooleanT) aParameterTypeConverter );
 		}
 		else if ( control instanceof ClockT )
 		{
-			return new DateTimeConverter( parameter );
+// 3/11/2010 Scott Atwell			return new DateTimeConverter( parameter );
+			return new DateTimeConverter( aParameterTypeConverter );
 		}
 		else
-			throw new JAXBException( "Unsupported ControlT type: " + control.getClass().getName() );
+		{
+// 3/10/2010 Scott Atwell			throw new JAXBException( "Unsupported ControlT type: " + control.getClass().getName() );
+			throw new IllegalArgumentException( "Unsupported ControlT type: " + control.getClass().getName() );
+		}
 	}
+	
+
+
+	/*
+	 * Returns an Object that is an instanceof the Parameter's base data type (eg String, BigDecimal, DateTime, etc)
+	 */
+// 3/12/2010 Scott Atwell added	
+	public static Object getParameterDatatype(ParameterT aParameter)
+	{
+		if ( aParameter instanceof StringT || aParameter instanceof CharT || aParameter instanceof MultipleCharValueT
+				|| aParameter instanceof MultipleStringValueT || aParameter instanceof CurrencyT || aParameter instanceof ExchangeT
+				|| aParameter instanceof DataT )
+		{
+			return DatatypeConverter.DATATYPE_STRING;
+		}
+		else if ( aParameter instanceof NumericT )
+		{
+			return DatatypeConverter.DATATYPE_BIG_DECIMAL; // Float field
+		}
+		else if ( aParameter instanceof IntT || aParameter instanceof NumInGroupT || aParameter instanceof SeqNumT || aParameter instanceof TagNumT
+				|| aParameter instanceof LengthT )
+		{
+			return DatatypeConverter.DATATYPE_BIG_INTEGER; // Integer field
+		}
+		else if ( aParameter instanceof BooleanT )
+		{
+			return DatatypeConverter.DATATYPE_BOOLEAN; 
+		}
+		else if ( aParameter instanceof MonthYearT )
+		{
+			return DatatypeConverter.DATATYPE_STRING;
+		}
+		else if ( aParameter instanceof UTCTimestampT || aParameter instanceof UTCTimeOnlyT
+				|| aParameter instanceof LocalMktDateT || aParameter instanceof UTCDateOnlyT )
+		{
+			return DatatypeConverter.DATATYPE_XML_GREGORIAN_CALENDAR;
+		}
+		else
+		{
+// 3/10/2010 Scott Atwell			throw new JAXBException( "Unsupported ParameterT type: " + aParameter.getClass().getName() );
+			throw new IllegalArgumentException( "Unsupported ParameterT type: " + aParameter.getClass().getName() );
+		}
+	}
+
 }

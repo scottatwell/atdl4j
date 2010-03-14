@@ -364,4 +364,108 @@ public class ControlHelper
 	}
 ****/
 
+	public static String getUiRepOrID( ControlT aControl )
+	{
+		if ( aControl == null )
+		{
+			return null;
+		}
+		
+		String tempUiRep = null;
+		
+		if ( aControl instanceof CheckBoxT )
+		{
+			tempUiRep = ((CheckBoxT) aControl).getLabel();
+		}
+		else if ( aControl instanceof CheckBoxListT )
+		{
+			tempUiRep = ((CheckBoxListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof ClockT )
+		{
+			tempUiRep = ((ClockT) aControl).getLabel();
+		}
+		else if ( aControl instanceof DoubleSpinnerT )
+		{
+			tempUiRep = ((DoubleSpinnerT) aControl).getLabel();
+		}
+		else if ( aControl instanceof DropDownListT )
+		{
+			tempUiRep = ((DropDownListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof EditableDropDownListT )
+		{
+			tempUiRep = ((EditableDropDownListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof HiddenFieldT )
+		{
+//			tempUiRep = ((HiddenFieldT) aControl).getLabel();
+		}
+		else if ( aControl instanceof LabelT )
+		{
+			tempUiRep = ((LabelT) aControl).getLabel();
+		}
+		else if ( aControl instanceof MultiSelectListT )
+		{
+			tempUiRep = ((MultiSelectListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof RadioButtonT )
+		{
+			tempUiRep = ((RadioButtonT) aControl).getLabel();
+		}
+		else if ( aControl instanceof RadioButtonListT )
+		{
+			tempUiRep = ((RadioButtonListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof SingleSelectListT )
+		{
+			tempUiRep = ((SingleSelectListT) aControl).getLabel();
+		}
+		else if ( aControl instanceof SingleSpinnerT )
+		{
+			tempUiRep = ((SingleSpinnerT) aControl).getLabel();
+		}
+		else if ( aControl instanceof SliderT )
+		{
+			tempUiRep = ((SliderT) aControl).getLabel();
+		}
+		else if ( aControl instanceof TextFieldT )
+		{
+			tempUiRep = ((TextFieldT) aControl).getLabel();
+		}
+		
+		// -- Return Control's ID if no uiRep --
+		if ( ( tempUiRep == null ) || ( "".equals( tempUiRep ) ) )
+		{
+			return aControl.getID();
+		}
+		else
+		{
+			return tempUiRep;
+		}
+	}
+
+	/**
+	 * Handles ControlT/@initPolicy ("UseValue" or "UseFixField") logic in conjunction with ControlT/@initValue and ControlT/@initFixField
+	 * Returns null if ControlT/@initValue is the special null indicator: VALUE_NULL_INDICATOR
+	 * Also has special handling for LabelT which may simply use "label=" vs. "initValue=" for its value.
+	 * @param aControl
+	 * @param aAtdl4jConfig
+	 * @return 
+	 */
+	public static Object getReinitValue( ControlT aControl, Atdl4jConfig aAtdl4jConfig )
+	{
+		Object tempInitValue = getInitValue( aControl, aAtdl4jConfig );
+		
+		if ( ( tempInitValue == null ) && ( aControl instanceof LabelT ) )
+		{
+			// 3/14/2010 Scott Atwell LabelT may simply use "label=" and do not want to lose it upon reinit
+			return ((LabelT) aControl).getLabel();
+		}
+		else
+		{
+			return tempInitValue;
+		}
+	}
+
 }

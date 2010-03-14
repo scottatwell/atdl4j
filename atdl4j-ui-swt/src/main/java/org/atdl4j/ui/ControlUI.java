@@ -1,8 +1,6 @@
 
 package org.atdl4j.ui;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.fixatdl.core.ParameterT;
@@ -15,12 +13,10 @@ import org.atdl4j.fixatdl.layout.ControlT;
 public interface ControlUI<E extends Comparable<?>> 
 {
 // 2/9/2010 Scott Atwell added
-	public void init(ControlT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig)
-		throws JAXBException;
+	public void init(ControlT control, ParameterT parameter, Atdl4jConfig aAtdl4jConfig);
 
 // 3/8/2010 Scott Atwell added
-	public void reinit()
-		throws JAXBException;
+	public void reinit();
 
 // 2/10/2010 Scott Atwell added	
 	public boolean isNullValue();
@@ -48,15 +44,16 @@ public interface ControlUI<E extends Comparable<?>>
 	
 // 2/10/2010 Scott Atwell not used		public String getControlValueAsString() throws JAXBException;
 	
-	public Comparable<?> getControlValueAsComparable() throws JAXBException;
+	public Comparable<?> getControlValueAsComparable();
 	
 	// Parameter value accessor methods
 	
 	public Object getParameterValue();
 	
-	public String getParameterValueAsString() throws JAXBException;
+// 3/10/2010 Scott Atwell	public String getParameterValueAsString() throws JAXBException;
+	public String getParameterFixWireValue();
 	
-	public Comparable<?> getParameterValueAsComparable() throws JAXBException;
+	public Comparable<?> getParameterValueAsComparable();
 	
 	// Value mutator methods
 	
@@ -65,19 +62,20 @@ public interface ControlUI<E extends Comparable<?>>
 	/* 
 	 * This method handles string matching Atdl4jConstants.VALUE_NULL_INDICATOR and invoking setNullValue().
 	 */
-	public void setValueAsString(String value) throws JAXBException;
+	public void setValueAsString(String value);
 
 	// Helper methods
 	
-	public Comparable<?> convertStringToControlComparable(String string) throws JAXBException;
+	public Comparable<?> convertStringToControlComparable(String string);
 	
-	public Comparable<?> convertStringToParameterComparable(String string) throws JAXBException;
-	
+// 3/10/2010 Scott Atwell	public Comparable<?> convertStringToParameterComparable(String string) throws JAXBException;
+	public Comparable<?> convertParameterStringToParameterComparable(String aParameterString );
+
 	// FIX methods
 	
-	public String getFIXValue() throws JAXBException;
+	public String getFIXValue();
 	
-	public void getFIXValue(FIXMessageBuilder builder) throws JAXBException;
+	public void getFIXValue(FIXMessageBuilder builder);
 
 	// UI methods
 	
@@ -88,7 +86,7 @@ public interface ControlUI<E extends Comparable<?>>
 	public boolean isEnabled();
 	
 //TODO Scott Atwell 1/14/2010 Added
-	public int getFIXType() throws JAXBException;
+	public int getFIXType();
 	
 	public E getLastNonNullStateControlValueRaw();
 	
@@ -96,16 +94,16 @@ public interface ControlUI<E extends Comparable<?>>
 	 * Used when pre-populating a control with its FIX message wire value 
 	 * For example: PercentageT with isMultiplyBy100() == true would have ".1234" on the wire for "12.34" displayed/stored by the control (for 12.34%). 
 	 * @param aFIXValue
-	 * @throws JAXBException
 	 */
-	public void setFIXValue( String aFIXValue )
-		throws JAXBException;
+	public void setFIXValue( String aFIXValue );
 	
-	public void applyConstOrInitValues()
-		throws JAXBException;
+	public void applyConstOrInitValues();
 	
 	public void processConstValueHasBeenSet();
 	
 	public void setControlExcludingLabelEnabled(boolean enabled);	
 	public boolean isControlExcludingLabelEnabled();
+	
+	public boolean isHiddenFieldForInputAndFilterData();
+	public void setHiddenFieldForInputAndFilterData(boolean aBoolean);
 }

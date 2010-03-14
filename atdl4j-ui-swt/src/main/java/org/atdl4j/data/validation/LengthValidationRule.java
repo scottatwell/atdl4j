@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.ui.ControlUI;
 
 /**
@@ -59,7 +59,8 @@ public class LengthValidationRule
 			throw new JAXBException( tempMsg );
 		}
 
-		String fieldValue = target.getParameterValueAsString();
+// 3/10/2010 Scott Atwell		String fieldValue = target.getParameterValueAsString();
+		String fieldValue = target.getParameterFixWireValue();
 		if ( fieldValue != null )
 		{
 			validateLength( target, fieldValue, operator );

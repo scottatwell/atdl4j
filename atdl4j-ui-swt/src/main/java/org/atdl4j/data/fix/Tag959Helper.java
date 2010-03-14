@@ -1,7 +1,5 @@
 package org.atdl4j.data.fix;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.fixatdl.core.AmtT;
 import org.atdl4j.fixatdl.core.BooleanT;
 import org.atdl4j.fixatdl.core.CharT;
@@ -39,7 +37,7 @@ import org.atdl4j.fixatdl.core.UTCTimestampT;
 public abstract class Tag959Helper
 {
 
-	public static int toInteger(ParameterT parameter) throws JAXBException
+	public static int toInteger(ParameterT parameter)
 	{
 		if ( parameter instanceof IntT )
 		{
@@ -157,6 +155,6 @@ public abstract class Tag959Helper
 		{
 			return 29;
 		}
-		throw new JAXBException( "Unsupported Parameter type." );
+		throw new IllegalArgumentException( "Unsupported Parameter type: " + (parameter == null ? "null" : parameter.getClass() ) );
 	}
 }

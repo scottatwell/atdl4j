@@ -2,11 +2,11 @@ package org.atdl4j.data.converter;
 
 import java.util.GregorianCalendar;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.atdl4j.data.ParameterHelper;
+import org.atdl4j.data.ParameterTypeConverter;
 import org.atdl4j.fixatdl.core.LocalMktDateT;
 import org.atdl4j.fixatdl.core.MonthYearT;
 import org.atdl4j.fixatdl.core.ParameterT;
@@ -28,122 +28,55 @@ public class DateTimeConverter
 	public static DatatypeFactory javaxDatatypeFactory;
 
 	
-	public DateTimeConverter(ParameterT parameter)
+	public DateTimeConverter(ParameterT aParameter)
 	{
-		this.parameter = parameter;
+		super( aParameter );
 		
-		setTimezone( ParameterHelper.getLocalMktTz( parameter ) );
+		setTimezone( ParameterHelper.getLocalMktTz( getParameter() ) );
 	}
 
+	public DateTimeConverter(ParameterTypeConverter<?> aParameterTypeConverter)
+	{
+		super( aParameterTypeConverter );
+
+		if ( ( aParameterTypeConverter != null ) && ( aParameterTypeConverter.getParameter() != null ) ) 
+		{
+			setTimezone( ParameterHelper.getLocalMktTz( aParameterTypeConverter.getParameter() ) );
+		}
+	}
+	
 	private String getFormatString()
 	{
-		if ( parameter != null )
+		if ( getParameter() != null )
 		{
-			if ( parameter instanceof LocalMktDateT )
+			if ( getParameter() instanceof LocalMktDateT )
 			{
 				return "yyyyMMdd";
 			}
-			else if ( parameter instanceof MonthYearT )
+			else if ( getParameter() instanceof MonthYearT )
 			{
 				return "yyyyMM";
 			}
-			else if ( parameter instanceof UTCDateOnlyT )
+			else if ( getParameter() instanceof UTCDateOnlyT )
 			{
 				return "yyyyMMdd";
 			}
-			else if ( parameter instanceof UTCTimeOnlyT )
+			else if ( getParameter() instanceof UTCTimeOnlyT )
 			{
 				return "HH:mm:ss";
 			}
-			else if ( parameter instanceof UTCTimestampT )
+			else if ( getParameter() instanceof UTCTimestampT )
 			{
 				return "yyyyMMdd-HH:mm:ss";
 			}
 			// TODO: Uncomment when TZTimestamp / TZTimeOnly becomes available
 			/*
-			 * else if (parameter instanceof TZTimeOnlyT) { return "HH:mm:ssZZ"; }
-			 * else if (parameter instanceof TZTimestampT) { return
+			 * else if (getParameter() instanceof TZTimeOnlyT) { return "HH:mm:ssZZ"; }
+			 * else if (getParameter() instanceof TZTimestampT) { return
 			 * "yyyyMMdd-HH:mm:ssZZ"; }
 			 */
 		}
 		return "yyyyMMdd-HH:mm:ss";
-	}
-
-	public DateTime convertValueToParameterComparable(Object value) throws JAXBException
-	{
-		if ( value instanceof DateTime )
-		{
-			return (DateTime) value;
-		}
-// 2/16/2010 Scott Atwell Added (when handling dailyConstValue)		
-// 2/23/2010 Scott Atwell Added (when handling 'daily' format for constValue)		
-		else if ( value instanceof XMLGregorianCalendar )
-		{
-			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) value, getTimezone() );
-		}
-		else if ( value instanceof String )
-		{
-			String str = (String) value;
-			String format = getFormatString();
-			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
-
-			try
-			{  
-				if ( parameter == null || parameter instanceof UTCTimeOnlyT || parameter instanceof UTCTimestampT )
-				{
-// 2/16/2010 Scott Atwell makes 06:30 CT come back 06:30 UTC					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
-					DateTime tempDateTime = fmt.parseDateTime( str ); 
-					return tempDateTime.withZone( DateTimeZone.UTC );
-				}
-
-				/*
-				 * else if (parameter instanceof TZTimestamp || parameter instanceof
-				 * TZTimeOnlyT) { return fmt.withOffsetParsed().parseDateTime(str);
-				 * }
-				 */
-				else
-				{
-					return fmt.parseDateTime( str );
-				}
-
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new JAXBException( "Unable to parse \"" + str + "\" with format \"" + format + "\"" );
-			}
-		}
-		return null;
-	}
-
-	public DateTime convertValueToControlComparable(Object value) throws JAXBException
-	{
-		return convertValueToParameterComparable( value );
-	}
-
-	public String convertValueToParameterString(Object value) throws JAXBException
-	{
-		DateTime date = convertValueToParameterComparable( value ); 
-		
-		if ( date != null )
-		{
-			DateTimeFormatter fmt = DateTimeFormat.forPattern( getFormatString() );
-// 2/15/2010 Scott Atwell			return fmt.print( date );
-			return fmt.withZone( DateTimeZone.UTC ).print( date );
-		}
-		return null;
-	}
-
-	public String convertValueToControlString(Object value) throws JAXBException
-	{
-		DateTime date = convertValueToControlComparable( value ); 
-		
-		if ( date != null )
-		{
-			DateTimeFormatter fmt = DateTimeFormat.forPattern( getFormatString() );
-// 2/15/2010 Scott Atwell			return fmt.print( date );
-			return fmt.withZone( DateTimeZone.getDefault() ).print( date );
-		}
-		return null;
 	}
 
 	public static DateTimeZone convertTimezoneToDateTimeZone( Timezone aTimezone )
@@ -258,6 +191,295 @@ public class DateTimeConverter
 // com.sun.jdi.InvocationException ???		return getJavaxDatatypeFactory().newXMLGregorianCalendar();
 		return getJavaxDatatypeFactory().newXMLGregorianCalendar( new GregorianCalendar() );
 	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToControlComparable(java.lang.Object)
+	 */
+	@Override
+	public DateTime convertControlValueToControlComparable(Object aValue)
+	{
+		if ( aValue instanceof DateTime )
+		{
+			return (DateTime) aValue;
+		}
+		else if ( aValue instanceof XMLGregorianCalendar )
+		{
+			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) aValue, getTimezone() );
+		}
+		else if ( aValue instanceof String )
+		{
+			String str = (String) aValue;
+			String format = getFormatString();
+			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
+
+			try
+			{  
+// ??? 3/11/2010 Scott Atwell				if ( getParameter() == null || getParameter() instanceof UTCTimeOnlyT || getParameter() instanceof UTCTimestampT )
+				if ( ( getParameterTypeConverter() == null ) ||
+					  ( getParameterTypeConverter().getParameter() == null ) || 
+					  ( getParameterTypeConverter().getParameter() instanceof UTCTimeOnlyT ) || 
+					  ( getParameterTypeConverter().getParameter() instanceof UTCTimestampT ) )
+				{
+// 2/16/2010 Scott Atwell makes 06:30 CT come back 06:30 UTC					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
+					DateTime tempDateTime = fmt.parseDateTime( str ); 
+					return tempDateTime.withZone( DateTimeZone.UTC );
+				}
+
+				/*
+				 * else if (getParameter() instanceof TZTimestamp || getParameter() instanceof
+				 * TZTimeOnlyT) { return fmt.withOffsetParsed().parseDateTime(str);
+				 * }
+				 */
+				else
+				{
+					return fmt.parseDateTime( str );
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new IllegalArgumentException( "Unable to parse \"" + str + "\" with format \"" + format + "\"  Exception: " + e.getMessage() );
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertControlValueToParameterValue(java.lang.Object)
+	 */
+	@Override
+	public Object convertControlValueToParameterValue(Object aValue)
+	{
+		if ( aValue instanceof XMLGregorianCalendar )
+		{
+			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) aValue, getTimezone() ); 
+		}
+		else
+		{
+			return (DateTime) aValue;
+		}
+	}
+
+	/* No conversion applicable for this type.  Returns aValue.
+	 * @see org.atdl4j.data.ControlTypeConverter#convertParameterValueToControlValue(java.lang.Object)
+	 */
+	@Override
+	public DateTime convertParameterValueToControlValue(Object aValue)
+	{
+		if ( aValue instanceof DateTime )
+		{
+			return (DateTime) aValue;
+		}
+		else if ( aValue instanceof XMLGregorianCalendar )
+		{
+			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) aValue, getTimezone() );
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ControlTypeConverter#convertStringToControlValue(java.lang.String)
+	 */
+	@Override
+	public DateTime convertStringToControlValue(String aString)
+	{
+		return convertControlValueToControlComparable( aString );
+	}
+
+	/* aFixWireValue value should contain time expressed in UTC for UTCTimestampT
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertFixWireValueToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertFixWireValueToParameterValue(String aFixWireValue)
+	{
+		if ( aFixWireValue != null )
+		{
+			String str = (String) aFixWireValue;
+			String format = getFormatString();
+			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
+
+			try
+			{  
+				if ( getParameter() == null || 
+						getParameter() instanceof UTCTimeOnlyT || 
+						getParameter() instanceof UTCTimestampT )
+				{
+// 2/16/2010 Scott Atwell makes 06:30 CT come back 06:30 UTC					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
+//					DateTime tempDateTime = fmt.parseDateTime( str ); 
+//					return tempDateTime.withZone( DateTimeZone.UTC );
+					DateTime tempDateTime = fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
+					return tempDateTime;
+				}
+				else
+				{
+					return fmt.parseDateTime( str );
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new IllegalArgumentException( "Unable to parse \"" + str + "\" with format \"" + format + "\"  Execption: " + e.getMessage() );
+			}
+		}
+		else
+		{	
+			return null;
+		}	
+	}
+
+	/* aParameterString time value should be expressed in local or Parameter/@timezone
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterStringToParameterValue(java.lang.String)
+	 */
+	@Override
+	public Object convertParameterStringToParameterValue(String aParameterString)
+	{
+//		return convertStringToParameterValue( aParameterString );
+		if ( aParameterString != null )
+		{
+			String str = (String) aParameterString;
+			String format = getFormatString();
+			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
+
+			try
+			{  
+				if ( getParameter() == null || 
+						getParameter() instanceof UTCTimeOnlyT || 
+						getParameter() instanceof UTCTimestampT )
+				{
+// 2/16/2010 Scott Atwell makes 06:30 CT come back 06:30 UTC					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
+// 3/11/2010 Scott Atwell needed UTC to avoid double adjusting when checking const, min/max					DateTime tempDateTime = fmt.parseDateTime( str ); 
+					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str ); 
+				}
+				else
+				{
+					return fmt.parseDateTime( str );
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new IllegalArgumentException( "Unable to parse \"" + str + "\" with format \"" + format + "\"  Execption: " + e.getMessage() );
+			}
+		}
+		else
+		{	
+			return null;
+		}	
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToFixWireValue(java.lang.Object)
+	 */
+	@Override
+	public String convertParameterValueToFixWireValue(Object aParameterValue)
+	{
+// 3/10/2010 Scott Atwell		DateTime date = convertValueToParameterComparable( aParameterValue ); 
+		DateTime date = convertParameterValueToParameterComparable( aParameterValue ); 
+		
+		if ( date != null )
+		{
+			DateTimeFormatter fmt = DateTimeFormat.forPattern( getFormatString() );
+// 2/15/2010 Scott Atwell			return fmt.print( date );
+			return fmt.withZone( DateTimeZone.UTC ).print( date );
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToParameterComparable(java.lang.Object)
+	 */
+	@Override
+	public DateTime convertParameterValueToParameterComparable(Object aParameterValue)
+	{
+		if ( aParameterValue instanceof DateTime )
+		{
+// 3/11/2010 Scott Atwell			return (DateTime) aParameterValue;
+			DateTime tempDateTime = (DateTime) aParameterValue;
+			
+			if ( getParameter() == null || 
+					getParameter() instanceof UTCTimeOnlyT || 
+					getParameter() instanceof UTCTimestampT )
+			{
+				return tempDateTime.withZone( DateTimeZone.UTC );
+			}
+			else
+			{
+				return tempDateTime;
+			}
+		}
+		else if ( aParameterValue instanceof XMLGregorianCalendar )
+		{
+			return convertXMLGregorianCalendarToDateTime( (XMLGregorianCalendar) aParameterValue, getTimezone() );
+		}
+//		else if ( aParameterValue instanceof String )
+//		{
+//			String str = (String) aParameterValue;
+//			String format = getFormatString();
+//			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
+//
+//			try
+//			{  
+//				if ( getParameter() == null || getParameter() instanceof UTCTimeOnlyT || getParameter() instanceof UTCTimestampT )
+//				{
+//// 2/16/2010 Scott Atwell makes 06:30 CT come back 06:30 UTC					return fmt.withZone( DateTimeZone.UTC ).parseDateTime( str );
+//					DateTime tempDateTime = fmt.parseDateTime( str ); 
+//					return tempDateTime.withZone( DateTimeZone.UTC );
+//				}
+//
+//				/*
+//				 * else if (getParameter() instanceof TZTimestamp || getParameter() instanceof
+//				 * TZTimeOnlyT) { return fmt.withOffsetParsed().parseDateTime(str);
+//				 * }
+//				 */
+//				else
+//				{
+//					return fmt.parseDateTime( str );
+//				}
+//			}
+//			catch (IllegalArgumentException e)
+//			{
+//				throw new IllegalArgumentException( "Unable to parse \"" + str + "\" with format \"" + format + "\"  Exception: " + e.getMessage() );
+//			}
+//		}
+		else
+		{
+			return null;
+		}
+	}
 	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.data.ParameterTypeConverter#convertParameterValueToComparisonString(java.lang.Object)
+	 */
+	@Override
+	public String convertParameterValueToComparisonString(Object aParameterValue)
+	{
+		DateTime tempDateTime = convertParameterValueToParameterComparable( aParameterValue );
 	
+		if ( tempDateTime != null )
+		{
+// 3/11/2010 Scott Atwell			return tempDateTime.toString();
+			String format = getFormatString();
+			DateTimeFormatter fmt = DateTimeFormat.forPattern( format );
+// 3/11/2010			return fmt.print( tempDateTime );
+			if ( getParameter() == null || 
+					getParameter() instanceof UTCTimeOnlyT || 
+					getParameter() instanceof UTCTimestampT )
+			{
+				tempDateTime = tempDateTime.withZone( DateTimeZone.UTC );
+			}
+			return fmt.print( tempDateTime );
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 }

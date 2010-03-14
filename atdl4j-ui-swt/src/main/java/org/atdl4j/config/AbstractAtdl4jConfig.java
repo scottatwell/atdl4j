@@ -469,7 +469,6 @@ public abstract class AbstractAtdl4jConfig
 	 * @throws JAXBException
 	 */
 	public TypeConverterFactory getTypeConverterFactory() 
-		throws JAXBException 
 	{
 		if ( ( typeConverterFactory == null ) && ( getClassNameTypeConverterFactory() != null ) )
 		{
@@ -1390,7 +1389,7 @@ public abstract class AbstractAtdl4jConfig
 
 	public List<StrategyT> getStrategiesFilteredStrategyList()
 	{
-		if ( ( getStrategies() == null ) && ( getStrategies().getStrategy() != null ) )
+		if ( ( getStrategies() == null ) || ( getStrategies().getStrategy() == null ) )
 		{
 			return null;
 		}

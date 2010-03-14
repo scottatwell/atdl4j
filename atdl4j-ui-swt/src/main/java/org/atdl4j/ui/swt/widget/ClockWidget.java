@@ -254,11 +254,6 @@ public class ClockWidget
 		return result;
 	}
 
-	public DateTime getParameterValue()
-	{
-		return (DateTime) getControlValue();
-	}
-
 	public void setValue(DateTime value)
 	{
 		// Convert to UTC time for UTCTimestampT and UTCTimeOnlyT.

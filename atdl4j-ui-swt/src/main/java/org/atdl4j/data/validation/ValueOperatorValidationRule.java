@@ -5,10 +5,10 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.atdl4j.fixatdl.flow.StateRuleT;
-import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.fixatdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.ui.ControlUI;
 
 /**
@@ -76,7 +76,8 @@ AbstractControlUI had (thus returning Parameter value even when we are comparing
 		else // StrategyEditT uses Parameter values
 		{
 			fieldValue = target.getParameterValueAsComparable();
-			v = target.convertStringToParameterComparable( value );
+// 3/10/2010 Scott Atwell			v = target.convertStringToParameterComparable( value );
+			v = target.convertParameterStringToParameterComparable( value );
 		}
 		
 		validateValues(target, fieldValue, operator, v);

@@ -130,6 +130,22 @@ public class SWTStrategyUI
 	protected void buildControlMap()
 		throws JAXBException
 	{
+		if ( getStrategy() == null )
+		{
+			throw new IllegalStateException("Unexpected error: getStrategy() was null.");
+		}
+		
+		if ( getStrategy().getStrategyLayout() == null )
+		{
+			throw new IllegalStateException("Unexpected error: getStrategy().getStrategyLayout() was null .  (verify  <lay:StrategyLayout>)");
+		}
+		
+		if ( getStrategy().getStrategyLayout() == null )
+		{
+			throw new IllegalStateException("Unexpected error: getStrategy().getStrategyLayout().getStrategyPanel() was null .  (verify  <lay:StrategyLayout> <lay:StrategyPanel>)");
+		}
+		
+		
 		buildControlMap( getStrategy().getStrategyLayout().getStrategyPanel() );
 	}
 
@@ -340,6 +356,21 @@ public class SWTStrategyUI
 		getControlMap().put( aName, (SWTWidget<?>) aControlUI );
 	}
 
+	protected void addToControlWithParameterMap( String aName, ControlUI aControlUI )
+	{
+		getControlWithParameterMap().put( aName, (SWTWidget<?>) aControlUI );
+	}
+
+	protected void removeFromControlMap( String aName )
+	{
+		getControlMap().remove( aName );
+	}
+
+	protected void removeFromControlWithParameterMap( String aName )
+	{
+		getControlWithParameterMap().remove( aName );
+	}
+
 	/**
 	 * @throws JAXBException
 	 */
@@ -515,6 +546,17 @@ public class SWTStrategyUI
 		// fire state listeners once for good measure
 		for ( SWTStateListener stateListener : getStateListenerList() )
 			stateListener.handleEvent( null );
+	}
+
+	protected void fireStateListenersForControl( ControlUI aControl )
+	{
+		for ( SWTStateListener stateListener : getStateListenerList() )
+		{
+			if ( aControl.equals( stateListener.getAffectedWidget() ) )
+			{
+				stateListener.handleEvent( null );
+			}
+		}
 	}
 
 // 3/8/2010 Scott Atwell added	
