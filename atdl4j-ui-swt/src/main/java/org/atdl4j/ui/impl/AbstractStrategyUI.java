@@ -131,11 +131,14 @@ public abstract class AbstractStrategyUI
 
 		addHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );
 // 3/9/2010 Scott Atwell moved after buildControlWithParameterMap		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
+// 3/15/2010 John Shields undid Scott's change above and moved it before, as validation rules were failing
+// 3/14/2010 Scott Atwell restored location (note earlier version was missing addToControlWithParameterMap()) 		addHiddenFieldsForParameterWithoutControl( getParameterMap() );
 		
 		buildControlWithParameterMap();
 		attachGlobalStateRulesToControls();
 		
-		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
+// 3/14/2010 Scott Atwell method rename		addHiddenFieldsForConstParameterWithoutControl( getParameterMap() );
+		addHiddenFieldsForParameterWithoutControl( getParameterMap() );
 
 		attachStateListenersToAllControls();
 	}
@@ -550,7 +553,8 @@ public abstract class AbstractStrategyUI
 	}
 	
 	
-	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
+// 3/14/2010 Scott Atwell Johnny's rename and not const-specific	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
+	protected void addHiddenFieldsForParameterWithoutControl( Map<String, ParameterT> aParameterMap )
 		throws JAXBException
 	{
 		if ( aParameterMap != null )
@@ -559,12 +563,27 @@ public abstract class AbstractStrategyUI
 	
 			for ( Map.Entry<String, ParameterT> tempMapEntry : aParameterMap.entrySet() )
 			{
+// 3/14/2010 Scott Atwell - removed Johnny's addition (recently added call to addToControlWithParameterMap() should handle the if-exists-check				boolean matchFound = false;
 				String tempName = tempMapEntry.getKey();
 				ParameterT tempParameter = tempMapEntry.getValue();
 
+/*** 3/14/2010 Scott Atwell - removed Johnny's addition (recently added call to addToControlWithParameterMap() should handle the if-exists-check
+				for(ControlUI<?> control : getControlUIMap().values())
+				{
+					if (tempParameter.equals(control.getParameter()))
+					{
+						matchFound = true;
+						break;
+					}
+				}
+				if (!matchFound )
+				{
+***/				
 				// -- If Parameter has const value and does not have a Control --
-				if ( ( ParameterHelper.getConstValue( tempParameter ) != null ) &&
-					  ( getControlForParameter( tempParameter ) == null ) )
+// 3/14/2010 Scott Atwell/John Shields remove const value-specific logic				if ( ( ParameterHelper.getConstValue( tempParameter ) != null ) &&
+//					  ( getControlForParameter( tempParameter ) == null ) )
+				// -- If Parameter does not have a Control --
+				if ( getControlForParameter( tempParameter ) == null )
 				{
 					// -- Add a HiddenField control for this parameter (to add to ControlWithParameters map used by StrategyEdit and FIX Message building) -- 
 					HiddenFieldT tempHiddenField = new HiddenFieldT();
@@ -575,6 +594,7 @@ public abstract class AbstractStrategyUI
 					addToControlWithParameterMap( tempName, hiddenFieldWidget );
 				}
 			}
+			// 3/14/2010 Scott Atwell - removed Johnny's addition (recently added call to addToControlWithParameterMap() should handle the if-exists-check			}
 		}
 	}
 
