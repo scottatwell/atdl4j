@@ -19,6 +19,7 @@ import org.atdl4j.fixatdl.layout.CheckBoxT;
 import org.atdl4j.fixatdl.layout.ControlT;
 import org.atdl4j.fixatdl.layout.DropDownListT;
 import org.atdl4j.fixatdl.layout.EditableDropDownListT;
+import org.atdl4j.fixatdl.layout.HiddenFieldT;
 import org.atdl4j.fixatdl.layout.ListItemT;
 import org.atdl4j.fixatdl.layout.MultiSelectListT;
 import org.atdl4j.fixatdl.layout.RadioButtonListT;
@@ -347,7 +348,11 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			List<EnumPairT> enumPairs = parameter.getEnumPair();
 			List<ListItemT> listItems = getListItems();
 
-			if ( control instanceof RadioButtonT || control instanceof CheckBoxT )
+			if ( control instanceof HiddenFieldT )
+			{
+				// don't need to validate in case of HiddenFieldT
+			}
+			else if ( control instanceof RadioButtonT || control instanceof CheckBoxT )
 			{
 				// validate checkedEnumRef and uncheckedEnumRef
 			}
