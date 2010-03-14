@@ -178,7 +178,7 @@ public class StrategyRuleset
 		StringBuffer tempStringBuffer = new StringBuffer();
 		
 		tempStringBuffer.append( "Parameter \"" + aControlUI.getParameter().getName() + "\"" );
-		tempStringBuffer.append( " (\"" + ControlHelper.getUiRepOrID( aControlUI.getControl() ) + "\") " );
+		tempStringBuffer.append( " (\"" + ControlHelper.getLabelOrID( aControlUI.getControl() ) + "\") " );
 		tempStringBuffer.append(  aMsgText );
 		if ( aOriginalValidationException.getMessage() != null )
 		{ 

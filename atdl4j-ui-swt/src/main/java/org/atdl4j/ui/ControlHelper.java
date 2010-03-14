@@ -253,6 +253,12 @@ public class ControlHelper
 		return null;
 	}
 
+	public static String getLabelOrID( ControlT aControl ) 
+	{
+// 3/14/2010 Scott Atwell don't want ""		return aControl.getLabel() != null ? aControl.getLabel() : aControl.getID();
+		return (aControl.getLabel() != null && !"".equals(aControl.getLabel())) ? aControl.getLabel() : aControl.getID();
+	}
+
 /*** 3/9/2010 Scott Atwell - moved away from using this via common, AbstractControlUI, and rather forcing each Control concrete instance to support reinit()	
 	/ **
 	 * Like getInitValue() although it returns a non-null value for each aControl type (avoid issues with Control's setValue(null) ). 
@@ -364,6 +370,7 @@ public class ControlHelper
 	}
 ****/
 
+/*** 3/14/2010 Scott Atwell - Johnny renamed to getLabelOrID()	
 	public static String getUiRepOrID( ControlT aControl )
 	{
 		if ( aControl == null )
@@ -444,6 +451,7 @@ public class ControlHelper
 			return tempUiRep;
 		}
 	}
+***/	
 
 	/**
 	 * Handles ControlT/@initPolicy ("UseValue" or "UseFixField") logic in conjunction with ControlT/@initValue and ControlT/@initFixField
