@@ -71,7 +71,7 @@ public abstract class AbstractAtdl4jUserMessageHandler
 			if ( tempValidationException.getMessage() != null )
 			{
 				// -- Add new lines after sentence (eg before "Rule Tested: [______]") --
-				return tempValidationException.getMessage().replace( ".  ", "\n\n" );
+				return tempValidationException.getMessage().replace( ".  ", ".\n\n" );
 			}
 			else
 			{

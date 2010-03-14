@@ -117,7 +117,8 @@ public class SWTAtdl4jCompositePanel
 		{
 			if ( aText != null )
 			{
-				outputFixMessageText.setText( aText );
+// 3/14/2010 Scott Atwell				outputFixMessageText.setText( aText );
+				outputFixMessageText.setText( aText.replace( '\n', ' ' ) );
 				setVisibleValidateOutputSection( true );
 			}
 			else
@@ -128,7 +129,8 @@ public class SWTAtdl4jCompositePanel
 		}
 		else
 		{
-			outputFixMessageText.setText( aText );
+// 3/14/2010 Scott Atwell			outputFixMessageText.setText( aText );
+			outputFixMessageText.setText( aText.replace( '\n', ' ' ) );
 			setVisibleValidateOutputSection( false );
 		}	
 	}
