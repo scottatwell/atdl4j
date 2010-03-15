@@ -10,8 +10,9 @@ import org.atdl4j.fixatdl.layout.ListItemT;
 import org.atdl4j.fixatdl.layout.PanelOrientationT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -51,26 +52,34 @@ public class CheckBoxListWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		control.getLabel();
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
-
-		Composite c = new Composite( parent, SWT.NONE );
-		c.setLayout( new FillLayout() );
-
-// 2/23/2010 Scott Atwell added		
-		if ( PanelOrientationT.VERTICAL.equals( ((CheckBoxListT) control).getOrientation() ) )
-		{
-			c.setLayout( new GridLayout( 1, false ) );
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
 		}
 		
-		// label tooltip
-		String tooltip = getTooltip();
-		if ( tooltip != null )
-			label.setToolTipText( tooltip );
-
+		Composite c = new Composite( parent, SWT.NONE );
+		c.setLayoutData(controlGD);
+		
+		// 2/23/2010 Scott Atwell added
+		// 3/14/2010 John Shields implemented RowLayout for horizontal orientation
+		if ( ((CheckBoxListT) control).getOrientation() != null &&
+			 PanelOrientationT.VERTICAL.equals( ((CheckBoxListT) control).getOrientation() ) )
+		{
+			c.setLayout( new GridLayout( 1, false ) );
+		} else {
+			RowLayout rl = new RowLayout();
+			rl.wrap = false;
+			c.setLayout( rl );
+		}
+		
 		// checkBoxes
 		List<ListItemT> listItems = ( (CheckBoxListT) control ).getListItem();
 		for ( ListItemT listItem : listItems )
@@ -175,7 +184,7 @@ public class CheckBoxListWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.addAll( multiCheckBox );
 		return widgets;
 	}

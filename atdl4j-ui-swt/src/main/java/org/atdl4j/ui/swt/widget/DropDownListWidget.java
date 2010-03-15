@@ -37,36 +37,36 @@ public class DropDownListWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
-
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.CENTER, false, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
-
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
+		
 		// dropDownList
 		style = style | SWT.BORDER;
 		if ( control instanceof DropDownListT )
 		{
 			style |= SWT.READ_ONLY;
 		}
-		Combo dropDownList = new Combo( parent, style );
-		this.dropDownList = dropDownList;
-		dropDownList.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+		dropDownList = new Combo( parent, style );
+		dropDownList.setLayoutData( controlGD );
 
 		// dropDownList items
 		java.util.List<ListItemT> listItems = ( control instanceof EditableDropDownListT ) ? ( (EditableDropDownListT) control ).getListItem()
 				: ( (DropDownListT) control ).getListItem();
 		// TODO: throw error if there are no list items
-		for ( ListItemT listItem : listItems )
-			dropDownList.add( listItem.getUiRep() );
+		for ( ListItemT listItem : listItems ) dropDownList.add( listItem.getUiRep() );
 
 		// tooltip
-		String tooltip = getTooltip();
-		if ( tooltip != null )
-		{
-			dropDownList.setToolTipText( tooltip );
-			label.setToolTipText( tooltip );
-		}
+		if ( tooltip != null ) dropDownList.setToolTipText( tooltip );
 
 		// default initializer
 		dropDownList.select( 0 );
@@ -181,7 +181,7 @@ public class DropDownListWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.add( dropDownList );
 		return widgets;
 	}
@@ -189,7 +189,6 @@ public class DropDownListWidget
 	public List<Control> getControlsExcludingLabel()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.add( dropDownList );
 		return widgets;
 	}

@@ -10,8 +10,9 @@ import org.atdl4j.fixatdl.layout.PanelOrientationT;
 import org.atdl4j.fixatdl.layout.RadioButtonListT;
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -40,42 +41,33 @@ public class RadioButtonListWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
-
-		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
-			label.setText( control.getLabel() );
-
-		Composite c = new Composite( parent, SWT.NONE );
-
-		// Scott Atwell 1/20/2010
-		// -- original, default (Horizontal) --
-		c.setLayout( new FillLayout() );
-
-		logger.debug( "LOG RadioButtonGroupWidget: " + control.getID() + " parent.getData(): " + parent.getData() + " parent.getLayout(): "
-				+ parent.getLayout() + " parent.getChildren().length: " + parent.getChildren().length + " parent.getChildren(): " + parent.getChildren() );
-		// -- Special behavior to generate these vertically if parent
-		// StrategyPanel is in PanelOrientationT.VERTICAL and contains this
-		// component ONLY --
-		// @see SWTFactory.createLayout() -- it has: else if (orientation ==
-		// PanelOrientationT.VERTICAL) { GridLayout l = new GridLayout(2,
-		// false); }
-// 2/23/2010 Scott Atwell RadioButtonList/@orientation has been added
-//		if ( ( disableVerticalLayoutHandling == false ) && ( parent.getChildren().length <= 2 ) && ( parent.getData() instanceof StrategyPanelT )
-//				&& ( ( (StrategyPanelT) parent.getData() ).getOrientation() == PanelOrientationT.VERTICAL ) )
-		if ( PanelOrientationT.VERTICAL.equals( ((RadioButtonListT) control).getOrientation() ) )
-		{
-//			// -- consider it (orientation == PanelOrientationT.VERTICAL) --
-//			logger.info( "LOG RadioButtonGroupWidget: " + control.getID() + " Considering parent: " + parent + " with GridLayout: "
-//					+ ( (GridLayout) parent.getLayout() ) + "to be PanelOrientationT.VERTICAL" );
-			c.setLayout( new GridLayout( 1, false ) );
-		}
-		// TODO Scott Atwell 1/20/2010 ABOVE
-
-		// tooltip
 		String tooltip = getTooltip();
-		if ( tooltip != null )
-			label.setToolTipText( tooltip );
+		GridData controlGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		
+		// label
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
+			label.setText( control.getLabel() );
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
+		
+		Composite c = new Composite( parent, SWT.NONE );
+		c.setLayoutData(controlGD);
+
+		// 2/23/2010 Scott Atwell RadioButtonList/@orientation has been added
+		// 3/14/2010 John Shields implemented RowLayout for horizontal orientation
+		if ( ((RadioButtonListT) control).getOrientation() != null &&
+			 PanelOrientationT.VERTICAL.equals( ((RadioButtonListT) control).getOrientation() ) )
+		{
+			c.setLayout( new GridLayout( 1, false ) );
+		} else {
+			RowLayout rl = new RowLayout();
+			rl.wrap = false;
+			c.setLayout( rl );
+		}
 
 		// radioButton
 		for ( ListItemT listItem : ( (RadioButtonListT) control ).getListItem() )
@@ -167,7 +159,7 @@ public class RadioButtonListWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.addAll( buttons );
 		return widgets;
 	}
@@ -175,7 +167,6 @@ public class RadioButtonListWidget
 	public List<Control> getControlsExcludingLabel()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.addAll( buttons );
 		return widgets;
 	}

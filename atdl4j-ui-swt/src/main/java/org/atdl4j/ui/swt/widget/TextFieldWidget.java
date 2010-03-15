@@ -32,16 +32,22 @@ public class TextFieldWidget
 
 	public Widget createWidget(Composite parent, int style) throws JAXBException
 	{
-
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.CENTER, true, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
-
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
+				
 		// textField
-		Text textField = new Text( parent, style | SWT.BORDER );
-		this.textField = textField;
-		textField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+		textField = new Text( parent, style | SWT.BORDER );
+		textField.setLayoutData( controlGD );
 
 /*** 2/12/2010 Scott Atwell	
 This is prone to issues:
@@ -75,10 +81,7 @@ This is prone to issues:
 			textField.setText( (String) ControlHelper.getInitValue( control, getAtdl4jConfig() ) );
 
 		// tooltip
-		String tooltip = getTooltip();
-		textField.setToolTipText( tooltip );
-		if ( tooltip != null )
-			label.setToolTipText( tooltip );
+		if ( tooltip != null ) textField.setToolTipText( tooltip );
 
 		return parent;
 	}
@@ -124,7 +127,7 @@ This is prone to issues:
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.add( textField );
 		return widgets;
 	}
@@ -132,7 +135,6 @@ This is prone to issues:
 	public List<Control> getControlsExcludingLabel()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.add( textField );
 		return widgets;
 	}

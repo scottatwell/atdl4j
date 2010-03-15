@@ -37,12 +37,19 @@ public class ListBoxWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
-
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.TOP, false, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
-		label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
 
 		// dropDownList
 		style = style | SWT.BORDER;
@@ -55,7 +62,7 @@ public class ListBoxWidget
 			style |= SWT.SINGLE;
 		}
 		listBox = new List( parent, style );
-		listBox.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+		listBox.setLayoutData( controlGD );
 
 		// listBox items
 		java.util.List<ListItemT> listItems = control instanceof MultiSelectListT ? ( (MultiSelectListT) control ).getListItem()
@@ -66,12 +73,7 @@ public class ListBoxWidget
 		}
 
 		// tooltip
-		String tooltip = getTooltip();
-		if ( tooltip != null )
-		{
-			listBox.setToolTipText( tooltip );
-			label.setToolTipText( tooltip );
-		}
+		if ( tooltip != null ) listBox.setToolTipText( tooltip );
 
 		// init value
 //		String initValue = control instanceof MultiSelectListT ? ( (MultiSelectListT) control ).getInitValue() : ( (SingleSelectListT) control )
@@ -164,7 +166,7 @@ public class ListBoxWidget
 	public java.util.List<Control> getControls()
 	{
 		java.util.List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.add( listBox );
 		return widgets;
 	}
@@ -172,7 +174,6 @@ public class ListBoxWidget
 	public java.util.List<Control> getControlsExcludingLabel()
 	{
 		java.util.List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.add( listBox );
 		return widgets;
 	}

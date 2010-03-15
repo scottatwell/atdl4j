@@ -21,6 +21,7 @@ public class SliderWidget
 {
 	private Scale slider;
 	private Label label;
+	private List<Label> sliderLabels;
 
 	/**
 	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
@@ -32,13 +33,22 @@ public class SliderWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
+		sliderLabels = new ArrayList<Label>();
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
-
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
+		
 		Composite c = new Composite( parent, SWT.NONE );
-		c.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+		c.setLayoutData(controlGD);
 
 		int numColumns = ( ( (SliderT) control ).getListItem() != null && ( (SliderT) control ).getListItem().size() > 0 ) ? ( (SliderT) control )
 				.getListItem().size() : 1;
@@ -59,13 +69,14 @@ public class SliderWidget
 			for ( ListItemT li : ( (SliderT) control ).getListItem() )
 			{
 				Label label = new Label( c, SWT.NONE );
-				label.setText( li.getUiRep() );
+				if (li.getUiRep() != null && !li.getUiRep().equals("")) label.setText( li.getUiRep() );
 				label.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+				sliderLabels.add(label);
 			}
 		}
 
 		// tooltip
-		String tooltip = getTooltip();
+
 		if ( tooltip != null )
 		{
 			slider.setToolTipText( tooltip );
@@ -79,7 +90,8 @@ public class SliderWidget
 
 		return parent;
 	}
-
+	
+	
 /** 2/10/2010 Scott Atwell	
 	public String getControlValue()
 	{
@@ -129,16 +141,17 @@ public class SliderWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.add( slider );
+		widgets.addAll( sliderLabels );
 		return widgets;
 	}
 
 	public List<Control> getControlsExcludingLabel()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.add( slider );
+		widgets.addAll( sliderLabels );
 		return widgets;
 	}
 

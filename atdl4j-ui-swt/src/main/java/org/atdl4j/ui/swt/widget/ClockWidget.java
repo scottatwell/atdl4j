@@ -79,7 +79,6 @@ public class ClockWidget
 	 * JAXBException { this.control = control; this.parameter = parameter;
 	 * init(); }
 	 **/
-
 	public Widget createWidget(Composite parent, int style)
 	{
 
@@ -107,7 +106,9 @@ public class ClockWidget
 			showDay = false;
 			showTime = true;
 		}
-
+		
+		boolean hasLabelOrCheckbox = false;
+		
 		// 1/20/2010 Scott Atwell added to enable/disable "optional" Clock
 		// display BELOW
 		if ( ( getAtdl4jConfig() != null ) &&
@@ -115,6 +116,7 @@ public class ClockWidget
 			  ( parameter != null ) && 
 			  ( UseT.OPTIONAL.equals( parameter.getUse() ) ) )
 		{
+			hasLabelOrCheckbox = true;
 			enabledButton = new Button( parent, SWT.CHECK );
 			if ( control.getLabel() != null )
 			{
@@ -135,6 +137,7 @@ public class ClockWidget
 		// "required" -- use standard label without preceding checkbox
 		{
 			// label
+			hasLabelOrCheckbox = true;
 			label = new Label( parent, SWT.NONE );
 			if ( control.getLabel() != null )
 				label.setText( control.getLabel() );
@@ -148,20 +151,25 @@ public class ClockWidget
 		gridLayout.marginTop = gridLayout.marginBottom = 0;
 		gridLayout.marginWidth = gridLayout.marginHeight = 0;
 		c.setLayout( gridLayout );
-		c.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
-
+		GridData controlGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		controlGD.horizontalSpan = hasLabelOrCheckbox ? 1 : 2;
+		c.setLayoutData(controlGD);
+		
+		GridData clockGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		clockGD.horizontalSpan = (showMonthYear && showTime) ? 1 : 2;						
+		
 		// date clock
 		if ( showMonthYear )
 		{
 			dateClock = new org.eclipse.swt.widgets.DateTime( c, style | SWT.BORDER | SWT.DATE | ( showDay ? SWT.MEDIUM : SWT.SHORT ) );
-			dateClock.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+			dateClock.setLayoutData(clockGD);
 
 		}
 		// time clock
 		if ( showTime )
 		{
 			timeClock = new org.eclipse.swt.widgets.DateTime( c, style | SWT.BORDER | SWT.TIME | SWT.MEDIUM );
-			timeClock.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+			timeClock.setLayoutData(clockGD);
 		}
 
 		// tooltip

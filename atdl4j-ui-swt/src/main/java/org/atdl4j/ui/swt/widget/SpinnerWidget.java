@@ -60,17 +60,24 @@ public class SpinnerWidget
 
 	public Widget createWidget(Composite parent, int style)
 	{
-
+		String tooltip = getTooltip();
+		GridData controlGD = new GridData( SWT.FILL, SWT.FILL, false, false );
+		
 		// label
-		label = new Label( parent, SWT.NONE );
-		if ( control.getLabel() != null )
+		if ( control.getLabel() != null ) {
+			label = new Label( parent, SWT.NONE );
 			label.setText( control.getLabel() );
+			if ( tooltip != null ) label.setToolTipText( tooltip );
+			controlGD.horizontalSpan = 1;
+		} else {
+			controlGD.horizontalSpan = 2;
+		}
 
 		if ( control instanceof SingleSpinnerT )
 		{
 			// spinner
 			spinner = new Spinner( parent, style | SWT.BORDER );
-			spinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+			spinner.setLayoutData( controlGD );
 		}
 		else if ( control instanceof DoubleSpinnerT )
 		{
@@ -81,7 +88,7 @@ public class SpinnerWidget
 			gridLayout.horizontalSpacing = 0;
 			gridLayout.verticalSpacing = 0;
 			c.setLayout( gridLayout );
-			c.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
+			c.setLayoutData( controlGD );
 
 			// doubleSpinner
 			spinner = new Spinner( c, style | SWT.BORDER );
@@ -91,16 +98,14 @@ public class SpinnerWidget
 
 			this.buttonUp = new Button( c, SWT.ARROW | SWT.UP );
 			this.buttonDown = new Button( c, SWT.ARROW | SWT.DOWN );
+			if ( tooltip != null ) {
+				buttonUp.setToolTipText( tooltip );
+				buttonDown.setToolTipText( tooltip );
+			}
 		}
-
+		
 		// tooltip
-		String tooltip = getTooltip();
-		if ( tooltip != null )
-		{
-			spinner.setToolTipText( tooltip );
-			label.setToolTipText( tooltip );
-		}
-
+		if ( tooltip != null ) spinner.setToolTipText( tooltip );
 
 		// Set min/max/precision if a parameter is attached
 		if ( parameterConverter != null && parameterConverter instanceof DecimalConverter )
@@ -208,7 +213,6 @@ public class SpinnerWidget
 		return parent;
 	}
 
-
 	public BigDecimal getControlValueRaw()
 	{
 		try
@@ -229,7 +233,7 @@ public class SpinnerWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if (label != null) widgets.add( label );
 		widgets.add( spinner );
 		if ( control instanceof DoubleSpinnerT )
 		{
@@ -242,7 +246,6 @@ public class SpinnerWidget
 	public List<Control> getControlsExcludingLabel()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-//		widgets.add( label );
 		widgets.add( spinner );
 		if ( control instanceof DoubleSpinnerT )
 		{
