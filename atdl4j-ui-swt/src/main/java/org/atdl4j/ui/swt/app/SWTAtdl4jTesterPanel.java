@@ -7,7 +7,10 @@ package org.atdl4j.ui.swt.app;
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.ui.app.AbstractAtdl4jTesterPanel;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * Represents the SWT-specific "TesterApp" core GUI component (without a main() line).
@@ -24,6 +27,9 @@ public class SWTAtdl4jTesterPanel
 {
 	public final Logger logger = Logger.getLogger(SWTAtdl4jTesterPanel.class);
 	private Composite parentComposite;
+	
+// 3/14/2010 Scott Atwell added
+	private Composite inputAndFilterDataAndLoadMessageComposite;
 	
 	public Object buildAtdl4jTesterPanel(Object aParentOrShell, Atdl4jConfig aAtdl4jConfig)
 	{
@@ -59,8 +65,21 @@ public class SWTAtdl4jTesterPanel
 //			    false));
 //		}
 
+/*** 3/14/2010 Scott Atwell		
 		// -- Build the SWT.Composite from FixMsgLoadPanel ("Input Data/Filter Criteria" button) --
 		getAtdl4jInputAndFilterDataSelectionPanel().buildAtdl4jInputAndFilterDataSelectionPanel( aParentOrShell, getAtdl4jConfig() );
+***/
+		inputAndFilterDataAndLoadMessageComposite = new Group( aParentOrShell, SWT.NONE );
+		((Group) inputAndFilterDataAndLoadMessageComposite).setText( "Testing Input" );
+		inputAndFilterDataAndLoadMessageComposite.setLayout( new org.eclipse.swt.layout.GridLayout(2, false) );
+		inputAndFilterDataAndLoadMessageComposite.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false ) );
+		
+		// -- Build the SWT.Composite from Atdl4jInputAndFilterDataSelectionPanel ("Input Data/Filter Criteria" button) --
+		getAtdl4jInputAndFilterDataSelectionPanel().buildAtdl4jInputAndFilterDataSelectionPanel( inputAndFilterDataAndLoadMessageComposite, getAtdl4jConfig() );
+		
+		// -- Build the SWT.Composite from FixMsgLoadPanel ("Load FIX Message" button) --
+		getFixMsgLoadPanel().buildFixMsgLoadPanel( inputAndFilterDataAndLoadMessageComposite, getAtdl4jConfig() );
+		
 		
 		// -- Build the SWT.Composite from Atdl4jCompositePanel --
 		getAtdl4jCompositePanel().buildAtdl4jCompositePanel( aParentOrShell, aAtdl4jConfig );

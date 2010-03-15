@@ -19,10 +19,6 @@ public interface Atdl4jInputAndFilterDataPanel
 
 	public void removeListener( Atdl4jInputAndFilterDataPanelListener aAtdl4jInputAndFilterCriteriaPanelListener );
 
-	public void addFixMsgLoadPanelListener(FixMsgLoadPanelListener aFixMsgLoadPanelListener);
-	
-	public void removeFixMsgLoadPanelListener(FixMsgLoadPanelListener aFixMsgLoadPanelListener);
-
 	public boolean extractAtdl4jConfigFromScreen();
 	
 	public boolean loadScreenWithAtdl4jConfig();

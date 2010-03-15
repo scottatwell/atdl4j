@@ -18,8 +18,7 @@ import org.atdl4j.config.InputAndFilterData;
  */
 public abstract class AbstractAtdl4jInputAndFilterDataSelectionPanel
 	implements Atdl4jInputAndFilterDataSelectionPanel,
-		Atdl4jInputAndFilterDataPanelListener,
-		FixMsgLoadPanelListener
+		Atdl4jInputAndFilterDataPanelListener
 {
 
 	Atdl4jConfig atdl4jConfig;
@@ -28,7 +27,6 @@ public abstract class AbstractAtdl4jInputAndFilterDataSelectionPanel
 	private Atdl4jInputAndFilterDataPanel atdl4jInputAndFilterDataPanel;
 
 	private List<Atdl4jInputAndFilterDataPanelListener> listenerList = new Vector<Atdl4jInputAndFilterDataPanelListener>();
-	private List<FixMsgLoadPanelListener> fixMsgLoadPaneListenerList = new Vector<FixMsgLoadPanelListener>();
 
 	protected void init( Object aParentOrShell, Atdl4jConfig aAtdl4jConfig )
 	{
@@ -40,7 +38,6 @@ public abstract class AbstractAtdl4jInputAndFilterDataSelectionPanel
 		// -- FixMsgLoadPanel (Load Message button/text field) - build() method called via concrete class --
 		setAtdl4jInputAndFilterDataPanel( getAtdl4jConfig().getAtdl4jInputAndFilterDataPanel() );
 		getAtdl4jInputAndFilterDataPanel().addListener( this );
-		getAtdl4jInputAndFilterDataPanel().addFixMsgLoadPanelListener( this );
 	}
 
 	/**
@@ -110,24 +107,6 @@ public abstract class AbstractAtdl4jInputAndFilterDataSelectionPanel
 		return atdl4jInputAndFilterDataPanel;
 	}
 
-	public void addFixMsgLoadPanelListener( FixMsgLoadPanelListener aFixMsgLoadPanelListener )
-	{
-		fixMsgLoadPaneListenerList.add( aFixMsgLoadPanelListener );
-	}
-
-	public void removeFixMsgLoadPanelListener( FixMsgLoadPanelListener aFixMsgLoadPanelListener )
-	{
-		fixMsgLoadPaneListenerList.remove( aFixMsgLoadPanelListener );
-	}	
-
-	protected void fireFixMsgLoadSelectedEvent( String aFixMsg )
-	{
-		for ( FixMsgLoadPanelListener tempListener : fixMsgLoadPaneListenerList )
-		{
-			tempListener.fixMsgLoadSelected( aFixMsg );
-		}
-	}
-
 	/* 
 	 * Re-fire to listeners who have registered with us.
 	 */
@@ -135,14 +114,4 @@ public abstract class AbstractAtdl4jInputAndFilterDataSelectionPanel
 	{
 		fireInputAndFilterDataSpecifiedEvent( aInputAndFilterData );
 	}
-
-	/* 
-	 * Re-fire to listeners who have registered with us.
-	 */
-	public void fixMsgLoadSelected(String aFixMsg)
-	{
-		fireFixMsgLoadSelectedEvent( aFixMsg );
-	}
-	
-
 }

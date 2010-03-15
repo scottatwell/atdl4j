@@ -75,7 +75,7 @@ public class SWTAtdl4jTesterApp
 			shell.pack();
 
 // 3/8/2010 Scott Atwell added to avoid postage stamp size at start		
-			shell.setSize( shell.computeSize( 400, 500 ) );
+			shell.setSize( shell.computeSize( 475, 500 ) );
 			
 
 			// -- SWT-specific stuff to keep Display and Shell active --

@@ -95,9 +95,6 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		// -- Build the SWT.Composite from Atdl4jCompositePanel --
 		buildCoreAtdl4jSettingsPanel( aParentOrShell );
 
-		// -- Build the SWT.Composite from FixMsgLoadPanel (Load Message button/text field) --
-		getFixMsgLoadPanel().buildFixMsgLoadPanel( aParentOrShell, getAtdl4jConfig() );
-		
 		return parentComposite;
 	}
 

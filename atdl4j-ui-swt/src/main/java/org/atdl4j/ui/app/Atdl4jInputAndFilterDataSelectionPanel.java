@@ -18,9 +18,4 @@ public interface Atdl4jInputAndFilterDataSelectionPanel
 	public void addListener( Atdl4jInputAndFilterDataPanelListener aAtdl4jInputAndFilterCriteriaPanelListener );
 
 	public void removeListener( Atdl4jInputAndFilterDataPanelListener aAtdl4jInputAndFilterCriteriaPanelListener );
-
-	public void addFixMsgLoadPanelListener(FixMsgLoadPanelListener aFixMsgLoadPanelListener);
-	
-	public void removeFixMsgLoadPanelListener(FixMsgLoadPanelListener aFixMsgLoadPanelListener);
-
 }

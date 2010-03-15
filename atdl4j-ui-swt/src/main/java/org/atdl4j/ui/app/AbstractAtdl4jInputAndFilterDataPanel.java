@@ -17,28 +17,18 @@ import org.atdl4j.config.InputAndFilterData;
  * @version 1.0, Mar 1, 2010
  */
 public abstract class AbstractAtdl4jInputAndFilterDataPanel
-	implements Atdl4jInputAndFilterDataPanel,
-		FixMsgLoadPanelListener
+	implements Atdl4jInputAndFilterDataPanel
 {
 
 	Atdl4jConfig atdl4jConfig;
 	Object parentOrShell;  // SWT: Shell, Swing: JFrame, etc
 	
 	private List<Atdl4jInputAndFilterDataPanelListener> listenerList = new Vector<Atdl4jInputAndFilterDataPanelListener>();
-	private List<FixMsgLoadPanelListener> fixMsgLoadPaneListenerList = new Vector<FixMsgLoadPanelListener>();
-
-	private FixMsgLoadPanel fixMsgLoadPanel;
 
 	protected void init( Object aParentOrShell, Atdl4jConfig aAtdl4jConfig )
 	{
 		setAtdl4jConfig( aAtdl4jConfig );
 		setParentOrShell( aParentOrShell );
-		
-		
-		
-		// -- FixMsgLoadPanel (Load Message button/text field) - build() method called via concrete class --
-		setFixMsgLoadPanel( getAtdl4jConfig().getFixMsgLoadPanel() );
-		getFixMsgLoadPanel().addListener( this );
 	}
 
 	/**
@@ -74,39 +64,6 @@ public abstract class AbstractAtdl4jInputAndFilterDataPanel
 	}
 	
 
-	/**
-	 * @return the fixMsgLoadPanel
-	 */
-	public FixMsgLoadPanel getFixMsgLoadPanel()
-	{
-		return this.fixMsgLoadPanel;
-	}
-
-	/**
-	 * @param aFixMsgLoadPanel the fixMsgLoadPanel to set
-	 */
-	private void setFixMsgLoadPanel(FixMsgLoadPanel aFixMsgLoadPanel)
-	{
-		this.fixMsgLoadPanel = aFixMsgLoadPanel;
-	}
-
-	public void addFixMsgLoadPanelListener( FixMsgLoadPanelListener aFixMsgLoadPanelListener )
-	{
-		fixMsgLoadPaneListenerList.add( aFixMsgLoadPanelListener );
-	}
-
-	public void removeFixMsgLoadPanelListener( FixMsgLoadPanelListener aFixMsgLoadPanelListener )
-	{
-		fixMsgLoadPaneListenerList.remove( aFixMsgLoadPanelListener );
-	}	
-
-	protected void fireFixMsgLoadSelectedEvent( String aFixMsg )
-	{
-		for ( FixMsgLoadPanelListener tempListener : fixMsgLoadPaneListenerList )
-		{
-			tempListener.fixMsgLoadSelected( aFixMsg );
-		}
-	}
 	
 	public void addListener( Atdl4jInputAndFilterDataPanelListener aAtdl4jInputAndFilterCriteriaPanelListener )
 	{
@@ -126,11 +83,5 @@ public abstract class AbstractAtdl4jInputAndFilterDataPanel
 		}
 	}
 
-	/* 
-	 * Re-fire to listeners who have registered with us.
-	 */
-	public void fixMsgLoadSelected(String aFixMsg)
-	{
-		fireFixMsgLoadSelectedEvent( aFixMsg );
-	}
+
 }

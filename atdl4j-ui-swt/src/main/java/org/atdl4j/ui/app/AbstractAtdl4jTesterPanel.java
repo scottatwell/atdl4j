@@ -18,12 +18,16 @@ public abstract class AbstractAtdl4jTesterPanel
 			Atdl4jCompositePanelListener,
 			FixMsgLoadPanelListener,
 			Atdl4jInputAndFilterDataPanelListener
-{
+{ 
 
 	Atdl4jConfig atdl4jConfig;
 	Object parentOrShell;  // SWT: Shell, Swing: JFrame, etc
 	
 	private Atdl4jInputAndFilterDataSelectionPanel atdl4jInputAndFilterDataSelectionPanel;
+	
+// 3/14/2010 Scott Atwell moved FixMsgLoadPanel from Atdl4jInputAndFilterDataSelectionPanel to here
+	private FixMsgLoadPanel fixMsgLoadPanel;
+	
 	private Atdl4jCompositePanel atdl4jCompositePanel;
 
 	protected void init( Object aParentOrShell, Atdl4jConfig aAtdl4jConfig )
@@ -39,11 +43,20 @@ public abstract class AbstractAtdl4jTesterPanel
 			getAtdl4jConfig().initAtdl4jUserMessageHandler( aParentOrShell );
 		}
 
+/*** 3/14/2010 Scott Atwell		
 		// -- FixMsgLoadPanel (Load Message button/text field) - build() method called via concrete class --
 		setAtdl4jInputAndFilterDataSelectionPanel( getAtdl4jConfig().getAtdl4jInputAndFilterDataSelectionPanel() );
 		getAtdl4jInputAndFilterDataSelectionPanel().addListener( this );
 		getAtdl4jInputAndFilterDataSelectionPanel().addFixMsgLoadPanelListener( this );
-
+***/
+		// -- Atdl4jInputAndFilterDataSelectionPanel (Input And Filter Data button/text field) - build() method called via concrete class --
+		setAtdl4jInputAndFilterDataSelectionPanel( getAtdl4jConfig().getAtdl4jInputAndFilterDataSelectionPanel() );
+		getAtdl4jInputAndFilterDataSelectionPanel().addListener( this );
+		
+		// -- FixMsgLoadPanel (Load Message button/text field) - build() method called via concrete class --
+		setFixMsgLoadPanel( getAtdl4jConfig().getFixMsgLoadPanel() );
+		getFixMsgLoadPanel().addListener( this );
+		
 		// -- Init the Atdl4jCompositePanel --
 		setAtdl4jCompositePanel( getAtdl4jConfig().getAtdl4jCompositePanel() );
 		getAtdl4jCompositePanel().addListener( this );
@@ -121,8 +134,14 @@ public abstract class AbstractAtdl4jTesterPanel
 	{
 		if ( getAtdl4jCompositePanel() != null )
 		{
+			if ( ( aFixMsg == null ) || ( "".equals( aFixMsg ) ) )
+			{
+				getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Error", "No Fix Message provided to load.");
+				return;
+			}
+			
 			getAtdl4jCompositePanel().loadFixMessage( aFixMsg );
-		}
+		} 
 	}
 
 	/* (non-Javadoc)
@@ -186,6 +205,22 @@ public abstract class AbstractAtdl4jTesterPanel
 		{
 			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Select Strategy", "Please select a Strategy" );
 		}
+	}
+
+	/**
+	 * @param fixMsgLoadPanel the fixMsgLoadPanel to set
+	 */
+	private void setFixMsgLoadPanel(FixMsgLoadPanel fixMsgLoadPanel)
+	{
+		this.fixMsgLoadPanel = fixMsgLoadPanel;
+	}
+
+	/**
+	 * @return the fixMsgLoadPanel
+	 */
+	public FixMsgLoadPanel getFixMsgLoadPanel()
+	{
+		return fixMsgLoadPanel;
 	}
 	
 }
