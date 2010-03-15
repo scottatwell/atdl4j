@@ -174,7 +174,8 @@ public class TypeConverterFactory
 		{
 // 3/10/2010 Scott Atwell			return new BooleanConverter();
 // 3/11/2010 Scott Atwell			return new BooleanConverter( (BooleanT) parameter );
-			return new BooleanConverter( (BooleanT) aParameterTypeConverter );
+// 3/14/2010 Scott Atwell error   return new BooleanConverter( (BooleanT) aParameterTypeConverter );
+			return new BooleanConverter( aParameterTypeConverter );
 		}
 		else if ( control instanceof ClockT )
 		{
