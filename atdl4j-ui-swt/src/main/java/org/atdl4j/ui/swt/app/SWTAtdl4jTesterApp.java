@@ -28,24 +28,30 @@ public class SWTAtdl4jTesterApp
 	
 	/**
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		SWTAtdl4jTesterApp tempSWTAtdl4jTesterApp = new SWTAtdl4jTesterApp();
 		try
 		{
 			tempSWTAtdl4jTesterApp.mainLine(args);
-		}
-		catch ( Throwable e )
+		} catch (Exception e)
 		{
-			tempSWTAtdl4jTesterApp.logger.warn("Fatal Exception in mainLine", e);
+			if (getAtdl4jConfig() != null && 
+				getAtdl4jConfig().isCatchAllMainlineExceptions())
+			{
+				tempSWTAtdl4jTesterApp.logger.warn("Fatal Exception in mainLine", e);
+			} else {
+				throw e;
+			}
 		}
 	}
 	
-	public void mainLine(String[] args) 
+	public void mainLine(String[] args) throws Exception 
 	{
-		try
-		{
+		//try
+		//{
 			// -- Setup SWT-specific Display and Shell --
 			Display display = new Display();
 			shell = new Shell(display);
@@ -75,26 +81,30 @@ public class SWTAtdl4jTesterApp
 			// -- SWT-specific stuff to keep Display and Shell active --
 			while (!shell.isDisposed()) 
 			{
-				try
-				{
+				try {
 					if (!display.readAndDispatch())
 					{
 						display.sleep();
-					}	
-				}
-				catch (Throwable e)
+					}
+				} catch (Exception e)
 				{
-					logger.warn( "Fatal Exception encountered", e );
-					getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Fatal Exception encountered", "", e );
+					 if (getAtdl4jConfig() != null && 
+					     getAtdl4jConfig().isCatchAllRuntimeExceptions())
+					 {
+						logger.warn( "Fatal Exception encountered", e );
+						getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Fatal Exception encountered", "", e );
+					 } else {
+						 throw e;
+					 }
 				}
 			}
 			
 			display.dispose();
-		}
-		catch (Throwable e)
-		{
-			logger.warn( "Fatal Exception encountered during startup", e );
-		}
+		//}
+		//catch (Throwable e)
+		//{
+		//	logger.warn( "Fatal Exception encountered during startup", e );
+		//}
 	}	
 
 }

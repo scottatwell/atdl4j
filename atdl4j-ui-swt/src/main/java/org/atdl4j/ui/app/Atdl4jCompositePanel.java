@@ -106,7 +106,7 @@ public interface Atdl4jCompositePanel
 	 * Invokes fixatdlFileSelected() with getLastFixatdlFilename() if non-null.  
 	 * Re-reads the FIXatdl XML file and then re-loads the screen for StrategiesT.
 	 */
-	public void reloadFixatdlFile();
+	public void reloadFixatdlFile() throws Exception;
 	
 	public void setVisibleValidateOutputSection( boolean aVisible );
 	

@@ -1,9 +1,5 @@
 package org.atdl4j.ui.app;
 
-import java.io.File;
-
-import org.atdl4j.fixatdl.core.StrategyT;
-
 /**
  * Represents FixatdlFileSelectionPanel events.
  * 

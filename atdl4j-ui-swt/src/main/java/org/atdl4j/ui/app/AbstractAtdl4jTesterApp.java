@@ -1,8 +1,5 @@
 package org.atdl4j.ui.app;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.atdl4j.config.Atdl4jConfig;
 
 /**
@@ -16,7 +13,7 @@ import org.atdl4j.config.Atdl4jConfig;
 public abstract class AbstractAtdl4jTesterApp
 {
 
-	Atdl4jConfig atdl4jConfig;
+	static Atdl4jConfig atdl4jConfig;
 	Object parentOrShell;  // SWT: Shell, Swing: JFrame, etc
 	
 	Atdl4jTesterPanel atdl4jTesterPanel;
@@ -88,9 +85,9 @@ public abstract class AbstractAtdl4jTesterApp
 	/**
 	 * @return the atdl4jConfig
 	 */
-	public Atdl4jConfig getAtdl4jConfig()
+	public static Atdl4jConfig getAtdl4jConfig()
 	{
-		return this.atdl4jConfig;
+		return atdl4jConfig;
 	}
 
 	/**
@@ -98,7 +95,7 @@ public abstract class AbstractAtdl4jTesterApp
 	 */
 	private void setAtdl4jConfig(Atdl4jConfig aAtdl4jConfig)
 	{
-		this.atdl4jConfig = aAtdl4jConfig;
+		atdl4jConfig = aAtdl4jConfig;
 	}
 
 	/**

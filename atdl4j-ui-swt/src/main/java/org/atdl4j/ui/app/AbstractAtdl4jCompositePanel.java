@@ -193,18 +193,41 @@ public abstract class AbstractAtdl4jCompositePanel
 	@Override
 	public void fixatdlFileSelected(String aFilename)
 	{
-		try
+		if (getAtdl4jConfig() != null && 
+			getAtdl4jConfig().isCatchAllStrategyLoadExceptions())
 		{
-			parseFixatdlFile( aFilename );
-			
-			loadScreenWithFilteredStrategies();
-		}
-		catch (Exception e)
-		{
-			logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
-			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl File Parse Exception", "", e );
+			try {
+				fixatdlFileSelectedNotCatchAllExceptions(aFilename);
+			}
+			catch (Exception e) {
+						logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
+						getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl Unknown Exception", "", e );
+			}
+		} else {
+			fixatdlFileSelectedNotCatchAllExceptions(aFilename);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.atdl4j.ui.app.FixatdlFileSelectionPanelListener#fixatdlFileSelected(java.lang.String)
+	 */
+	protected void fixatdlFileSelectedNotCatchAllExceptions(String aFilename)
+	{
+		try {
+			parseFixatdlFile( aFilename );
+			loadScreenWithFilteredStrategies();
+		} catch (JAXBException e) {
+			logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl File Parse Exception", "", e );
+		} catch (NumberFormatException e) {
+			logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl Number Format Exception", "", e );
+		} catch (IOException e) {
+			logger.warn( "parseFixatdlFile/loadScreenWithFilteredStrategies exception", e );
+			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "FIXatdl IO Exception", "", e );
+		}
+	}
+
 
 	/**
 	 * @param strategiesPanel the strategiesPanel to set
@@ -537,7 +560,7 @@ public abstract class AbstractAtdl4jCompositePanel
 	 * Invokes fixatdlFileSelected() with getLastFixatdlFilename() if non-null.  
 	 * Re-reads the FIXatdl XML file and then re-loads the screen for StrategiesT.
 	 */
-	public void reloadFixatdlFile() 
+	public void reloadFixatdlFile() throws Exception 
 	{
 		if ( getLastFixatdlFilename() != null )
 		{

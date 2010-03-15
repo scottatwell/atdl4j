@@ -4,14 +4,10 @@
  */
 package org.atdl4j.ui.app;
 
-import java.util.List;
-import java.util.Vector;
-
 import javax.xml.bind.JAXBException;
 
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.exception.ValidationException;
-import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
  * Represents the base, non-GUI system-specific GUI pop-up message screen support.

@@ -1,7 +1,6 @@
 package org.atdl4j.ui.app;
 
 import org.atdl4j.config.Atdl4jConfig;
-import org.atdl4j.config.InputAndFilterData;
 
 
 /**

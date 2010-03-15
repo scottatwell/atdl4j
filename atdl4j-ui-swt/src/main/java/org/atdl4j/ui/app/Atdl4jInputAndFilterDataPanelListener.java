@@ -1,9 +1,6 @@
 package org.atdl4j.ui.app;
 
-import java.io.File;
-
 import org.atdl4j.config.InputAndFilterData;
-import org.atdl4j.fixatdl.core.StrategyT;
 
 /**
  * Represents Atdl4jInputAndFilterCriteriaPanel events.

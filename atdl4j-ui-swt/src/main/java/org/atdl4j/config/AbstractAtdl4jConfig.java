@@ -150,6 +150,9 @@ public abstract class AbstractAtdl4jConfig
 	private Map<StrategyT, StrategyUI> strategyUIMap;
 	private StrategyT selectedStrategy;
 	
+	private boolean catchAllStrategyLoadExceptions  = false;
+	private boolean catchAllRuntimeExceptions  = false;
+	private boolean catchAllMainlineExceptions  = false;
 
 // 2/9/2010 Scott Atwell StrategiesUIFactory no longer needs to be GUI library-centric  	abstract protected String getDefaultClassNameStrategiesUIFactory();
 	protected String getDefaultClassNameStrategiesUIFactory()
@@ -2026,5 +2029,52 @@ public abstract class AbstractAtdl4jConfig
 		this.usePreCachedStrategyPanels = aUsePreCachedStrategyPanels;
 	}
 	
+	/**
+	 * @return the catchAllStrategyLoadExceptions
+	 */
+	public boolean isCatchAllStrategyLoadExceptions()
+	{
+		return this.catchAllStrategyLoadExceptions;
+	}
+	
+	/**
+	 * @return the catchAllRuntimeExceptions
+	 */
+	public boolean isCatchAllRuntimeExceptions()
+	{
+		return this.catchAllRuntimeExceptions;
+	}
+	
+	/**
+	 * @return the catchAllMainlineExceptions
+	 */
+	public boolean isCatchAllMainlineExceptions()
+	{
+		return this.catchAllMainlineExceptions;
+	}
+	
+	/**
+	 * @param aCatchAllStrategyLoadExceptions the catchAllStrategyLoadExceptions to set
+	 */
+	public void setCatchAllStrategyLoadExceptions(boolean aCatchAllStrategyLoadExceptions)
+	{
+		this.catchAllStrategyLoadExceptions = aCatchAllStrategyLoadExceptions;
+	}
+	
+	/**
+	 * @param aCatchAllRuntimeExceptions the catchAllRuntimeExceptions to set
+	 */
+	public void setCatchAllRuntimeExceptions(boolean aCatchAllRuntimeExceptions)
+	{
+		this.catchAllRuntimeExceptions = aCatchAllRuntimeExceptions;
+	}
+	
+	/**
+	 * @param aCatchAllMainlineExceptions the catchAllMainlineExceptions to set
+	 */
+	public void setCatchAllMainlineExceptions(boolean aCatchAllMainlineExceptions)
+	{
+		this.catchAllMainlineExceptions = aCatchAllMainlineExceptions;
+	}	
 
 }
