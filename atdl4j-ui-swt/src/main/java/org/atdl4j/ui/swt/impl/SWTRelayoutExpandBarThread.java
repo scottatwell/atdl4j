@@ -1,7 +1,7 @@
 package org.atdl4j.ui.swt.impl;
 
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ExpandBar;
 
 /**
  * 
@@ -11,20 +11,20 @@ import org.eclipse.swt.widgets.Display;
  * @author Scott Atwell
  * @version 1.0, Mar 3, 2010
  */
-public class SWTRevalidateLayoutThread
+public class SWTRelayoutExpandBarThread
 		extends Thread
 {
-	private Control control;
+	private ExpandBar expandBar;
 	
-	public SWTRevalidateLayoutThread( Control aControl )
+	public SWTRelayoutExpandBarThread( ExpandBar anExpandBar )
 	{
-		control = aControl;
+		expandBar = anExpandBar;
 		
 		Display.getCurrent().asyncExec(new Runnable()
 		{
          public void run()
          {
-         	SWTStrategyPanelHelper.revalidateLayout( control );
+         	SWTStrategyPanelHelper.relayoutExpandBar( expandBar );
          }
      });
 	}

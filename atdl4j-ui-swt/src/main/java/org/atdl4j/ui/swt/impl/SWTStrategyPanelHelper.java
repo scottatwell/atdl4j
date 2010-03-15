@@ -28,57 +28,64 @@ public class SWTStrategyPanelHelper
 {
 	private static final Logger logger = Logger.getLogger( SWTStrategyPanelHelper.class );
 
-
 	/**
-	 * Invokes revalidateLayout() within Display.getCurrent().asyncExec(new Runnable() ... )
+	 * Invokes revalidateLayout() within Display.getCurrent().asyncExec(new
+	 * Runnable() ... )
+	 * 
 	 * @param aControl
 	 */
-	public static void revalidateLayoutAsync(Control aControl)
-	{ 
-		SWTRevalidateLayoutThread tempRevalidateLayoutThread = new SWTRevalidateLayoutThread( aControl );
+	public static void revalidateLayoutAsync(ExpandBar anExpandBar) {
+		SWTRelayoutExpandBarThread tempRevalidateLayoutThread = new SWTRelayoutExpandBarThread(
+				anExpandBar);
 		tempRevalidateLayoutThread.start();
 	}
- 
+
 	/**
-	 * Helper method contributed on web:  http://stackoverflow.com/questions/586414/why-does-an-swt-composite-sometimes-require-a-call-to-resize-to-layout-correctl
+	 * Helper method contributed on web:
+	 * http://stackoverflow.com/questions/586414
+	 * /why-does-an-swt-composite-sometimes
+	 * -require-a-call-to-resize-to-layout-correctl
+	 * 
 	 * @author http://stackoverflow.com/users/63293/peter-walser
 	 * @param control
 	 */
-	public static void revalidateLayout(Control control)
-	{ 
-        Control c = control; 
-        do 
-        { 
-          if (c instanceof ExpandBar) 
-          { 
-         	 ExpandBar expandBar = (ExpandBar) c; 
-         	 for (ExpandItem expandItem : expandBar.getItems()) 
-         	 { 
-         		 expandItem.setHeight(expandItem.getControl().computeSize(expandBar.getSize().x, SWT.DEFAULT, true).y); 
-         	 } 
-          } 
-          c = c.getParent(); 
-        } while (c != null && c.getParent() != null && !(c instanceof ScrolledComposite)); 
+	// 3/13/2010 John Shields
+	// streamlined method to increase speed; previously was doing too much
+	// layout work which made the app very slow.
 
-        
-        if (c instanceof ScrolledComposite) 
-        { 
-      	  ScrolledComposite scrolledComposite = (ScrolledComposite) c; 
-      	  if (scrolledComposite.getExpandHorizontal() || scrolledComposite.getExpandVertical()) 
-      	  { 
+	public static void relayoutExpandBar(ExpandBar expandBar) {
+		relayoutExpandBar(expandBar, true);
+         	 } 
+	public static void relayoutExpandBar(ExpandBar expandBar, boolean relayoutParents) {
+		Composite c = expandBar;
+		do {
+			if (c instanceof ExpandBar) {
+				ExpandBar eb = (ExpandBar) c;
+				for (ExpandItem expandItem : eb.getItems()) {
+					expandItem.getControl().pack();
+					expandItem.setHeight(expandItem.getControl().computeSize(eb.getSize().x, SWT.DEFAULT, true).y);
+          } 
+
+				if (relayoutParents) {
+					Control p = c.getParent();
+					if (p instanceof ScrolledComposite) {
+						ScrolledComposite scrolledComposite = (ScrolledComposite) p;
+						if (scrolledComposite.getExpandHorizontal()
+								|| scrolledComposite.getExpandVertical()) {
       		  scrolledComposite.setMinSize(scrolledComposite.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT, true)); 
-      	  } 
-      	  else 
-      	  { 
+						} else {
       		  scrolledComposite.getContent().pack(true); 
       	  } 
         } 
         
-        if (c instanceof Composite) 
-        { 
-      	  Composite composite = (Composite) c; 
-      	  composite.layout(true, true); 
+					if (p instanceof Composite) {
+						Composite composite = (Composite) p;
+						composite.layout();
+					}
+				}				
         } 
+			c = c.getParent();
+		} while (c != null && c.getParent() != null	&& !(c instanceof ScrolledComposite));
 	} 
 
 	

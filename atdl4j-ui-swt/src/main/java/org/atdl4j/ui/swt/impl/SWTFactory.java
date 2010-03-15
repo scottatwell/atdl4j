@@ -15,6 +15,7 @@ import org.atdl4j.ui.swt.SWTPanelFactory;
 import org.atdl4j.ui.swt.SWTWidget;
 import org.atdl4j.ui.swt.SWTWidgetFactory;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ExpandBar;
 
 public class SWTFactory
 		implements SWTWidgetFactory, SWTPanelFactory
@@ -135,7 +136,7 @@ public class SWTFactory
 
 		
 		// -- Force re-sizing (to support non-collapsed, collapsible ExpandBar components) --
-		SWTStrategyPanelHelper.revalidateLayout( c );
+		if (c.getParent() instanceof ExpandBar) SWTStrategyPanelHelper.relayoutExpandBar( (ExpandBar)c.getParent(), false );
 		
 		return controlWidgets;
 	}

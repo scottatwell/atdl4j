@@ -3,6 +3,7 @@ package org.atdl4j.ui.swt.impl;
 import org.eclipse.swt.events.ExpandAdapter;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ExpandBar;
 
 /**
  * Helper class used to respond to ExpandBar events invoking SWTStrategyPanelHelper.revalidateLayoutAsync() upon itemCollapsed() and itemExpanded()
@@ -23,11 +24,11 @@ public class SWTExpandBarResizer
 	
 	public void itemCollapsed(ExpandEvent aE)
 	{
-		SWTStrategyPanelHelper.revalidateLayoutAsync( composite );
+		SWTStrategyPanelHelper.revalidateLayoutAsync( (ExpandBar)composite.getParent() );
 	}
 	
 	public void itemExpanded(ExpandEvent aE)
 	{
-		SWTStrategyPanelHelper.revalidateLayoutAsync( composite );
+		SWTStrategyPanelHelper.revalidateLayoutAsync( (ExpandBar)composite.getParent() );
 	}
 }
