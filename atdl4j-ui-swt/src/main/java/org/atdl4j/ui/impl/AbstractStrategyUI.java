@@ -412,16 +412,18 @@ public abstract class AbstractStrategyUI
 		// and add local rules
 		for ( EditT edit : strategy.getEdit() )
 		{
+			// 3/13/2010 - John Shields modified so strategy-scoped rules can be created even if they don't have an ID
+			ValidationRule rule = ValidationRuleFactory.createRule( edit, tempRuleMap, strategy );
 			String id = edit.getId();
-			if ( id != null )
-			{
-				ValidationRule rule = ValidationRuleFactory.createRule( edit, tempRuleMap, strategy );
-				tempRuleMap.put( id, rule );
-			}
+			if ( id != null ) tempRuleMap.put( id, rule );
+
+			// 3/13/2010 - John Shields commented out below
+			/*
 			else
 			{
 				throw new JAXBException( "Strategy-scoped edit without id" );
 			}
+			*/
 		}
 
 		// generate validation rules for StrategyEdit elements
