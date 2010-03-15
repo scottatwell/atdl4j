@@ -23,24 +23,32 @@ public abstract class AbstractStrategyDescriptionPanel
 	 * 
 	 * @param aStrategy
 	 */
-	public void loadStrategyDescription( StrategyT aStrategy )
+	public void loadStrategyDescriptionVisible( StrategyT aStrategy )
+	{
+		setStrategyDescriptionText( "" );
+		if ( ( getAtdl4jConfig() != null ) && ( getAtdl4jConfig().isShowStrategyDescription() )
+			&& ( aStrategy != null ) && ( aStrategy.getDescription() != null )  )
+		{
+			setVisible( true );
+		}
+		else
+		{
+			setVisible( false );
+		}
+	}	
+	
+	public void loadStrategyDescriptionText( StrategyT aStrategy )
 	{
 		if ( ( getAtdl4jConfig() != null ) && ( getAtdl4jConfig().isShowStrategyDescription() ) )
 		{
 			if ( ( aStrategy != null ) && ( aStrategy.getDescription() != null ) )
 			{
 				setStrategyDescriptionText( aStrategy.getDescription() );
-				setVisible( true );
 			}
 			else
 			{
 				setStrategyDescriptionText( "" );
-				setVisible( false );
-			}
 		}
-		else
-		{
-			setVisible( false );
 		}
 	}
 

@@ -180,11 +180,11 @@ public abstract class AbstractAtdl4jCompositePanel
 	{
 		getAtdl4jConfig().setSelectedStrategyValidated( false );
 		setValidateOutputText( "" );
-
-		getStrategyDescriptionPanel().loadStrategyDescription( aStrategy );
+		getStrategyDescriptionPanel().loadStrategyDescriptionVisible( aStrategy );
 		getStrategiesPanel().adjustLayoutForSelectedStrategy( aIndex );
 
 		packLayout();
+		getStrategyDescriptionPanel().loadStrategyDescriptionText( aStrategy );
 	}
 
 	/* (non-Javadoc)
@@ -424,8 +424,8 @@ public abstract class AbstractAtdl4jCompositePanel
 		{
 			getStrategySelectionPanel().selectFirstDropDownStrategy();
 		}
-	
-		packLayout();
+		// 3/13/2010 John Shields - This is not needed as PackLayout is called propoerly in strategySelected()
+		//packLayout();
 	}
 	
 	public boolean loadFixMessage( String aFixMessage ) 

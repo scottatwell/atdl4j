@@ -13,8 +13,10 @@ public interface StrategyDescriptionPanel
 {
 	public Object buildStrategyDescriptionPanel(Object parentOrShell, Atdl4jConfig atdl4jConfig);
 	
-	public void loadStrategyDescription( StrategyT aStrategy );
-
+	public void loadStrategyDescriptionVisible( StrategyT aStrategy );
+	
+	public void loadStrategyDescriptionText( StrategyT aStrategy );
+	
 	public void setVisible( boolean aVisible );
 	
 	public Atdl4jConfig getAtdl4jConfig();
