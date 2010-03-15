@@ -25,7 +25,9 @@ import org.atdl4j.ui.swt.SWTWidget;
 import org.atdl4j.ui.swt.widget.ButtonWidget;
 import org.atdl4j.ui.swt.widget.RadioButtonListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * SWT-specific UI representation for a Strategy object.
@@ -309,6 +311,17 @@ public class SWTStrategyUI
 			tempControlMap.putAll( getControlFactory().createStrategyPanelAndWidgets( getParent(), panel, getParameterMap(), SWT.NONE ) );
 		}
 	
+		// 3/13/2010 John Shields HACK: make the first panel take the full width of the window
+		Composite c = getParent();
+		for ( Control child : c.getChildren() )
+		{
+	        if (child instanceof Composite) 
+	        {
+	      	  Composite composite = (Composite) child;
+	      	  composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+	        }
+	    }
+		
 		setControlMap( tempControlMap );
 	}
 

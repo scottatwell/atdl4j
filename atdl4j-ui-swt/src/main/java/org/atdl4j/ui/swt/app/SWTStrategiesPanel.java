@@ -14,7 +14,6 @@ import org.atdl4j.ui.StrategiesUIFactory;
 import org.atdl4j.ui.StrategyUI;
 import org.atdl4j.ui.app.AbstractStrategiesPanel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -88,25 +87,34 @@ public class SWTStrategiesPanel
 		{
 			// create composite
 			Composite strategyParent = new Composite( strategiesPanel, SWT.NONE );
-			strategyParent.setLayout( new FillLayout() );
+			//strategyParent.setLayout( new FillLayout() );
+			
+			GridLayout strategyParentLayout = new GridLayout( 1, false );
+			strategyParentLayout.verticalSpacing = 0;
+			strategyParent.setLayout( strategyParentLayout );
+			strategyParent.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+			
 			StrategyUI ui;
 
 			// build strategy and catch strategy-specific errors
-			try
-			{
-				ui = strategiesUI.createUI( strategy, strategyParent );
-			}
-			catch (Throwable e)
-			{
-				getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Strategy Load Error",
-						"Error in Strategy: " + Atdl4jHelper.getStrategyUiRepOrName( strategy ), e );
+				try {
+					ui = strategiesUI.createUI( strategy, strategyParent );
+				} catch (JAXBException je) {
+					getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Strategy Load Error",
+							"Error in Strategy: " + Atdl4jHelper.getStrategyUiRepOrName( strategy ), je );
 
-				// rollback changes
-				strategyParent.dispose();
+					// rollback changes
+					strategyParent.dispose();
 
-				// skip to next strategy
-				continue;
-			}
+					// skip to next strategy
+					continue;
+				} /*catch (Exception e) {								
+					if (e.getMessage() != null)
+					{
+						throw new Exception("Application Error while Loading Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName( strategy ) + "\": " + e.getMessage());
+					}
+					else throw new Exception("Unknown Application Error while Loading Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName( strategy ) + "\"");					
+				} */
 
 			getAtdl4jConfig().getStrategyUIMap().put( strategy, ui );
 
@@ -122,6 +130,7 @@ public class SWTStrategiesPanel
 		setPreCached( true );
 	}  
 
+
 	public void adjustLayoutForSelectedStrategy(int aIndex)
 	{
 		if ( strategiesPanel != null )
@@ -134,6 +143,12 @@ public class SWTStrategiesPanel
 				{
 					((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != aIndex) ? 0 : -1;
 					((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != aIndex) ? 0 : -1;
+
+					if (i == aIndex) 
+					{
+						//((Composite)strategiesPanel.getChildren()[i]).pack();
+						((Composite)strategiesPanel.getChildren()[i]).getParent().layout(true,true);
+					}
 				}
 			}
 			

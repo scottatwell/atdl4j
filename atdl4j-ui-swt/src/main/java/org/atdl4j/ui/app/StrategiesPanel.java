@@ -24,7 +24,7 @@ public interface StrategiesPanel
 {
 	public Object buildStrategiesPanel(Object parentOrShell, Atdl4jConfig atdl4jConfig);
 
-	public void createStrategyPanels(List<StrategyT> aFilteredStrategyList);
+	public void createStrategyPanels(List<StrategyT> aFilteredStrategyList); // throws Exception;
 
 	public void removeAllStrategyPanels();
 	
