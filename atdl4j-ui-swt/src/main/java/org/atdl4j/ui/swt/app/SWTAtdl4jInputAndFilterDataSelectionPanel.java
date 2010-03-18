@@ -26,6 +26,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 	
 	private Button atdl4jInputAndFilterDataPanelButton;
 	private Shell atdl4jInputAndFilterDataPanelShell;
+	private Button debugModeButton;
 	
 	public Object buildAtdl4jInputAndFilterDataSelectionPanel(Object aParentOrShell, Atdl4jConfig aAtdl4jConfig)
 	{
@@ -72,6 +73,7 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 		}
 		
 		getAtdl4jInputAndFilterDataPanel().loadScreenWithAtdl4jConfig();
+		getDebugModeButton().setSelection( getAtdl4jConfig().isDebugLoggingLevel() );
 		
 		// -- Open/Pop-up the dialog window --
 		atdl4jInputAndFilterDataPanelShell.open();	
@@ -125,10 +127,41 @@ public class SWTAtdl4jInputAndFilterDataSelectionPanel
 			}
 		} );
 		
+		//blank button used as spacer
+		Button tempBlankButton = new Button(tempFooter, SWT.NONE);
+		tempBlankButton.setVisible(false);
+
+		setDebugModeButton( new Button(tempFooter, SWT.CHECK) );		
+		getDebugModeButton().setText("Debug Mode");
+
+		getDebugModeButton().addSelectionListener(new SelectionAdapter() 
+		{
+			public void widgetSelected(SelectionEvent e) 
+			{
+				getAtdl4jConfig().setDebugLoggingLevel( getDebugModeButton().getSelection() );
+			}
+		});
+		
 		tempAtdl4jInputAndFilterDataPanelShell.layout( true );
 		tempAtdl4jInputAndFilterDataPanelShell.pack();
 		
 		return tempAtdl4jInputAndFilterDataPanelShell;
+	}
+
+	/**
+	 * @return the debugModeButton
+	 */
+	public Button getDebugModeButton()
+	{
+		return this.debugModeButton;
+	}
+
+	/**
+	 * @param aDebugModeButton the debugModeButton to set
+	 */
+	public void setDebugModeButton(Button aDebugModeButton)
+	{
+		this.debugModeButton = aDebugModeButton;
 	}
 
 }

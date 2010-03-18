@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.ValidationRule;
@@ -71,7 +72,8 @@ public abstract class AbstractAtdl4jConfig
 	implements Atdl4jConfig
 {
 	private final Logger logger = Logger.getLogger(AbstractAtdl4jConfig.class);
-	
+
+	public static String ATDL4J_PACKAGE_NAME_PATH_FOR_DEBUG_LOGGING = "org.atdl4j";
 	public static String DEFAULT_CLASS_NAME_STRATEGIES_UI_FACTORY = "org.atdl4j.ui.impl.BaseStrategiesUIFactory";
 	public static String DEFAULT_CLASS_NAME_CONTROL_UI_FACTORY = "org.atdl4j.ui.impl.BaseControlUIFactory";
 	public static String DEFAULT_CLASS_NAME_TYPE_CONVERTER_FACTORY = "org.atdl4j.data.TypeConverterFactory";
@@ -2077,4 +2079,39 @@ public abstract class AbstractAtdl4jConfig
 		this.catchAllMainlineExceptions = aCatchAllMainlineExceptions;
 	}	
 
+	/* 
+	 * Sets Logger's logging level to Level.DEBUG if aDebugLevelFlag is true, otherwise to Level.INFO.
+	 * Sets the logging level for ATDL4J_PACKAGE_NAME_PATH_FOR_DEBUG_LOGGING package/path.
+	 */
+	public void setDebugLoggingLevel( boolean aDebugLevelFlag )
+	{
+		Level tempLevel = Level.INFO; 
+		if ( aDebugLevelFlag )
+		{
+			tempLevel = Level.DEBUG;
+		}
+		
+		logger.info( "setDebugLoggingLevel( " + aDebugLevelFlag + " ) invoking org.apache.log4j.Logger.getLogger( " + ATDL4J_PACKAGE_NAME_PATH_FOR_DEBUG_LOGGING + " ).setLevel( " + tempLevel + " )" );
+		Logger.getLogger( ATDL4J_PACKAGE_NAME_PATH_FOR_DEBUG_LOGGING ).setLevel( tempLevel );
+		// -- explicitly set ourself, too --
+		logger.setLevel( tempLevel );
+	}
+
+	/* 
+	 * Returns true if this class' Logger's logging level is Level.DEBUG or higher, otherwise returns false.
+	 */
+	public boolean isDebugLoggingLevel()
+	{
+		// -- Use this class' own logger's level as guide --
+		Level tempLevel = logger.getLevel(); 
+		
+		if ( ( tempLevel != null ) && ( Level.DEBUG.isGreaterOrEqual( tempLevel ) ) )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

@@ -170,5 +170,8 @@ public interface Atdl4jConfig
 	public void setCatchAllStrategyLoadExceptions(boolean aCatchAllStrategyLoadExceptions);
 	public void setCatchAllRuntimeExceptions(boolean aCatchAllRuntimeExceptions);
 	public void setCatchAllMainlineExceptions(boolean aCatchAllMainlineExceptions);
-	
+
+	public void setDebugLoggingLevel( boolean aDebugLevelFlag );
+	public boolean isDebugLoggingLevel();
+
 }

@@ -402,7 +402,11 @@ public abstract class AbstractAtdl4jCompositePanel
 		
 		if ( tempFilteredStrategyList == null )
 		{
-			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Unexpected Error", "Unexpected Error: Atdl4jConfig().getStrategiesFilteredStrategyList() was null." );
+			if ( getAtdl4jConfig().getStrategies() != null )
+			{
+				// -- Only generate the error message if Strategies have been parsed -- 
+				getAtdl4jConfig().getAtdl4jUserMessageHandler().displayMessage( "Unexpected Error", "Unexpected Error: Atdl4jConfig.getStrategiesFilteredStrategyList() was null." );
+			}
 			return;
 		}
 
