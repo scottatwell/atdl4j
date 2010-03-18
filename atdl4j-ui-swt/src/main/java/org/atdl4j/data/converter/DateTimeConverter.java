@@ -20,7 +20,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 public class DateTimeConverter
-		extends AbstractTypeConverter<DateTime>
+// 3/18/2010 Scott Atwell avoid compile error "type parameter org.joda.time.DateTime is not within its bound"		extends AbstractTypeConverter<DateTime>
+		extends AbstractTypeConverter<Comparable<DateTime>>
 {
 // 2/15/2010 Scott Atwell added	
 	Timezone timezone = null;

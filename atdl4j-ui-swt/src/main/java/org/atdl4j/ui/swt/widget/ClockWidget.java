@@ -50,7 +50,8 @@ import org.joda.time.DateTimeZone;
  * @author john.shields
  */
 public class ClockWidget
-		extends AbstractSWTWidget<DateTime>
+//3/18/2010 Scott Atwell avoid compile error "type parameter org.joda.time.DateTime is not within its bound"		extends AbstractSWTWidget<DateTime>
+	extends AbstractSWTWidget<Comparable<DateTime>>
 {
 
 	private static final Logger logger = Logger.getLogger( ClockWidget.class );
@@ -262,7 +263,8 @@ public class ClockWidget
 		return result;
 	}
 
-	public void setValue(DateTime value)
+//3/18/2010 Scott Atwell avoid compile error "type parameter org.joda.time.DateTime is not within its bound"		public void setValue(DateTime value)
+	public void setValue(Comparable<DateTime> value)
 	{
 		// Convert to UTC time for UTCTimestampT and UTCTimeOnlyT.
 		// Performing UTCDateT and MonthYearT coversion could produce an unexpected result.
@@ -291,7 +293,8 @@ public class ClockWidget
 		}
 ***/
 		// -- Force control to display time portion in local
-		DateTime tempLocalTzDateTime = value.withZone( DateTimeZone.getDefault() );
+//3/18/2010 Scott Atwell avoid compile error "type parameter org.joda.time.DateTime is not within its bound"		DateTime tempLocalTzDateTime = value.withZone( DateTimeZone.getDefault() );
+		DateTime tempLocalTzDateTime = ((DateTime)value).withZone( DateTimeZone.getDefault() );
 		
 		if ( showMonthYear )
 		{
