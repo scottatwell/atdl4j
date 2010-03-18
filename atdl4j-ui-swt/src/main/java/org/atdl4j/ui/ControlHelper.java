@@ -8,6 +8,13 @@ import java.math.BigInteger;
 
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.Atdl4jConstants;
+import org.atdl4j.fixatdl.core.AmtT;
+import org.atdl4j.fixatdl.core.FloatT;
+import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.PercentageT;
+import org.atdl4j.fixatdl.core.PriceOffsetT;
+import org.atdl4j.fixatdl.core.PriceT;
+import org.atdl4j.fixatdl.core.QtyT;
 import org.atdl4j.fixatdl.layout.CheckBoxListT;
 import org.atdl4j.fixatdl.layout.CheckBoxT;
 import org.atdl4j.fixatdl.layout.ClockT;
@@ -476,4 +483,41 @@ public class ControlHelper
 		}
 	}
 
+	public static int getDefaultDigitsForSpinnerControl( ParameterT aParameter, Atdl4jConfig aAtdl4jConfig )
+	{
+		if ( aParameter != null )
+		{
+			if ( aParameter instanceof PercentageT )
+			{
+				return 0;
+			}
+			else if ( aParameter instanceof QtyT )
+			{
+				return 0;
+			}			
+// use Atdl4jConfig.getDefaultDigitsForSpinnerControl() for these			
+//			else if ( aParameter instanceof FloatT )
+//			{
+//			}
+//			else if ( aParameter instanceof AmtT )
+//			{
+//			}
+//			else if ( aParameter instanceof PriceOffsetT )
+//			{
+//			}
+//			else if ( aParameter instanceof PriceT )
+//			{
+//			}
+		}
+		
+		// -- not specified via rule above, use default if we have one within Atdl4jConfig --
+		if ( ( aAtdl4jConfig != null ) && ( aAtdl4jConfig.getDefaultDigitsForSpinnerControl() != null ) )
+		{
+			return aAtdl4jConfig.getDefaultDigitsForSpinnerControl().intValue();
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }

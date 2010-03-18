@@ -142,7 +142,7 @@ public class DatatypeConverter
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBooleanDatatype() datatype value: " + aValue );
+			throw new IllegalArgumentException( "Unsupported convertValueToBooleanDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
 		}
 	}
 
@@ -168,6 +168,10 @@ public class DatatypeConverter
 				return new BigDecimal( str );
 			}
 		}
+		else if ( aValue instanceof BigInteger )
+		{
+			return new BigDecimal( aValue.toString() );
+		}
 		else if ( aValue instanceof Boolean )
 		{
 			Boolean bool = (Boolean) aValue;
@@ -185,7 +189,7 @@ public class DatatypeConverter
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBigDecimalDatatype() datatype value: " + aValue );
+			throw new IllegalArgumentException( "Unsupported convertValueToBigDecimalDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
 		}
 	}
 	
@@ -211,6 +215,10 @@ public class DatatypeConverter
 				return new BigInteger( str );
 			}
 		}
+		else if ( aValue instanceof BigDecimal )
+		{
+			return new BigInteger( aValue.toString() );
+		}
 		else if ( aValue instanceof Boolean )
 		{
 			Boolean bool = (Boolean) aValue;
@@ -228,7 +236,8 @@ public class DatatypeConverter
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBigIntegerDatatype() datatype value: " + aValue );
-		}	}
+			throw new IllegalArgumentException( "Unsupported convertValueToBigIntegerDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
+		}	
+	}
 	
 }
