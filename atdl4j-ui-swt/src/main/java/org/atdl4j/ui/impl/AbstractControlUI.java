@@ -401,8 +401,19 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 			java.util.List<EnumPairT> enumPairs = parameter.getEnumPair();
 			for ( EnumPairT enumPair : enumPairs )
 			{
+//				if ( enumPair.getEnumID().equals( enumID ) )
+// 3/19/2010 Scott Atwell handle VALUE_NULL_INDICATOR					return enumPair.getWireValue();
 				if ( enumPair.getEnumID().equals( enumID ) )
-					return enumPair.getWireValue();
+				{
+					if ( Atdl4jConstants.VALUE_NULL_INDICATOR.equals( enumPair.getWireValue() ) )
+					{
+						return null;
+					}
+					else
+					{
+						return enumPair.getWireValue();
+					}
+				}
 			}
 			// throw error?
 		}
