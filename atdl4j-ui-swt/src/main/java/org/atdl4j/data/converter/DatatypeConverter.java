@@ -38,10 +38,11 @@ public class DatatypeConverter
 	 */
 	public static Object convertValueToDatatype( Object aValue, Object aToDatatypeObject )
 	{
-		if ( aValue == null )
-		{
-			return aValue;
-		}
+// 3/20/2010 Scott Atwell
+//		if ( aValue == null )
+//		{
+//			return aValue;
+//		}
 		
 		if ( aToDatatypeObject == null )
 		{
@@ -84,7 +85,11 @@ public class DatatypeConverter
 	 */
 	protected static String convertValueToStringDatatype( Object aValue )
 	{
-		if ( aValue instanceof String )
+		if ( aValue == null )
+		{
+			return null;
+		}
+		else if ( aValue instanceof String )
 		{
 			return (String) aValue;
 		}
@@ -100,7 +105,11 @@ public class DatatypeConverter
 	 */
 	protected static Boolean convertValueToBooleanDatatype( Object aValue )
 	{
-		if ( aValue instanceof Boolean )
+		if ( aValue == null )
+		{
+			return null;
+		}
+		else if ( aValue instanceof Boolean )
 		{
 			return (Boolean) aValue;
 		}
@@ -142,7 +151,7 @@ public class DatatypeConverter
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBooleanDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
+			throw new IllegalArgumentException( "Unsupported convertValueToBooleanDatatype() datatype " + aValue.getClass() + " value: " + aValue );
 		}
 	}
 
@@ -152,14 +161,18 @@ public class DatatypeConverter
 	 */
 	protected static BigDecimal convertValueToBigDecimalDatatype( Object aValue )
 	{
-		if ( aValue instanceof BigDecimal )
+		if ( aValue == null )
+		{
+			return null;
+		}
+		else if ( aValue instanceof BigDecimal )
 		{
 			return (BigDecimal) aValue;
 		}
 		else if ( aValue instanceof String )
 		{
 			String str = (String) aValue;
-			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			if ( str.trim().length() == 0 )
 			{
 				return null;
 			}
@@ -175,21 +188,14 @@ public class DatatypeConverter
 		else if ( aValue instanceof Boolean )
 		{
 			Boolean bool = (Boolean) aValue;
-			if ( bool != null )
-			{
-				if ( bool )
-					return new BigDecimal( 1 );
-				else
-					return new BigDecimal( 0 );
-			}
+			if ( Boolean.TRUE.equals( bool ) )
+				return new BigDecimal( 1 );
 			else
-			{
-				throw new IllegalArgumentException( "Unsupported convertValueToBigDecimalDatatype() Boolean value: " + aValue );
-			}
+				return new BigDecimal( 0 );
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBigDecimalDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
+			throw new IllegalArgumentException( "Unsupported convertValueToBigDecimalDatatype() datatype " + aValue.getClass() + " value: " + aValue );
 		}
 	}
 	
@@ -199,14 +205,18 @@ public class DatatypeConverter
 	 */
 	protected static BigInteger convertValueToBigIntegerDatatype( Object aValue )
 	{
-		if ( aValue instanceof BigInteger )
+		if ( aValue == null )
+		{
+			return null;
+		}
+		else if ( aValue instanceof BigInteger )
 		{
 			return (BigInteger) aValue;
 		}
 		else if ( aValue instanceof String )
 		{
 			String str = (String) aValue;
-			if ( ( str == null ) || ( str.trim().length() == 0 ) )
+			if ( str.trim().length() == 0 )
 			{
 				return null;
 			}
@@ -222,21 +232,14 @@ public class DatatypeConverter
 		else if ( aValue instanceof Boolean )
 		{
 			Boolean bool = (Boolean) aValue;
-			if ( bool != null )
-			{
-				if ( bool )
-					return new BigInteger( "1" );
-				else
-					return new BigInteger( "0" );
-			}
+			if ( Boolean.TRUE.equals( bool ) )
+				return new BigInteger( "1" );
 			else
-			{
-				throw new IllegalArgumentException( "Unsupported convertValueToBigIntegerDatatype() Boolean value: " + aValue );
-			}
+				return new BigInteger( "0" );
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Unsupported convertValueToBigIntegerDatatype() datatype " + (aValue != null ? aValue.getClass() : "null" ) + " value: " + aValue );
+			throw new IllegalArgumentException( "Unsupported convertValueToBigIntegerDatatype() datatype " + aValue.getClass() + " value: " + aValue );
 		}	
 	}
 	

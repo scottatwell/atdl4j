@@ -46,8 +46,8 @@ public class InputAndFilterData
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_REGION_name = "FIX_FIXatdl_Region_name";
 	public static String INPUT_FIELD_NAME_STRATEGY_FILTER_COUNTRY_CountryCode = "FIX_FIXatdl_Country_CountryCode";
 
-	public static String INPUT_FIELD_NAME_INIT_POLICY_LotSize = "FIX_FIXatdl_LotSize";
-	public static String INPUT_FIELD_NAME_INIT_POLICY_Tick = "FIX_FIXatdl_Tick";
+	public static String INPUT_FIELD_NAME_INCREMENT_POLICY_LotSize = "FIX_FIXatdl_LotSize";
+	public static String INPUT_FIELD_NAME_INCREMENT_POLICY_Tick = "FIX_FIXatdl_Tick";
 	
 	private boolean inputCxlReplaceMode = false;
 	
@@ -566,9 +566,9 @@ public class InputAndFilterData
 
 	/**
 	 */
-	public BigInteger getInputInitPolicy_LotSize()
+	public BigInteger getInputIncrementPolicy_LotSize()
 	{
-		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INIT_POLICY_LotSize );
+		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INCREMENT_POLICY_LotSize );
 		if ( tempValue != null )
 		{
 			return new BigInteger( tempValue );
@@ -581,9 +581,9 @@ public class InputAndFilterData
 	
 	/**
 	 */
-	public BigInteger getInputInitPolicy_Tick()
+	public BigInteger getInputIncrementPolicy_Tick()
 	{
-		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INIT_POLICY_Tick );
+		String tempValue = getInputHiddenFieldValue( INPUT_FIELD_NAME_INCREMENT_POLICY_Tick );
 		if ( tempValue != null )
 		{
 			return new BigInteger( tempValue );
@@ -591,6 +591,34 @@ public class InputAndFilterData
 		else
 		{
 			return null;
+		}
+	}
+
+	/**
+	 */
+	public void setInputIncrementPolicy_LotSize( BigInteger aLotSize )
+	{
+		if ( aLotSize != null )
+		{
+			setInputHiddenFieldNameValuePair( INPUT_FIELD_NAME_INCREMENT_POLICY_LotSize, aLotSize.toString() );
+		}
+		else
+		{
+			setInputHiddenFieldNameValuePair( INPUT_FIELD_NAME_INCREMENT_POLICY_LotSize, null);
+		}
+	}
+	
+	/**
+	 */
+	public void setInputIncrementPolicy_Tick( BigInteger aTick )
+	{
+		if ( aTick != null )
+		{
+			setInputHiddenFieldNameValuePair( INPUT_FIELD_NAME_INCREMENT_POLICY_Tick, aTick.toString() );
+		}
+		else
+		{
+			setInputHiddenFieldNameValuePair( INPUT_FIELD_NAME_INCREMENT_POLICY_Tick, null );
 		}
 	}
 

@@ -1,5 +1,6 @@
 package org.atdl4j.ui.swt.app;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,9 +44,9 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	private Combo dropDownListStrategyFilterSecurityType;
 	public static String[] DEFAULT_STRATEGY_FILTER_SECURITY_TYPE_SUBSET_LIST = new String[] { "", "CS", "FUT", "OPT", "FXSPOT", "FXFWD" };  // just to seed it with some  
 	
-	Text textSelectStrategyName;
-	Text textAreaStrategyNameFilterList;
-	Button checkboxInputStrategyListAsFilter;
+	private Text textSelectStrategyName;
+	private Text textAreaStrategyNameFilterList;
+	private Button checkboxInputStrategyListAsFilter;
 	
 	private Combo dropDownListFixFieldOrdType;
 	public static String[] DEFAULT_FIX_FIELD_ORD_TYPE_SUBSET_LIST = new String[] { "", "1", "2", "3", "4", "6", "7", "8", "9", "D", "E", "G", "I", "J", "K", "P", "Q" };  // just to seed it with some 
@@ -79,7 +80,10 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	private Button checkboxAtd4ljShowStrategyDescription;
 	private Button checkboxAtd4ljShowValidateOutputSection;
 	private Button checkboxAtd4ljShowCompositePanelOkCancelButtonSection;
-	
+
+	private Text textIncrementPolicyLotSize;
+	private Text textIncrementPolicyTick;
+
 	public Object buildAtdl4jInputAndFilterDataPanel(Object aParentOrShell, Atdl4jConfig aAtdl4jConfig)
 	{
 		return buildAtdl4jInputAndFilterDataPanel( (Composite) aParentOrShell, aAtdl4jConfig );
@@ -115,7 +119,13 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		
 		buildStandardFixFieldsPanel( tempThreeColPanel );
 		buildSelectStrategyPanel( tempThreeColPanel );
-		buildAtdl4jConfigSettingsPanel( tempThreeColPanel );
+
+		Composite tempThirdColumn = new Composite( tempThreeColPanel, SWT.NONE );
+		GridLayout tempThirdColumnLayout = new GridLayout(1, false);
+		tempThirdColumn.setLayout(tempThirdColumnLayout);
+		tempThirdColumn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		buildAtdl4jConfigSettingsPanel( tempThirdColumn );
+		buildIncrementPolicyPanel( tempThirdColumn );
 		
 		return tempCoreAtdl4jSettingsPanel;
 	}
@@ -314,6 +324,31 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		return tempAtdl4jConfigSettingsGroup;
 	}
 	
+	protected Composite buildIncrementPolicyPanel( Composite aParent )
+	{
+		Group tempIncrementPolicyGroup = new Group( aParent, SWT.NONE );
+		tempIncrementPolicyGroup.setText( "Increment Policy" );
+		GridLayout tempIncrementPolicyGroupLayout = new GridLayout( 2, false );
+		tempIncrementPolicyGroup.setLayout(tempIncrementPolicyGroupLayout);
+		tempIncrementPolicyGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true ));
+		
+		Label tempLabelIncrementPolicyLotSize = new Label( tempIncrementPolicyGroup, SWT.NONE );
+		tempLabelIncrementPolicyLotSize.setText( "Lot Size:" );
+		textIncrementPolicyLotSize = new Text( tempIncrementPolicyGroup, SWT.NONE );
+		textIncrementPolicyLotSize.setToolTipText( "May be used in conjunction with Control/@incrementPolicy on spinner controls" );
+		textIncrementPolicyLotSize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false ));
+		setTextValue( textIncrementPolicyLotSize, getAtdl4jConfig().getInputAndFilterData().getInputIncrementPolicy_LotSize() );
+			  
+		Label tempLabelIncrementPolicyTick = new Label( tempIncrementPolicyGroup, SWT.NONE );
+		tempLabelIncrementPolicyTick.setText( "Tick Size:" );
+		textIncrementPolicyTick = new Text( tempIncrementPolicyGroup, SWT.NONE );
+		textIncrementPolicyTick.setToolTipText( "May be used in conjunction with Control/@incrementPolicy on spinner controls" );
+		textIncrementPolicyTick.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false ));
+		setTextValue( textIncrementPolicyTick, getAtdl4jConfig().getInputAndFilterData().getInputIncrementPolicy_Tick() );
+			  
+		return tempIncrementPolicyGroup;
+	}
+
 	/*
 	 */
 	public boolean extractAtdl4jConfigFromScreen()
@@ -348,6 +383,9 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		getAtdl4jConfig().setShowValidateOutputSection( getCheckboxValue( checkboxAtd4ljShowValidateOutputSection, null ).booleanValue() );
 		getAtdl4jConfig().setShowCompositePanelOkCancelButtonSection( getCheckboxValue( checkboxAtd4ljShowCompositePanelOkCancelButtonSection, null ).booleanValue() );
 
+		getAtdl4jConfig().getInputAndFilterData().setInputIncrementPolicy_LotSize( getTextValueAsBigInteger( textIncrementPolicyLotSize ) );
+		getAtdl4jConfig().getInputAndFilterData().setInputIncrementPolicy_Tick( getTextValueAsBigInteger( textIncrementPolicyTick ) );
+		
 		return true;
 	}
 
@@ -444,6 +482,31 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		else
 		{
 			aText.setText( aValue );
+		}
+	}
+	
+	public static BigInteger getTextValueAsBigInteger( Text aText )
+	{
+		String tempText = aText.getText();
+		if ( "".equals( tempText ) )
+		{
+			return null;
+		}
+		else
+		{
+			return new BigInteger( tempText );
+		}
+	}
+	
+	public static void setTextValue( Text aText, BigInteger aValue )
+	{
+		if ( aValue == null )
+		{
+			aText.setText( "" );
+		}
+		else
+		{
+			aText.setText( aValue.toString() );
 		}
 	}
 	

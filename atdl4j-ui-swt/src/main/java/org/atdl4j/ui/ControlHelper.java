@@ -106,9 +106,9 @@ public class ControlHelper
 		{
 			if ( ( aAtdl4jConfig != null ) &&
 				  ( aAtdl4jConfig.getInputAndFilterData() != null ) &&
-				  ( aAtdl4jConfig.getInputAndFilterData().getInputInitPolicy_LotSize() != null ) )
+				  ( aAtdl4jConfig.getInputAndFilterData().getInputIncrementPolicy_LotSize() != null ) )
 			{
-				return aAtdl4jConfig.getInputAndFilterData().getInputInitPolicy_LotSize();
+				return aAtdl4jConfig.getInputAndFilterData().getInputIncrementPolicy_LotSize();
 			}
 			else
 			{
@@ -119,9 +119,9 @@ public class ControlHelper
 		{
 			if ( ( aAtdl4jConfig != null ) &&
 				  ( aAtdl4jConfig.getInputAndFilterData() != null ) &&
-				  ( aAtdl4jConfig.getInputAndFilterData().getInputInitPolicy_Tick() != null ) )
+				  ( aAtdl4jConfig.getInputAndFilterData().getInputIncrementPolicy_Tick() != null ) )
 			{
-				return aAtdl4jConfig.getInputAndFilterData().getInputInitPolicy_Tick();
+				return aAtdl4jConfig.getInputAndFilterData().getInputIncrementPolicy_Tick();
 			}
 			else
 			{
