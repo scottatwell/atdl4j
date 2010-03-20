@@ -483,37 +483,18 @@ public class ControlHelper
 		}
 	}
 
+	/**
+	 * Returns the default number of Spinner control "digits" for the specified aParameter 
+	 * @param aParameter
+	 * @param aAtdl4jConfig
+	 * @return
+	 */
 	public static int getDefaultDigitsForSpinnerControl( ParameterT aParameter, Atdl4jConfig aAtdl4jConfig )
 	{
-		if ( aParameter != null )
-		{
-			if ( aParameter instanceof PercentageT )
-			{
-				return 0;
-			}
-			else if ( aParameter instanceof QtyT )
-			{
-				return 0;
-			}			
-// use Atdl4jConfig.getDefaultDigitsForSpinnerControl() for these			
-//			else if ( aParameter instanceof FloatT )
-//			{
-//			}
-//			else if ( aParameter instanceof AmtT )
-//			{
-//			}
-//			else if ( aParameter instanceof PriceOffsetT )
-//			{
-//			}
-//			else if ( aParameter instanceof PriceT )
-//			{
-//			}
-		}
-		
 		// -- not specified via rule above, use default if we have one within Atdl4jConfig --
-		if ( ( aAtdl4jConfig != null ) && ( aAtdl4jConfig.getDefaultDigitsForSpinnerControl() != null ) )
+		if ( aAtdl4jConfig != null )
 		{
-			return aAtdl4jConfig.getDefaultDigitsForSpinnerControl().intValue();
+			return aAtdl4jConfig.getDefaultDigitsForSpinnerControl( aParameter );
 		}
 		else
 		{

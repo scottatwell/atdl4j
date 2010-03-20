@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.fixatdl.core.ParameterT;
+import org.atdl4j.fixatdl.core.PercentageT;
+import org.atdl4j.fixatdl.core.QtyT;
 import org.atdl4j.fixatdl.core.StrategiesT;
 import org.atdl4j.fixatdl.core.StrategyT;
 import org.atdl4j.fixatdl.layout.CheckBoxListT;
@@ -146,7 +148,10 @@ public abstract class AbstractAtdl4jConfig
 	private boolean restoreLastNonNullStateControlValueBehavior = true;	
 	
 	private boolean showEnabledCheckboxOnOptionalClockControl = false;
-	private Integer defaultDigitsForSpinnerControl = new Integer( 2 );
+	
+	private int defaultDigitsForSpinnerControlForPercentage = 0;
+	private int defaultDigitsForSpinnerControlForQty = 0;
+	private int defaultDigitsForSpinnerControl = 2;
 
 	private StrategiesT strategies;
 	private Map<StrategyT, StrategyUI> strategyUIMap;
@@ -1968,22 +1973,6 @@ public abstract class AbstractAtdl4jConfig
 	}
 
 	/**
-	 * @return the defaultDigitsForSpinnerControl
-	 */
-	public Integer getDefaultDigitsForSpinnerControl()
-	{
-		return this.defaultDigitsForSpinnerControl;
-	}
-
-	/**
-	 * @param aDefaultDigitsForSpinnerControl the defaultDigitsForSpinnerControl to set
-	 */
-	public void setDefaultDigitsForSpinnerControl(Integer aDefaultDigitsForSpinnerControl)
-	{
-		this.defaultDigitsForSpinnerControl = aDefaultDigitsForSpinnerControl;
-	}
-
-	/**
 	 * @return the strategyDropDownItemDepth
 	 */
 	public Integer getStrategyDropDownItemDepth()
@@ -2113,5 +2102,87 @@ public abstract class AbstractAtdl4jConfig
 		{
 			return false;
 		}
+	}
+	
+	/* 
+	 * Returns the Spinner control's "digits" value for the specified aParameter (eg 0 vs. 2 for Percentage)
+	 */
+	public int getDefaultDigitsForSpinnerControl( ParameterT aParameter )
+	{
+		if ( aParameter != null )
+		{
+			if ( aParameter instanceof PercentageT )
+			{
+				return getDefaultDigitsForSpinnerControlForPercentage();
+			}
+			else if ( aParameter instanceof QtyT )
+			{
+				return getDefaultDigitsForSpinnerControlForQty();
+			}			
+// use Atdl4jConfig.getDefaultDigitsForSpinnerControl() for these			
+//			else if ( aParameter instanceof FloatT )
+//			{
+//			}
+//			else if ( aParameter instanceof AmtT )
+//			{
+//			}
+//			else if ( aParameter instanceof PriceOffsetT )
+//			{
+//			}
+//			else if ( aParameter instanceof PriceT )
+//			{
+//			}
+		}
+		
+		// -- not specified via rule above, use default if we have one within Atdl4jConfig --
+		return getDefaultDigitsForSpinnerControl();
+	}
+
+	/**
+	 * @return the defaultDigitsForSpinnerControlForPercentage
+	 */
+	protected int getDefaultDigitsForSpinnerControlForPercentage()
+	{
+		return this.defaultDigitsForSpinnerControlForPercentage;
+	}
+
+	/**
+	 * @param aDefaultDigitsForSpinnerControlForPercentage the defaultDigitsForSpinnerControlForPercentage to set
+	 */
+	protected void setDefaultDigitsForSpinnerControlForPercentage(int aDefaultDigitsForSpinnerControlForPercentage)
+	{
+		this.defaultDigitsForSpinnerControlForPercentage = aDefaultDigitsForSpinnerControlForPercentage;
+	}
+
+	/**
+	 * @return the defaultDigitsForSpinnerControlForQty
+	 */
+	protected int getDefaultDigitsForSpinnerControlForQty()
+	{
+		return this.defaultDigitsForSpinnerControlForQty;
+	}
+
+	/**
+	 * @param aDefaultDigitsForSpinnerControlForQty the defaultDigitsForSpinnerControlForQty to set
+	 */
+	protected void setDefaultDigitsForSpinnerControlForQty(int aDefaultDigitsForSpinnerControlForQty)
+	{
+		this.defaultDigitsForSpinnerControlForQty = aDefaultDigitsForSpinnerControlForQty;
+	}
+
+	/**
+	 * @return the defaultDigitsForSpinnerControl
+	 */
+	protected int getDefaultDigitsForSpinnerControl()
+	{
+		return this.defaultDigitsForSpinnerControl;
+	}
+
+	/**
+	 * @param aDefaultDigitsForSpinnerControl the defaultDigitsForSpinnerControl to set
+	 */
+	protected void setDefaultDigitsForSpinnerControl(int aDefaultDigitsForSpinnerControl)
+	{
+		this.defaultDigitsForSpinnerControl = aDefaultDigitsForSpinnerControl;
 	}
 }
