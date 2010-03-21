@@ -3,6 +3,7 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.atdl4j.fixatdl.core.EnumPairT;
 import org.atdl4j.fixatdl.layout.ListItemT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.ui.ControlHelper;
@@ -69,8 +70,21 @@ public class SliderWidget
 			for ( ListItemT li : ( (SliderT) control ).getListItem() )
 			{
 				Label label = new Label( c, SWT.NONE );
-				if (li.getUiRep() != null && !li.getUiRep().equals("")) label.setText( li.getUiRep() );
+				if (li.getUiRep() != null && !li.getUiRep().equals(""))
+				{
+					label.setText( li.getUiRep() );
+				} else {
+					// add some whitespace for hover tooltips
+					label.setText( "   " );
+				}			
 				label.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+				for ( EnumPairT ep : parameter.getEnumPair() )
+				{
+				    if (ep.getEnumID().equals(li.getEnumID()) && ep.getDescription() != null && !ep.getDescription().equals(""))
+				    {
+				    	label.setToolTipText(ep.getDescription());
+				    }
+				}
 				sliderLabels.add(label);
 			}
 		}

@@ -99,7 +99,7 @@ public interface Atdl4jCompositePanel
 	/* 
 	 * @return StrategyT (non-null only if passes all validation)
 	 */
-	public StrategyT validateStrategy();
+	public StrategyT validateStrategy() throws Exception;
 	
 
 	/* 

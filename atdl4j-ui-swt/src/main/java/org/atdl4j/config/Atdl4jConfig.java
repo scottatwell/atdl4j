@@ -166,9 +166,11 @@ public interface Atdl4jConfig
 	public void setSelectedStrategyValidated(boolean aSelectedStrategyValidated);
 	
 	public boolean isCatchAllStrategyLoadExceptions();
+	public boolean isCatchAllValidationExceptions();
 	public boolean isCatchAllRuntimeExceptions();
 	public boolean isCatchAllMainlineExceptions();
 	public void setCatchAllStrategyLoadExceptions(boolean aCatchAllStrategyLoadExceptions);
+	public void setCatchAllValidationExceptions(boolean aCatchAllStrategyLoadExceptions);
 	public void setCatchAllRuntimeExceptions(boolean aCatchAllRuntimeExceptions);
 	public void setCatchAllMainlineExceptions(boolean aCatchAllMainlineExceptions);
 

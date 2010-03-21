@@ -248,7 +248,26 @@ public abstract class AbstractAtdl4jCompositePanel
 	/* 
 	 * @return StrategyT (non-null only if passes all validation)
 	 */
-	public StrategyT validateStrategy() 
+	public StrategyT validateStrategy() {
+		if (getAtdl4jConfig() != null
+				&& getAtdl4jConfig().isCatchAllValidationExceptions()) {
+			try {
+				return validateStrategyWithoutCatchingAllExceptions();
+			} catch (Exception ex) {
+
+				setValidateOutputText("");
+				getAtdl4jConfig().getAtdl4jUserMessageHandler()
+						.displayException("Exception", "", ex);
+				logger.warn("Generic Exception", ex);
+				return null;
+			}
+
+		} else {
+			return validateStrategyWithoutCatchingAllExceptions();
+		}
+	}	
+	
+	public StrategyT validateStrategyWithoutCatchingAllExceptions() 
 	{
 		StrategyT tempSelectedStrategy = getAtdl4jConfig().getSelectedStrategy();
 		
@@ -284,13 +303,6 @@ public abstract class AbstractAtdl4jCompositePanel
 			setValidateOutputText( AbstractAtdl4jUserMessageHandler.extractExceptionMessage( ex ));
 			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "XML Parse Exception", "", ex );
 			logger.warn( "XML Parse Exception:", ex );
-			return null;
-		} 
-		catch (Exception ex) 
-		{
-			setValidateOutputText( "" );
-			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Exception", "", ex );
-			logger.warn( "Generic Exception", ex );
 			return null;
 		}
 	}

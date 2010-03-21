@@ -158,6 +158,7 @@ public abstract class AbstractAtdl4jConfig
 	private StrategyT selectedStrategy;
 	
 	private boolean catchAllStrategyLoadExceptions  = false;
+	private boolean catchAllValidationExceptions  = false;
 	private boolean catchAllRuntimeExceptions  = false;
 	private boolean catchAllMainlineExceptions  = false;
 
@@ -2029,6 +2030,14 @@ public abstract class AbstractAtdl4jConfig
 	}
 	
 	/**
+	 * @return the catchAllStrategyLoadExceptions
+	 */
+	public boolean isCatchAllValidationExceptions()
+	{
+		return this.catchAllValidationExceptions;
+	}
+		
+	/**
 	 * @return the catchAllRuntimeExceptions
 	 */
 	public boolean isCatchAllRuntimeExceptions()
@@ -2050,6 +2059,14 @@ public abstract class AbstractAtdl4jConfig
 	public void setCatchAllStrategyLoadExceptions(boolean aCatchAllStrategyLoadExceptions)
 	{
 		this.catchAllStrategyLoadExceptions = aCatchAllStrategyLoadExceptions;
+	}
+	
+	/**
+	 * @param aCatchAllStrategyLoadExceptions the catchAllStrategyLoadExceptions to set
+	 */
+	public void setCatchAllValidationExceptions(boolean aCatchAllValidationExceptions)
+	{
+		this.catchAllValidationExceptions = aCatchAllValidationExceptions;
 	}
 	
 	/**

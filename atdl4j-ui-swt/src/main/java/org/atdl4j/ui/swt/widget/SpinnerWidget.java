@@ -9,6 +9,7 @@ import org.atdl4j.data.converter.IntegerConverter;
 import org.atdl4j.fixatdl.layout.DoubleSpinnerT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.ui.ControlHelper;
+import org.atdl4j.ui.swt.util.NullableSpinner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -25,8 +26,7 @@ import org.eclipse.swt.widgets.Widget;
 public class SpinnerWidget
 		extends AbstractSWTWidget<BigDecimal>
 {
-
-	private Spinner spinner;
+	private NullableSpinner spinner;
 	private Label label;
 	private Button buttonUp;
 	private Button buttonDown;
@@ -38,13 +38,13 @@ public class SpinnerWidget
 	public class DoubleSpinnerSelection
 			implements SelectionListener
 	{
-		private Spinner spinner;
+		private NullableSpinner spinner;
 
 		private int increment;
 
-		public DoubleSpinnerSelection(Spinner spinner, int increment)
+		public DoubleSpinnerSelection(NullableSpinner spinner2, int increment)
 		{
-			this.spinner = spinner;
+			this.spinner = spinner2;
 			this.increment = increment;
 		}
 
@@ -76,7 +76,7 @@ public class SpinnerWidget
 		if ( control instanceof SingleSpinnerT )
 		{
 			// spinner
-			spinner = new Spinner( parent, style | SWT.BORDER );
+			spinner = new NullableSpinner( parent, style | SWT.BORDER );
 			spinner.setLayoutData( controlGD );
 		}
 		else if ( control instanceof DoubleSpinnerT )
@@ -91,7 +91,7 @@ public class SpinnerWidget
 			c.setLayoutData( controlGD );
 
 			// doubleSpinner
-			spinner = new Spinner( c, style | SWT.BORDER );
+			spinner = new NullableSpinner( c, style | SWT.BORDER );
 			GridData spinnerData = new GridData( SWT.FILL, SWT.CENTER, false, false );
 			spinnerData.verticalSpan = 2;
 			spinner.setLayoutData( spinnerData );
@@ -241,6 +241,7 @@ public class SpinnerWidget
 
 	public BigDecimal getControlValueRaw()
 	{
+		if (spinner.getSelection()==null) return null;
 		try
 		{
 			return BigDecimal.valueOf( spinner.getSelection(), spinner.getDigits() );
@@ -343,7 +344,8 @@ public class SpinnerWidget
 			// -- Handle initValue="2.5" and ensure that we don't wind up using BigDecimal unscaled and end up with "25" --
 			spinner.setSelection( new Double( initValue.doubleValue() * Math.pow( 10, spinner.getDigits() ) ).intValue() );
 		}
-		else
+// 3/21/2010 John Shields -- Don't need the below if we are using NullableSpinner
+/*		else
 		{
 			if ( ( parameterConverter != null ) && 
 				  ( parameterConverter instanceof DecimalConverter ) &&
@@ -365,7 +367,7 @@ public class SpinnerWidget
 				spinner.setSelection( 0 );
 			}
 		}
-		
+		*/
 	}
 
 	/* 
