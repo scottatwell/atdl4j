@@ -16,74 +16,74 @@ import org.eclipse.swt.widgets.Listener;
  * @author johnnyshields
  */
 
-public class RadioButtonListener implements Listener
+public class RadioButtonListener
+		implements Listener
 {
-    private List<Button> buttons;
+	private List<Button> buttons;
 
-    public RadioButtonListener()
-    {
-	buttons = new Vector<Button>();
-    }
-    
-    public void addButton(Button button)
-    {
-	buttons.add(button);
-	button.addListener(SWT.Selection, this);
-    }
-
-    public void addButton(ButtonWidget buttonWidget)
-    {
-	addButton(buttonWidget.getButton());
-    }
-
-    public void handleEvent(Event p_event)
-    {
-	Button sender = (Button) p_event.widget;
-	for (Button b : buttons)
+	public RadioButtonListener()
 	{
-	    b.setSelection(sender.equals(b));
+		buttons = new Vector<Button>();
 	}
-    }
 
-    /*
-    public Object getControlValue()
-    {
-	for (Button button : buttons)
+	public void addButton(Button button)
 	{
-	    if (button.getSelection())
-		return new Object(); // need a way to get value!!!!!!!
-	    break;
+		buttons.add( button );
+		button.addListener( SWT.Selection, this );
 	}
-	return null;
-    }*/
-    
-    /**
-    * If no RadioButtons within the radioGroup are selected, then first one in list will be selected.
-    */
-   public void processReinit()
-   {
-   	Button tempSelectedButton = null;
-   	
-   	for (Button b : buttons)
-   	{
-   		if ( b.getSelection() )
-   		{
-   			if ( tempSelectedButton == null )
-   			{
-   				tempSelectedButton = b;
-   			}
-   			else
-   			{
-   				// -- there is already a selected button!! --
-   				b.setSelection( false );
-   			}
-   		}
-   	}
 
-   	// -- Select first in list if no buttons are selected --
-   	if ( tempSelectedButton == null )
-   	{
-   		buttons.get( 0 ).setSelection( true );
-   	}
-   }
+	public void addButton(ButtonWidget buttonWidget)
+	{
+		addButton( buttonWidget.getButton() );
+	}
+
+	public void handleEvent(Event p_event)
+	{
+		handleEvent( (Button) p_event.widget );
+	}
+
+	public void handleEvent(Button aButton)
+	{
+		for ( Button b : buttons )
+		{
+			b.setSelection( aButton.equals( b ) );
+		}
+	}
+
+	/*
+	 * public Object getControlValue() { for (Button button : buttons) { if
+	 * (button.getSelection()) return new Object(); // need a way to get
+	 * value!!!!!!! break; } return null; }
+	 */
+
+	/**
+	 * If no RadioButtons within the radioGroup are selected, then first one in
+	 * list will be selected.
+	 */
+	public void processReinit()
+	{
+		Button tempSelectedButton = null;
+
+		for ( Button b : buttons )
+		{
+			if ( b.getSelection() )
+			{
+				if ( tempSelectedButton == null )
+				{
+					tempSelectedButton = b;
+				}
+				else
+				{
+					// -- there is already a selected button!! --
+					b.setSelection( false );
+				}
+			}
+		}
+
+		// -- Select first in list if no buttons are selected --
+		if ( tempSelectedButton == null )
+		{
+			buttons.get( 0 ).setSelection( true );
+		}
+	}
 }

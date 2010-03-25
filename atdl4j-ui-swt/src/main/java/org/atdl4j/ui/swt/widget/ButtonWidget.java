@@ -26,6 +26,7 @@ public class ButtonWidget
 	public static final String NULL_STRING = "{NULL}";
 	private Button button;
 	private Label label;
+	private RadioButtonListener radioButtonListener;
 
 	/**
 	 * 2/9/2010 Scott Atwell @see AbstractControlUI.init(ControlT aControl,
@@ -69,6 +70,11 @@ public class ButtonWidget
 	public void setValue(Boolean value)
 	{
 		button.setSelection( value.booleanValue() );
+		
+		if ( getRadioButtonListener() != null )
+		{
+			getRadioButtonListener().handleEvent( button );
+		}
 	}
 
 	public List<Control> getControls()
@@ -179,6 +185,22 @@ public class ButtonWidget
 		{
 			button.setSelection( (aControlInitValue != null ) ? ((Boolean) aControlInitValue).booleanValue() : false );
 		}
+	}
+
+	/**
+	 * @return the radioButtonListener
+	 */
+	public RadioButtonListener getRadioButtonListener()
+	{
+		return this.radioButtonListener;
+	}
+
+	/**
+	 * @param aRadioButtonListener the radioButtonListener to set
+	 */
+	public void setRadioButtonListener(RadioButtonListener aRadioButtonListener)
+	{
+		this.radioButtonListener = aRadioButtonListener;
 	}
 	
 }

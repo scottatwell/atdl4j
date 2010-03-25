@@ -91,6 +91,8 @@ public abstract class AbstractStrategyUI
 	abstract public void setCxlReplaceMode(boolean cxlReplaceMode);
 	abstract protected void fireStateListeners();
 	abstract protected void fireStateListenersForControl( ControlUI aControl );
+	abstract protected void fireLoadFixMessageStateListenersForControl( ControlUI aControl );
+
 
 	abstract protected void applyRadioGroupRules();
 	
@@ -721,6 +723,9 @@ public abstract class AbstractStrategyUI
 					{
 // 2/14/2010 Scott Atwell						widget.setValueAsString( value );
 						widget.setFIXValue( value );
+// 3/24/2010 Scott Atwell added
+						// -- Handles toggling associated controls (eg checkbox or radio button) when control is set to a non Atdl4jConstants.VALUE_NULL_INDICATOR value --
+						fireLoadFixMessageStateListenersForControl( widget );
 // 3/10/2010 Scott Atwell
 						fireStateListenersForControl( widget );
 					}
@@ -743,6 +748,9 @@ public abstract class AbstractStrategyUI
 						{
 // 2/14/2010 Scott Atwell							widget.setValueAsString( value2 );
 							widget.setFIXValue( value2 );
+// 3/24/2010 Scott Atwell added
+							// -- Handles toggling associated controls (eg checkbox or radio button) when control is set to a non Atdl4jConstants.VALUE_NULL_INDICATOR value --
+							fireLoadFixMessageStateListenersForControl( widget );
 // 3/10/2010 Scott Atwell
 							fireStateListenersForControl( widget );
 						}

@@ -710,4 +710,37 @@ public abstract class AbstractControlUI<E extends Comparable<?>>
 	{
 		this.hiddenFieldForInputAndFilterData = aHiddenFieldForInputAndFilterData;
 	}
+
+	/* Overriden to delegate to ControlUI's ControlT data member.  (note ControlUI map may be shallow copied resulting in new identity for ControlUI objects)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object aObj)
+	{
+		if ( ( getControl() != null ) &&
+			  ( aObj instanceof ControlUI<?> ) )
+		{
+			return getControl().equals( ((ControlUI<?>) aObj).getControl() );
+		}
+		else
+		{
+			return super.equals( aObj );
+		}
+	}
+
+	/* Overriden to delegate to ControlUI's ControlT data member.  (note ControlUI map may be shallow copied resulting in new identity for ControlUI objects)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		if ( getControl() != null )
+		{
+			return getControl().hashCode();
+		}
+		else
+		{
+			return super.hashCode();
+		}
+	}
 }

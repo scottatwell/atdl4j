@@ -9,9 +9,15 @@ import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.validation.ValidationRuleFactory;
+import org.atdl4j.data.validation.ValueOperatorValidationRule;
 import org.atdl4j.fixatdl.flow.StateRuleT;
+import org.atdl4j.fixatdl.layout.RadioButtonT;
+import org.atdl4j.fixatdl.validation.OperatorT;
+import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.swt.SWTWidget;
+import org.atdl4j.ui.swt.widget.ButtonWidget;
+import org.atdl4j.ui.swt.widget.RadioButtonListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -66,7 +72,7 @@ public class SWTStateListener
 		setBehaviorAsStateRule( true );
 	}
 
-	private void setBehaviorAsStateRule(Boolean state)
+	protected void setBehaviorAsStateRule(Boolean state)
 	{
 
 		// set visible
@@ -120,6 +126,72 @@ public class SWTStateListener
 	public SWTWidget<?> getAffectedWidget()
 	{
 		return this.affectedWidget;
+	}
+
+	/**
+	 * Returns true if StateRule has value="{NULL}" 
+	 * @return
+	 */
+	public boolean hasSetValueNullStateRule()
+	{
+		if ( stateRule != null )
+		{
+			if ( Atdl4jConstants.VALUE_NULL_INDICATOR.equals( stateRule.getValue() ) )
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Used when panel is initially loaded with a FIX Message.
+	 * Effectively fires the StateRule in reverse (eg selects radio button or checkbox that normally
+	 * nulls the control's value to be selected when control has a value set)
+	 * @param event
+	 */
+	public void handleLoadFixMessageEvent(Event event)
+	{
+		// -- If the StateRule sets value to VALUE_NULL_INDICATOR, however, the Control has 'externally' had 
+		// -- its value set to non-null value, then 'toggle' the state of the control (eg checkbox or radio button)
+		// -- associated with this StateRule
+		if ( ( getAffectedWidget() != null ) &&
+			  ( ! getAffectedWidget().isNullValue() ) &&
+			  ( hasSetValueNullStateRule() ) )
+		{
+			if ( getRule() instanceof ValueOperatorValidationRule )
+			{
+				ValueOperatorValidationRule tempValueOperatorValidationRule = (ValueOperatorValidationRule) getRule();
+				
+				ControlUI<?> tempAssociatedControl = controls.get( tempValueOperatorValidationRule.getField() );
+				
+				if ( ( tempAssociatedControl != null ) &&
+					  ( ControlHelper.isControlToggleable( tempAssociatedControl.getControl() ) ) ) 
+				{
+					String tempRuleNewValueAsString = null;
+					if ( "true".equals( tempValueOperatorValidationRule.getValue() ) )
+					{
+						tempRuleNewValueAsString = "false";
+					}
+					else if ( "false".equals( tempValueOperatorValidationRule.getValue() ) )
+					{
+						tempRuleNewValueAsString = "true";
+					}
+					
+					if ( tempRuleNewValueAsString != null )
+					{
+						// -- Toggle the value --
+						if ( ( OperatorT.EQ.equals( tempValueOperatorValidationRule.getOperator() ) ) 
+// ??									|| ( OperatorT.NE.equals( tempValueOperatorValidationRule.getOperator() ) ) 
+						    )
+						{
+							tempAssociatedControl.setValueAsString( tempRuleNewValueAsString );
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -86,4 +86,20 @@ AbstractControlUI had (thus returning Parameter value even when we are comparing
 	public String getField() {
 		return field;
 	}
+
+	/**
+	 * @return the operator
+	 */
+	public OperatorT getOperator()
+	{
+		return this.operator;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public String getValue()
+	{
+		return this.value;
+	}
 }

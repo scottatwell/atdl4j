@@ -501,4 +501,22 @@ public class ControlHelper
 			return 0;
 		}
 	}
+	
+	/**
+	 * Returns true if Control can toggle between two boolean states.
+	 * @param aControl
+	 * @return
+	 */
+	public static boolean isControlToggleable( ControlT aControl )
+	{
+		if ( ( aControl instanceof CheckBoxT ) ||
+			  ( aControl instanceof RadioButtonT ) )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

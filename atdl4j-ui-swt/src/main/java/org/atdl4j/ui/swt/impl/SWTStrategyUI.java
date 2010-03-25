@@ -19,6 +19,7 @@ import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.fixatdl.layout.ControlT;
 import org.atdl4j.fixatdl.layout.RadioButtonT;
 import org.atdl4j.fixatdl.layout.StrategyPanelT;
+import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.impl.AbstractStrategyUI;
 import org.atdl4j.ui.swt.SWTWidget;
@@ -340,8 +341,14 @@ public class SWTStrategyUI
 				String rg = ( (RadioButtonT) widget.getControl() ).getRadioGroup();
 				if ( !tempRadioGroupMap.containsKey( rg ) )
 					tempRadioGroupMap.put( rg, new RadioButtonListener() );
+				
 				if ( widget instanceof ButtonWidget )
+				{
 					tempRadioGroupMap.get( rg ).addButton( (ButtonWidget) widget );
+//	3/24/2010 Scott Atwell added to set RadioButtonListener within ButtonWidget for setValue() via loadFixMessage()
+					((ButtonWidget) widget).setRadioButtonListener( tempRadioGroupMap.get( rg ) );
+				}
+
 			}
 		}
 		
@@ -569,6 +576,18 @@ public class SWTStrategyUI
 			{
 				stateListener.handleEvent( null );
 			}
+		}
+	}
+
+	/**
+	 * Invokes SWTStateListener.handleLoadFixMessageEvent() for aControl
+	 * @param aControl
+	 */
+	protected void fireLoadFixMessageStateListenersForControl( ControlUI aControl )
+	{
+		for ( SWTStateListener stateListener : getStateListenerList() )
+		{
+			stateListener.handleLoadFixMessageEvent( null );
 		}
 	}
 
