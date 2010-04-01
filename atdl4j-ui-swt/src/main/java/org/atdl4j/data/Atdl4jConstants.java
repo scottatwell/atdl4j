@@ -39,6 +39,26 @@ public class Atdl4jConstants
 				STRATEGY_FILTER_REGION_EuropeMiddleEastAfricas,
 				STRATEGY_FILTER_REGION_AsiaPacificJapan };
 				
-	public static String[] STRATEGY_FILTER_FIX_MSG_TYPES = new String[] { "D", "E", "AB", "s" };  // @see Strategy/@fixMsgType
+	public static String STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderSingle = "D";
+	public static String STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderList = "E";
+	public static String STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderMultileg = "AB";
+	public static String STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderCross = "s";
+	public static String[] STRATEGY_FILTER_FIX_MSG_TYPES = new String[] { 
+		STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderSingle,
+		STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderList,
+		STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderMultileg,
+		STRATEGY_FILTER_FIX_MSG_TYPE_NewOrderCross };  // @see Strategy/@fixMsgType
+
+	public static String STRATEGY_FILTER_SECURITY_TYPE_CommonStock = "CS";
+	public static String STRATEGY_FILTER_SECURITY_TYPE_Future = "FUT";
+	public static String STRATEGY_FILTER_SECURITY_TYPE_Option = "OPT";
+	public static String STRATEGY_FILTER_SECURITY_TYPE_ForexSpot = "FXSPOT";
+	public static String STRATEGY_FILTER_SECURITY_TYPE_ForexForward = "FXFWD";
+	public static String[] STRATEGY_FILTER_SECURITY_TYPES = new String[] { 
+		STRATEGY_FILTER_SECURITY_TYPE_CommonStock,
+		STRATEGY_FILTER_SECURITY_TYPE_Future,
+		STRATEGY_FILTER_SECURITY_TYPE_Option,
+		STRATEGY_FILTER_SECURITY_TYPE_ForexSpot,
+		STRATEGY_FILTER_SECURITY_TYPE_ForexForward };  // @see Strategy/@securityType
 
 }

@@ -42,7 +42,6 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	private Combo dropDownListStrategyFilterMICCode;
 	public static String[] DEFAULT_STRATEGY_FILTER_MIC_CODE_SUBSET_LIST = new String[] { "", "XNYS", "XNAS", "XBMF", "XLSE", "XPAR", "XFRA", "XETR", "XTKS", "XHKG", "XASX" };  // just to seed it with some  
 	private Combo dropDownListStrategyFilterSecurityType;
-	public static String[] DEFAULT_STRATEGY_FILTER_SECURITY_TYPE_SUBSET_LIST = new String[] { "", "CS", "FUT", "OPT", "FXSPOT", "FXFWD" };  // just to seed it with some  
 	
 	private Text textSelectStrategyName;
 	private Text textAreaStrategyNameFilterList;
@@ -182,7 +181,11 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		Label tempLabelStrategyFilterSecurityType = new Label( tempRowTwo, SWT.NONE );
 		tempLabelStrategyFilterSecurityType.setText( "Security Type:" );
 		dropDownListStrategyFilterSecurityType = new Combo( tempRowTwo, SWT.NONE );
-		dropDownListStrategyFilterSecurityType.setItems( DEFAULT_STRATEGY_FILTER_SECURITY_TYPE_SUBSET_LIST );
+		List<String> tempSecurityTypeList = new ArrayList<String>();
+		tempSecurityTypeList.add( "" ); // add empty string at top
+		tempSecurityTypeList.addAll( Arrays.asList( Atdl4jConstants.STRATEGY_FILTER_SECURITY_TYPES ) );
+		dropDownListStrategyFilterSecurityType.setItems( tempFixMsgTypeList.toArray( new String[0] ) );
+
 		dropDownListStrategyFilterSecurityType.setVisibleItemCount( DEFAULT_DROP_DOWN_VISIBLE_ITEM_COUNT );
 		dropDownListStrategyFilterSecurityType.setToolTipText( "Specify FIX (tag 167) Security Type value\nExample list provided." );
 		

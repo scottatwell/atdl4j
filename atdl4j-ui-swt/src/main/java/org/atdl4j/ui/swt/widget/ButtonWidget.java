@@ -80,7 +80,10 @@ public class ButtonWidget
 	public List<Control> getControls()
 	{
 		List<Control> widgets = new ArrayList<Control>();
-		widgets.add( label );
+		if ( label != null )
+		{
+			widgets.add( label );
+		}
 		widgets.add( button );
 		return widgets;
 	}
