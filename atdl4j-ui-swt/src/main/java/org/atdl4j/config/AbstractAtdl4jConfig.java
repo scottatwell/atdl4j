@@ -1141,7 +1141,7 @@ public abstract class AbstractAtdl4jConfig
 	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter)
-		throws JAXBException 
+//		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForHiddenFieldT == null ) && ( getClassNameControlUIForHiddenFieldT() != null ) )
 //		{

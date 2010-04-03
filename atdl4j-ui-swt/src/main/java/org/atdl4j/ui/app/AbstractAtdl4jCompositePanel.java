@@ -404,11 +404,6 @@ public abstract class AbstractAtdl4jCompositePanel
 	public void loadScreenWithFilteredStrategies()
 		throws JAXBException
 	{
-/*** 3/8/2010 Scott Atwell		
-		// remove all strategy panels
-		getStrategiesPanel().removeAllStrategyPanels();
-***/
-		
 		// obtain filtered StrategyList
 		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
 		
@@ -422,17 +417,14 @@ public abstract class AbstractAtdl4jCompositePanel
 			return;
 		}
 
-/*** 3/8/2010 Scott Atwell		
-		getStrategiesPanel().createStrategyPanels( tempFilteredStrategyList );
-***/
+// 4/2/2010 Scott Atwell added
+		// -- Reduce screen re-draw/flash (doesn't really work for SWT, though) --
+		getStrategiesPanel().setVisible( false );
+
+		
 		if ( getAtdl4jConfig().isUsePreCachedStrategyPanels() )
 		{
-			if ( getStrategiesPanel().isPreCached() )
-			{
-				// -- Use Pre-cached panels, simply re-init each one's displayed values/state --
-				getStrategiesPanel().reinitStrategyPanels();
-			}
-			else
+			if ( ! getStrategiesPanel().isPreCached() )
 			{
 				// remove all strategy panels
 				getStrategiesPanel().removeAllStrategyPanels();
@@ -463,8 +455,10 @@ public abstract class AbstractAtdl4jCompositePanel
 		{
 			getStrategySelectionPanel().selectFirstDropDownStrategy();
 		}
-		// 3/13/2010 John Shields - This is not needed as PackLayout is called propoerly in strategySelected()
-		//packLayout();
+		
+// 4/2/2010 Scott Atwell added
+		// -- Reduce screen re-draw/flash (doesn't really work for SWT, though) --
+		getStrategiesPanel().setVisible( true );
 	}
 	
 	public boolean loadFixMessage( String aFixMessage ) 

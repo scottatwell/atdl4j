@@ -36,11 +36,12 @@ public interface StrategiesPanel
 	
 	public void setPreCached( boolean aPreCached );
 	
-	public void reinitStrategyPanels() 
-		throws JAXBException;
+	public void reinitStrategyPanels();
 	
 	public void addListener(StrategiesPanelListener strategiesUIListener);
 	
 	public void removeListener(StrategiesPanelListener strategiesUIListener);
 
+	public void setVisible( boolean aVisible );
 }
+ 

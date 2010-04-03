@@ -503,7 +503,7 @@ public abstract class AbstractStrategyUI
 
 
 	protected void addHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
-		throws JAXBException
+//		throws JAXBException
 	{
 		if ( ( aInputAndFilterData != null )
 				&& ( aInputAndFilterData.getInputHiddenFieldNameValueMap() != null ) )
@@ -537,7 +537,7 @@ public abstract class AbstractStrategyUI
 	}
 
 	protected void clearHiddenFieldsForInputAndFilterData()
-		throws JAXBException
+//		throws JAXBException
 	{
 		for ( Map.Entry<String,ControlUI<?>> tempEntry : getControlUIMap().entrySet() )
 		{
@@ -550,7 +550,7 @@ public abstract class AbstractStrategyUI
 	}
 
 	protected void reloadHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
-		throws JAXBException
+//		throws JAXBException
 	{
 		clearHiddenFieldsForInputAndFilterData();
 		addHiddenFieldsForInputAndFilterData( aInputAndFilterData );
@@ -559,7 +559,7 @@ public abstract class AbstractStrategyUI
 	
 // 3/14/2010 Scott Atwell Johnny's rename and not const-specific	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
 	protected void addHiddenFieldsForParameterWithoutControl( Map<String, ParameterT> aParameterMap )
-		throws JAXBException
+//		throws JAXBException
 	{
 		if ( aParameterMap != null )
 		{
@@ -773,7 +773,7 @@ public abstract class AbstractStrategyUI
 	 */
 	@Override
 	public void reinitStrategyPanel()
-		throws JAXBException
+//		throws JAXBException
 	{
 // 3/13/2010 Scott Atwell added to accept/incorporate changes specified via "OK" button on InputAndFilterDataPanel
 		reloadHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );

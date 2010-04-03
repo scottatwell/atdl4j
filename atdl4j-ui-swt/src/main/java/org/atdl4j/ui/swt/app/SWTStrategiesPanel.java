@@ -1,5 +1,6 @@
 package org.atdl4j.ui.swt.app;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class SWTStrategiesPanel
 	private final Logger logger = Logger.getLogger( SWTStrategiesPanel.class );
 
 	private Composite strategiesPanel;
+	private List<StrategyUI> strategyUIList;
 
 	public Object buildStrategiesPanel(Object parentOrShell, Atdl4jConfig atdl4jConfig)
 	{
@@ -82,6 +84,8 @@ public class SWTStrategiesPanel
 		}
 		
 		getAtdl4jConfig().setStrategyUIMap( new HashMap<StrategyT, StrategyUI>() );
+// 4/2/2010 Scott Atwell added		
+		strategyUIList = new ArrayList<StrategyUI>();		
 		
 		for ( StrategyT strategy : aFilteredStrategyList )
 		{
@@ -117,16 +121,19 @@ public class SWTStrategiesPanel
 				} */
 
 			getAtdl4jConfig().getStrategyUIMap().put( strategy, ui );
+// 4/2/2010 Scott Atwell added
+			strategyUIList.add( ui );
 
 			ui.setCxlReplaceMode( getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode() );
 		}
 
+/** 4/2/2010 Scott Atwell - this is already been handled by AbstractAtdl4jCompositePanel.loadScreenWithFilteredStrategies()		
 		// -- Force the display to only show the Composite panels for the first strategy, otherwise the first screen is a jumbled mess of all strategy's parameters sequentially --
 		if ( getAtdl4jConfig().getStrategyUIMap().size() > 0 )
 		{
 			adjustLayoutForSelectedStrategy( 0 );
 		}
-		
+**/		
 		setPreCached( true );
 	}  
 
@@ -135,22 +142,49 @@ public class SWTStrategiesPanel
 	{
 		if ( strategiesPanel != null )
 		{
+// 4/2/2010 Scott Atwell added
+			// -- Reduce screen re-draw/flash (doesn't really work for SWT, though) --
+			setVisible( false );
+
 			// -- These were the remnants from selectDropDownStrategy(int index) that did not become part of StrategySelectionPanel
 			for (int i = 0; i < strategiesPanel.getChildren().length; i++) 
 			{
-				if ( ( strategiesPanel.getChildren()[i] != null ) && 
-					  ((GridData)strategiesPanel.getChildren()[i].getLayoutData() != null ) ) 
+				Control tempControl = strategiesPanel.getChildren()[i];
+				if ( tempControl != null ) 
 				{
-					((GridData)strategiesPanel.getChildren()[i].getLayoutData()).heightHint = (i != aIndex) ? 0 : -1;
-					((GridData)strategiesPanel.getChildren()[i].getLayoutData()).widthHint = (i != aIndex) ? 0 : -1;
-
-					if (i == aIndex) 
+					GridData tempGridData = (GridData) tempControl.getLayoutData();
+					if ( tempGridData != null )
 					{
-						//((Composite)strategiesPanel.getChildren()[i]).pack();
-						((Composite)strategiesPanel.getChildren()[i]).getParent().layout(true,true);
+						tempGridData.heightHint = (i != aIndex) ? 0 : -1;
+						tempGridData.widthHint = (i != aIndex) ? 0 : -1;
+
+						if (i == aIndex) 
+						{
+							Composite tempComposite = (Composite) tempControl;
+
+// 4/2/2010 Scott Atwell added							
+							if ( ( strategyUIList != null ) && ( strategyUIList.size() > aIndex ) )
+							{
+								StrategyUI tempStrategyUI = strategyUIList.get(  aIndex ); 
+								if ( tempStrategyUI != null )
+								{
+									logger.debug( "Invoking  tempStrategyUI.reinitStrategyPanel() for: " + Atdl4jHelper.getStrategyUiRepOrName( tempStrategyUI.getStrategy() ) );								
+									tempStrategyUI.reinitStrategyPanel();
+								}
+							}
+							
+							
+							//tempComposite.pack();
+							tempComposite.getParent().layout(true, true);
+						}
 					}
 				}
 			}
+
+// 4/2/2010 Scott Atwell added
+			// -- Reduce screen re-draw/flash (doesn't really work for SWT, though) --
+			setVisible( true );
+			
 			
 			strategiesPanel.layout();
 		}
@@ -161,7 +195,6 @@ public class SWTStrategiesPanel
 	 */
 	@Override
 	public void reinitStrategyPanels()
-		throws JAXBException
 	{
 		for ( StrategyUI tempStrategyUI : getAtdl4jConfig().getStrategyUIMap().values() )
 		{
@@ -169,13 +202,27 @@ public class SWTStrategiesPanel
 
 			tempStrategyUI.reinitStrategyPanel();
 		}
-		
+
+/*** 4/2/2010 Scott Atwell		
 		// -- Force the display to only show the Composite panels for the first strategy, otherwise the first screen is a jumbled mess of all strategy's parameters sequentially --
 		if ( getAtdl4jConfig().getStrategyUIMap().size() > 0 )
 		{
 			adjustLayoutForSelectedStrategy( 0 );
 		}
+***/		
 	}
 
-
+	/* 
+	 * Doesn't really work for SWT.
+	 * (non-Javadoc)
+	 * @see org.atdl4j.ui.app.StrategiesPanel#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean aVisible)
+	{
+		if ( strategiesPanel != null )
+		{
+			strategiesPanel.setVisible( aVisible );
+		}
+	}
 }

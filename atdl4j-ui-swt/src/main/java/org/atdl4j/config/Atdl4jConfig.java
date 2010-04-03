@@ -105,7 +105,7 @@ public interface Atdl4jConfig
 	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter) throws JAXBException;
 	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter) throws JAXBException;
 	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter);
 	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter) throws JAXBException;
 	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter) throws JAXBException;
 

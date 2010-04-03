@@ -49,5 +49,5 @@ public interface StrategyUI {
 	public StrategyRuleset getStrategyRuleset();
 	public Map<String, ValidationRule> getCompleteValidationRuleMap();
 
-	public void reinitStrategyPanel() throws JAXBException;
+	public void reinitStrategyPanel();
 }
