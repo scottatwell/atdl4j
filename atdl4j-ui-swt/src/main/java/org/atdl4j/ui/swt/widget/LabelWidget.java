@@ -3,8 +3,6 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.impl.LabelUI;
 import org.atdl4j.ui.swt.SWTWidget;
@@ -29,7 +27,7 @@ public class LabelWidget
 	 * public LabelWidget(LabelT control) { super(control); }
 	 **/
 
-	public Widget createWidget(Composite parent, int style) throws JAXBException
+	public Widget createWidget(Composite parent, int style)
 	{
 
 		// label

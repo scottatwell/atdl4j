@@ -3,8 +3,6 @@ package org.atdl4j.data.validation;
 import java.math.BigInteger;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
@@ -43,7 +41,8 @@ public class LengthValidationRule
 		logger.trace( tempMsg, new Exception( "Stack trace" ) );
 	}
 
-	public void validate(Map<String, ValidationRule> refRules, Map<String, ControlUI<?>> targets) throws ValidationException, JAXBException
+	public void validate(Map<String, ValidationRule> refRules, Map<String, ControlUI<?>> targets) 
+		throws ValidationException
 	{
 
 		// get the widget from context using field name
@@ -56,7 +55,8 @@ public class LengthValidationRule
 			logger.debug( tempMsg2 );
 			logger.trace( tempMsg2, new Exception( "Stack trace" ) );
 
-			throw new JAXBException( tempMsg );
+//			throw new JAXBException( tempMsg );
+			throw new ValidationException( null, tempMsg );
 		}
 
 // 3/10/2010 Scott Atwell		String fieldValue = target.getParameterValueAsString();

@@ -3,21 +3,16 @@ package org.atdl4j.ui.swt.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.data.validation.ValidationRuleFactory;
 import org.atdl4j.data.validation.ValueOperatorValidationRule;
 import org.atdl4j.fixatdl.flow.StateRuleT;
-import org.atdl4j.fixatdl.layout.RadioButtonT;
 import org.atdl4j.fixatdl.validation.OperatorT;
 import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.swt.SWTWidget;
-import org.atdl4j.ui.swt.widget.ButtonWidget;
-import org.atdl4j.ui.swt.widget.RadioButtonListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -33,7 +28,6 @@ public class SWTStateListener
 	private boolean cxlReplaceMode = false;
 
 	public SWTStateListener(SWTWidget<?> affectedWidget, StateRuleT stateRule, Map<String, SWTWidget<?>> controls, Map<String, ValidationRule> refRules)
-			throws JAXBException
 	{
 		this.affectedWidget = affectedWidget;
 		this.stateRule = stateRule;
@@ -64,10 +58,6 @@ public class SWTStateListener
 		{
 			setBehaviorAsStateRule( false );
 			return;
-		}
-		catch (JAXBException e)
-		{
-			throw new RuntimeException( e );
 		}
 		setBehaviorAsStateRule( true );
 	}

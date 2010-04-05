@@ -21,9 +21,7 @@ public interface ValidationRule {
 	 * 
 	 * @param rules
 	 * @throws ValidationException
-	 * @throws JAXBException
 	 */
-	public void validate(Map<String, ValidationRule> refRules,
-			Map<String, ControlUI<?>> targets) throws ValidationException,
-			JAXBException;
+	public void validate(Map<String, ValidationRule> refRules, Map<String, ControlUI<?>> targets) 
+		throws ValidationException;
 }

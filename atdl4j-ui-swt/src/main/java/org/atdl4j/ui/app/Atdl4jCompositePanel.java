@@ -92,7 +92,7 @@ public interface Atdl4jCompositePanel
 	 * Can be invoked/re-invoked at anytime provided that parseFixatdlFile() has successfully parsed the
 	 * FIXatdl file contents into Atdl4jConfig().setStrategies().  Re-generates the display.
 	 */
-	public void loadScreenWithFilteredStrategies() throws JAXBException;
+	public void loadScreenWithFilteredStrategies();
 	
 	public boolean loadFixMessage( String aFixMessage );
 

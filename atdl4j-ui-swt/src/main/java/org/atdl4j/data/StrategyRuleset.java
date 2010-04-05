@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.data.exception.ValidationException;
+import org.atdl4j.fixatdl.validation.StrategyEditT;
 import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
-import org.atdl4j.fixatdl.validation.StrategyEditT;
 
 public class StrategyRuleset
 {
@@ -65,7 +63,8 @@ public class StrategyRuleset
 		this.refRules.put( strategyEdit, rule );
 	}
 
-	public void validate(Map<String, ValidationRule> refRules, Map<String, ControlUI<?>> parameters) throws ValidationException, JAXBException
+	public void validate(Map<String, ValidationRule> refRules, Map<String, ControlUI<?>> parameters) 
+		throws ValidationException
 	{
 
 		for ( ValidationRule requiredFieldRule : requiredFieldRules )

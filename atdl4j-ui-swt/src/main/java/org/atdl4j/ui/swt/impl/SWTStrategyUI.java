@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.validation.Field2OperatorValidationRule;
@@ -19,7 +17,6 @@ import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.fixatdl.layout.ControlT;
 import org.atdl4j.fixatdl.layout.RadioButtonT;
 import org.atdl4j.fixatdl.layout.StrategyPanelT;
-import org.atdl4j.ui.ControlHelper;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.impl.AbstractStrategyUI;
 import org.atdl4j.ui.swt.SWTWidget;
@@ -117,10 +114,8 @@ public class SWTStrategyUI
 
 	/**
 	 * @param parentContainer (should be swt.Composite)
-	 * @throws JAXBException
 	 */
 	public void initBegin(Object parentContainer)
-		throws JAXBException
 	{
 		setParent( (Composite) parentContainer );
 
@@ -131,7 +126,6 @@ public class SWTStrategyUI
 	}
 
 	protected void buildControlMap()
-		throws JAXBException
 	{
 		if ( getStrategy() == null )
 		{
@@ -153,7 +147,6 @@ public class SWTStrategyUI
 	}
 
 	public void initEnd()
-		throws JAXBException
 	{
 	}
 	
@@ -188,7 +181,7 @@ public class SWTStrategyUI
 			getWidgetStateListenerMap().get( widget ).add( stateListener );
 	}
 
-	private void attachRuleToControls(ValidationRule rule, SWTStateListener stateRuleListener) throws JAXBException
+	private void attachRuleToControls(ValidationRule rule, SWTStateListener stateRuleListener)
 	{
 		if ( rule instanceof LogicalOperatorValidationRule )
 		{
@@ -208,13 +201,13 @@ public class SWTStrategyUI
 		}
 	}
 
-	private void attachFieldToControls(String field, SWTStateListener stateRuleListener) throws JAXBException
+	private void attachFieldToControls(String field, SWTStateListener stateRuleListener)
 	{
 		if ( field != null )
 		{
 			SWTWidget<?> targetParameterWidget = getControlMap().get( field );
 			if ( targetParameterWidget == null )
-				throw new JAXBException( "Error generating a State Rule => Control: " + field + " does not exist in Strategy: " + getStrategy().getName() );
+				throw new IllegalStateException( "Error generating a State Rule => Control: " + field + " does not exist in Strategy: " + getStrategy().getName() );
 			putStateListener( targetParameterWidget, stateRuleListener );
 
 			// 2/1/2010 John Shields added
@@ -298,10 +291,8 @@ public class SWTStrategyUI
 	/**
 	 * @param aStrategyPanelList
 	 * @return
-	 * @throws JAXBException
 	 */
 	protected void buildControlMap( List<StrategyPanelT> aStrategyPanelList )
-		throws JAXBException
 	{
 		Map<String, SWTWidget<?>> tempControlMap = new HashMap<String, SWTWidget<?>>();
 		
@@ -392,10 +383,9 @@ public class SWTStrategyUI
 	}
 
 	/**
-	 * @throws JAXBException
+	 * 
 	 */
 	protected void buildControlWithParameterMap()
-		throws JAXBException
 	{
 		Map<String, SWTWidget<?>> tempControlWithParameterMap = new HashMap<String, SWTWidget<?>>();
 		
@@ -408,7 +398,7 @@ public class SWTStrategyUI
 				String tempParameterName = widget.getParameter().getName();
 				if ( tempControlWithParameterMap.containsKey( tempParameterName ) )
 				{
-					throw new JAXBException( "Cannot add parameter \"" + tempParameterName + "\" to two separate controls." );
+					throw new IllegalStateException( "Cannot add parameter \"" + tempParameterName + "\" to two separate controls." );
 				}
 				tempControlWithParameterMap.put( tempParameterName, widget );
 			}
@@ -419,10 +409,8 @@ public class SWTStrategyUI
 	}
 
 	/**
-	 * @throws JAXBException
 	 */
 	protected void attachGlobalStateRulesToControls()
-		throws JAXBException
 	{
 		List<SWTStateListener> tempStateListenerList = new Vector<SWTStateListener>();
 		
@@ -539,10 +527,8 @@ public class SWTStrategyUI
 	 * Lazy-init'd
 	 * 
 	 * @return the controlFactory
-	 * @throws JAXBException 
 	 */
 	public SWTFactory getControlFactory() 
-		throws JAXBException
 	{
 		if ( this.controlFactory == null )
 		{

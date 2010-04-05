@@ -3,8 +3,6 @@ package org.atdl4j.ui.swt.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.ui.ControlHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -30,7 +28,7 @@ public class TextFieldWidget
 	 * init(); }
 	 **/
 
-	public Widget createWidget(Composite parent, int style) throws JAXBException
+	public Widget createWidget(Composite parent, int style)
 	{
 		String tooltip = getTooltip();
 		GridData controlGD = new GridData( SWT.FILL, SWT.CENTER, true, false );

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.atdl4j.data.TypeConverterFactory;
@@ -326,11 +324,9 @@ public abstract class AbstractAtdl4jConfig
 	 * 
 	 * @param strategies
 	 * @return
-	 * @throws JAXBException
 	 */
 //	public StrategiesUI getStrategiesUI() 
 	public StrategiesUI getStrategiesUI(StrategiesT strategies)
-		throws JAXBException 
 	{
 // Constructs a new instance every call.
 //		if ( ( strategiesUI == null ) && ( getClassNameStrategiesUI() != null ) )
@@ -380,11 +376,9 @@ public abstract class AbstractAtdl4jConfig
 	 * @param strategiesRules
 	 * @param parentContainer (for SWT: should be swt.Composite)
 	 * @return
-	 * @throws JAXBException
 	 */
 //	public StrategyUI getStrategyUI() 
 	public StrategyUI getStrategyUI(StrategyT strategy, Map<String, ValidationRule> strategiesRules, Object parentContainer)
-		throws JAXBException 
 	{
 // Constructs a new instance every call.
 //		if ( ( strategyUI == null ) && ( getClassNameStrategyUI() != null ) )
@@ -429,10 +423,8 @@ public abstract class AbstractAtdl4jConfig
 	
 	/**
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUIFactory getControlUIFactory() 
-		throws JAXBException 
 	{
 // construct new each time		if ( ( controlUIFactory == null ) && ( getClassNameControlUIFactory() != null ) )
 //		{
@@ -477,7 +469,6 @@ public abstract class AbstractAtdl4jConfig
 	
 	/**
 	 * @return
-	 * @throws JAXBException
 	 */
 	public TypeConverterFactory getTypeConverterFactory() 
 	{
@@ -526,10 +517,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForCheckBoxT == null ) && ( getClassNameControlUIForCheckBoxT() != null ) )
 //		{
@@ -577,10 +566,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForDropDownListT == null ) && ( getClassNameControlUIForDropDownListT() != null ) )
 //		{
@@ -628,10 +615,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForEditableDropDownListT == null ) && ( getClassNameControlUIForEditableDropDownListT() != null ) )
 //		{
@@ -679,10 +664,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForRadioButtonListT == null ) && ( getClassNameControlUIForRadioButtonListT() != null ) )
 //		{
@@ -730,10 +713,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForTextFieldT == null ) && ( getClassNameControlUIForTextFieldT() != null ) )
 //		{
@@ -781,10 +762,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSliderT == null ) && ( getClassNameControlUIForSliderT() != null ) )
 //		{
@@ -832,10 +811,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForCheckBoxListT == null ) && ( getClassNameControlUIForCheckBoxListT() != null ) )
 //		{
@@ -883,10 +860,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForClockT == null ) && ( getClassNameControlUIForClockT() != null ) )
 //		{
@@ -934,10 +909,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSingleSpinnerT == null ) && ( getClassNameControlUIForSingleSpinnerT() != null ) )
 //		{
@@ -985,10 +958,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForDoubleSpinnerT == null ) && ( getClassNameControlUIForDoubleSpinnerT() != null ) )
 //		{
@@ -1036,10 +1007,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForSingleSelectListT == null ) && ( getClassNameControlUIForSingleSelectListT() != null ) )
 //		{
@@ -1087,10 +1056,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForMultiSelectListT == null ) && ( getClassNameControlUIForMultiSelectListT() != null ) )
 //		{
@@ -1138,10 +1105,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter)
-//		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForHiddenFieldT == null ) && ( getClassNameControlUIForHiddenFieldT() != null ) )
 //		{
@@ -1189,10 +1154,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForLabelT == null ) && ( getClassNameControlUIForLabelT() != null ) )
 //		{
@@ -1240,10 +1203,8 @@ public abstract class AbstractAtdl4jConfig
 	 * @param control
 	 * @param parameter
 	 * @return
-	 * @throws JAXBException
 	 */
 	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter)
-		throws JAXBException 
 	{
 // create new each time		if ( ( controlUIForRadioButtonT == null ) && ( getClassNameControlUIForRadioButtonT() != null ) )
 //		{

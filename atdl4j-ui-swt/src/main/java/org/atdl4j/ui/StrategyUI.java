@@ -2,8 +2,6 @@ package org.atdl4j.ui;
 
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.FIXMessageBuilder;
 import org.atdl4j.data.StrategyRuleset;
@@ -19,20 +17,18 @@ public interface StrategyUI {
 	 * @param aAtdl4jConfig (contains getStrategies())
 	 * @param strategiesRules
 	 * @param parentContainer (should be swt.Composite)
-	 * @throws JAXBException
 	 */
-	public void init(StrategyT strategy, Atdl4jConfig aAtdl4jConfig, Map<String, ValidationRule> strategiesRules, Object parentContainer)
-			 throws JAXBException;
+	public void init(StrategyT strategy, Atdl4jConfig aAtdl4jConfig, Map<String, ValidationRule> strategiesRules, Object parentContainer);
    
-	public void validate() throws ValidationException, JAXBException;
+	public void validate() throws ValidationException;
 
 	public StrategyT getStrategy();
 
-	public String getFIXMessage() throws JAXBException;
+	public String getFIXMessage();
 
-	public void getFIXMessage(FIXMessageBuilder builder) throws JAXBException;
+	public void getFIXMessage(FIXMessageBuilder builder);
 
-	public void setFIXMessage(String text) throws JAXBException;
+	public void setFIXMessage(String text);
 	
 	// -- Note invoking this method may result in object construction as a result of down-casting its own map of a specific templatized instance of ControlUI<?> --
 	public Map<String, ControlUI<?>> getControlUIMap();

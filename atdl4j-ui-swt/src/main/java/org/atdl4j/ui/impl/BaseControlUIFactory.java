@@ -1,7 +1,6 @@
 package org.atdl4j.ui.impl;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.fixatdl.core.IntT;
 import org.atdl4j.fixatdl.core.LengthT;
 import org.atdl4j.fixatdl.core.LocalMktDateT;
@@ -32,7 +31,6 @@ import org.atdl4j.fixatdl.layout.SingleSelectListT;
 import org.atdl4j.fixatdl.layout.SingleSpinnerT;
 import org.atdl4j.fixatdl.layout.SliderT;
 import org.atdl4j.fixatdl.layout.TextFieldT;
-import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.ui.ControlUI;
 import org.atdl4j.ui.ControlUIFactory;
 
@@ -66,7 +64,6 @@ public class BaseControlUIFactory
  	 * @return (for SWT returns SWTWidget<?>)
  	 */
  	public ControlUI<?> create(ControlT control, ParameterT parameter) 
- 		throws JAXBException
 	{
 		if ( control instanceof CheckBoxT )
 		{
@@ -182,7 +179,7 @@ public class BaseControlUIFactory
 			return getAtdl4jConfig().getControlUIForRadioButtonT( (RadioButtonT) control, parameter );
 		}
 
-		throw new JAXBException( "Control ID: \"" + control.getID() + "\" has unsupported Control type \"" + control.getClass().getSimpleName() + "\""
+		throw new IllegalStateException( "Control ID: \"" + control.getID() + "\" has unsupported Control type \"" + control.getClass().getSimpleName() + "\""
 				+ ( parameter == null ? "" : " for Parameter type \"" + parameter.getClass().getSimpleName() + "\"" ) );
 
 	}

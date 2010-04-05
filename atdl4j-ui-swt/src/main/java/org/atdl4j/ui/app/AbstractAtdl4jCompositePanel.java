@@ -298,13 +298,6 @@ public abstract class AbstractAtdl4jCompositePanel
 			logger.info( "Validation Exception:", ex );
 			return null;
 		} 
-		catch (JAXBException ex) 
-		{
-			setValidateOutputText( AbstractAtdl4jUserMessageHandler.extractExceptionMessage( ex ));
-			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "XML Parse Exception", "", ex );
-			logger.warn( "XML Parse Exception:", ex );
-			return null;
-		}
 	}
 	
 /*** 3/8/2010 Scott Atwell refactored	
@@ -402,7 +395,6 @@ public abstract class AbstractAtdl4jCompositePanel
 	 * FIXatdl file contents into Atdl4jConfig().setStrategies().  Re-generates the display.
 	 */
 	public void loadScreenWithFilteredStrategies()
-		throws JAXBException
 	{
 		// obtain filtered StrategyList
 		List<StrategyT> tempFilteredStrategyList = getAtdl4jConfig().getStrategiesFilteredStrategyList();
@@ -532,13 +524,6 @@ public abstract class AbstractAtdl4jCompositePanel
 			setValidateOutputText( AbstractAtdl4jUserMessageHandler.extractExceptionMessage( ex ));
 			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Validation Exception", "", ex );
 			logger.info( "Validation Exception:", ex );
-			return false;
-		} 
-		catch (JAXBException ex) 
-		{
-			setValidateOutputText( AbstractAtdl4jUserMessageHandler.extractExceptionMessage( ex ));
-			getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "XML Parse Exception", "", ex );
-			logger.warn( "XML Parse Exception:", ex );
 			return false;
 		} 
 		catch (Exception ex) 

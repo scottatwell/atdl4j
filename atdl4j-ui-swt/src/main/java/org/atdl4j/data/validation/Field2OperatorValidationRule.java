@@ -4,17 +4,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
-
 import org.apache.log4j.Logger;
-import org.atdl4j.ui.ControlUI;
-import org.atdl4j.ui.impl.HiddenFieldUI;
 import org.atdl4j.config.InputAndFilterData;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.data.exception.ValidationException;
 import org.atdl4j.fixatdl.flow.StateRuleT;
 import org.atdl4j.fixatdl.validation.OperatorT;
+import org.atdl4j.ui.ControlUI;
+import org.atdl4j.ui.impl.HiddenFieldUI;
 
 /**
  * Validator that validates input against another existing field.
@@ -48,9 +45,9 @@ public class Field2OperatorValidationRule extends
 	}
 
 	public void validate(Map<String, ValidationRule> rules,
-			Map<String, ControlUI<?>> targets) throws ValidationException,
-			JAXBException {
-
+			Map<String, ControlUI<?>> targets) 
+		throws ValidationException
+	{
 		// get the widget from context using field name
 		ControlUI<?> target = targets.get(field);
 		if (target == null) {
@@ -59,7 +56,8 @@ public class Field2OperatorValidationRule extends
 			logger.debug( tempMsg2 );
 			logger.trace( tempMsg2, new Exception("Stack trace") ); 
 			
-			throw new JAXBException( tempMsg );
+//			throw new JAXBException( tempMsg );
+			throw new ValidationException( null, tempMsg );
 		}
 		Object fieldValue = parent instanceof StateRuleT ? target.getControlValue() : target.getParameterValue();
 
@@ -71,7 +69,8 @@ public class Field2OperatorValidationRule extends
 			logger.debug( tempMsg2 );
 			logger.trace( tempMsg2, new Exception("Stack trace") ); 
 			
-			throw new JAXBException( tempMsg );
+//			throw new JAXBException( tempMsg );
+			throw new ValidationException( null, tempMsg );
 		}
 		Object fieldValue2 = parent instanceof StateRuleT ? target2.getControlValue() : target2.getParameterValue();
 		

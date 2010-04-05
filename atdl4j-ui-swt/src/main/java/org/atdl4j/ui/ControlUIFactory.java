@@ -4,11 +4,9 @@
  */
 package org.atdl4j.ui;
 
-import javax.xml.bind.JAXBException;
-
+import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.fixatdl.core.ParameterT;
 import org.atdl4j.fixatdl.layout.ControlT;
-import org.atdl4j.config.Atdl4jConfig;
 
 /**
  * Factory that creates the appropriate ParameterUI depending on the parameter
@@ -33,7 +31,6 @@ public interface ControlUIFactory
  	 * @param parameter
  	 * @return (for SWT returns SWTWidget<?>)
  	 */
- 	public ControlUI<?> create(ControlT control, ParameterT parameter) 
- 		throws JAXBException;
+ 	public ControlUI<?> create(ControlT control, ParameterT parameter);
 
 }

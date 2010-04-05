@@ -7,8 +7,6 @@ package org.atdl4j.config;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.atdl4j.data.TypeConverterFactory;
 import org.atdl4j.data.ValidationRule;
 import org.atdl4j.fixatdl.core.ParameterT;
@@ -62,10 +60,8 @@ public interface Atdl4jConfig
 	/**
 	 * @param strategies
 	 * @return
-	 * @throws JAXBException
 	 */
-	public StrategiesUI getStrategiesUI(StrategiesT strategies)
-		throws JAXBException;
+	public StrategiesUI getStrategiesUI(StrategiesT strategies);
 
 
 	/**
@@ -73,41 +69,36 @@ public interface Atdl4jConfig
 	 * @param strategiesRules
 	 * @param parentContainer (for SWT: should be swt.Composite)
 	 * @return
-	 * @throws JAXBException
 	 */
-	public StrategyUI getStrategyUI(StrategyT strategy, Map<String, ValidationRule> strategiesRules, Object parentContainer)
-		throws JAXBException;
+	public StrategyUI getStrategyUI(StrategyT strategy, Map<String, ValidationRule> strategiesRules, Object parentContainer);
 	
 	/**
 	 * @return
-	 * @throws JAXBException
 	 */
-	public ControlUIFactory getControlUIFactory()
-		throws JAXBException;
+	public ControlUIFactory getControlUIFactory();
 	
 	/**
 	 * @return
-	 * @throws JAXBException
 	 */
 	public TypeConverterFactory getTypeConverterFactory();
 	
 	
 	// -- Controls/Widgets (first arg is of type ControlT -- 
-	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForCheckBoxT(CheckBoxT control, ParameterT parameter);
+	public ControlUI getControlUIForDropDownListT(DropDownListT control, ParameterT parameter);
+	public ControlUI getControlUIForEditableDropDownListT(EditableDropDownListT control, ParameterT parameter);
+	public ControlUI getControlUIForRadioButtonListT(RadioButtonListT control, ParameterT parameter);
+	public ControlUI getControlUIForTextFieldT(TextFieldT control, ParameterT parameter);
+	public ControlUI getControlUIForSliderT(SliderT control, ParameterT parameter);
+	public ControlUI getControlUIForCheckBoxListT(CheckBoxListT control, ParameterT parameter);
+	public ControlUI getControlUIForClockT(ClockT control, ParameterT parameter);
+	public ControlUI getControlUIForSingleSpinnerT(SingleSpinnerT control, ParameterT parameter);
+	public ControlUI getControlUIForDoubleSpinnerT(DoubleSpinnerT control, ParameterT parameter);
+	public ControlUI getControlUIForSingleSelectListT(SingleSelectListT control, ParameterT parameter);
+	public ControlUI getControlUIForMultiSelectListT(MultiSelectListT control, ParameterT parameter);
 	public ControlUI getControlUIForHiddenFieldT(HiddenFieldT control, ParameterT parameter);
-	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter) throws JAXBException;
-	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter) throws JAXBException;
+	public ControlUI getControlUIForLabelT(LabelT control, ParameterT parameter);
+	public ControlUI getControlUIForRadioButtonT(RadioButtonT control, ParameterT parameter);
 
 	// -- App Components --
 	public Atdl4jTesterPanel getAtdl4jTesterPanel();

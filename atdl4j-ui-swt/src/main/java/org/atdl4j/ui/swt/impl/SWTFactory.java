@@ -3,8 +3,6 @@ package org.atdl4j.ui.swt.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.fixatdl.core.ParameterT;
@@ -26,7 +24,7 @@ public class SWTFactory
 	private ControlUIFactory controlWidgetFactory;
 
 	// 2/9/2010 Scott Atwell public SWTFactory()
-	public SWTFactory(Atdl4jConfig aAtdl4jConfig) throws JAXBException
+	public SWTFactory(Atdl4jConfig aAtdl4jConfig)
 	{
 		// 2/9/2010 Scott Atwell controlWidgetFactory = new SWTControlUIFactory();
 		controlWidgetFactory = aAtdl4jConfig.getControlUIFactory();
@@ -34,35 +32,28 @@ public class SWTFactory
 
 	// Used to create a single parameter widget
 // 3/5/2010 Scott Atwell renamed 	public SWTWidget<?> create(Composite parent, ControlT control, ParameterT parameter, int style) throws JAXBException
-	public SWTWidget<?> createWidget(Composite parent, ControlT control, ParameterT parameter, int style) throws JAXBException
+	public SWTWidget<?> createWidget(Composite parent, ControlT control, ParameterT parameter, int style)
 	{
 		SWTWidget<?> parameterWidget = null;
 
-		try
-		{
-			// TODO 1/19/2010 Scott Atwell added for debug
-			logger.debug( "createWidget() invoked " + "with parms parent: " + parent
-					+ " control: " + control + " parameter: " + parameter + " style: " + style );
+		// TODO 1/19/2010 Scott Atwell added for debug
+		logger.debug( "createWidget() invoked " + "with parms parent: " + parent
+				+ " control: " + control + " parameter: " + parameter + " style: " + style );
 
-			// 2/9/2010 parameterWidget = controlWidgetFactory.create(control,
-			// parameter);
-			parameterWidget = (SWTWidget<?>) controlWidgetFactory.create( control, parameter );
+		// 2/9/2010 parameterWidget = controlWidgetFactory.create(control,
+		// parameter);
+		parameterWidget = (SWTWidget<?>) controlWidgetFactory.create( control, parameter );
 
-			// TODO 1/19/2010 Scott Atwell added for debug
-			logger.debug( "createWidget() returned parameterWidget: " + parameterWidget );
+		// TODO 1/19/2010 Scott Atwell added for debug
+		logger.debug( "createWidget() returned parameterWidget: " + parameterWidget );
 
-			parameterWidget.createWidget( parent, style );
-			// TODO 1/19/2010 Scott Atwell added for debug
-			logger.debug( "createWidget() completed.  parameterWidget: " + parameterWidget );
+		parameterWidget.createWidget( parent, style );
+		// TODO 1/19/2010 Scott Atwell added for debug
+		logger.debug( "createWidget() completed.  parameterWidget: " + parameterWidget );
 
-			// 2/14/2010 Scott Atwell added
-			parameterWidget.applyConstOrInitValues();
+		// 2/14/2010 Scott Atwell added
+		parameterWidget.applyConstOrInitValues();
 
-		}
-		catch (JAXBException e)
-		{
-			throw e;
-		}
 		return parameterWidget;
 	}
 
@@ -70,7 +61,6 @@ public class SWTFactory
 	// Can also process options for a group frame instead of a single panel
 // 3/5/2010 Scott Atwell renamed	public Map<String, SWTWidget<?>> create(Composite parent, StrategyPanelT panel, Map<String, ParameterT> parameters, int style)
 	public Map<String, SWTWidget<?>> createStrategyPanelAndWidgets(Composite parent, StrategyPanelT panel, Map<String, ParameterT> parameters, int style)
-			throws JAXBException
 	{
 		// TODO 1/19/2010 Scott Atwell added for debug
 		logger.debug( "createStrategyPanelAndWidgets(Composite parent, StrategyPanelT panel, Map<String, ParameterT> parameters, int style)" + " invoked with parms parent: "
@@ -84,7 +74,7 @@ public class SWTFactory
 
 
 		if ( panel.getStrategyPanel().size() > 0 && panel.getControl().size() > 0 )
-			throw new JAXBException( "StrategyPanel may not contain both StrategyPanel and Control elements." );
+			throw new IllegalStateException( "StrategyPanel may not contain both StrategyPanel and Control elements." );
 
 		// build panels widgets recursively
 		for ( StrategyPanelT p : panel.getStrategyPanel() )
@@ -97,7 +87,7 @@ public class SWTFactory
 				for ( String existingID : controlWidgets.keySet() )
 				{
 					if ( newID.equals( existingID ) )
-						throw new JAXBException( "Duplicate Control ID: \"" + newID + "\"" );
+						throw new IllegalStateException( "Duplicate Control ID: \"" + newID + "\"" );
 				}
 			}
 			controlWidgets.putAll( widgets );
@@ -112,7 +102,7 @@ public class SWTFactory
 			{
 				parameter = parameters.get( control.getParameterRef() );
 				if ( parameter == null )
-					throw new JAXBException( "Cannot find Parameter \"" + control.getParameterRef() + "\" for Control ID: \"" + control.getID() + "\"" );
+					throw new IllegalStateException( "Cannot find Parameter \"" + control.getParameterRef() + "\" for Control ID: \"" + control.getID() + "\"" );
 			}
 // 3/5/2010 Scott Atwell			SWTWidget<?> widget = create( c, control, parameter, style );
 			SWTWidget<?> widget = createWidget( c, control, parameter, style );
@@ -124,13 +114,13 @@ public class SWTFactory
 				for ( SWTWidget<?> w : controlWidgets.values() )
 				{
 					if ( w.getControl().getID().equals( control.getID() ) )
-						throw new JAXBException( "Duplicate Control ID: \"" + control.getID() + "\"" );
+						throw new IllegalStateException( "Duplicate Control ID: \"" + control.getID() + "\"" );
 				}
 				controlWidgets.put( control.getID(), widget );
 			}
 			else
 			{
-				throw new JAXBException( "Control Type: \"" + control.getClass().getSimpleName() + "\" is missing ID" );
+				throw new IllegalStateException( "Control Type: \"" + control.getClass().getSimpleName() + "\" is missing ID" );
 			}
 		}
 

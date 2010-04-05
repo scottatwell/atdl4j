@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.data.Atdl4jHelper;
@@ -103,22 +101,17 @@ public class SWTStrategiesPanel
 			// build strategy and catch strategy-specific errors
 				try {
 					ui = strategiesUI.createUI( strategy, strategyParent );
-				} catch (JAXBException je) {
+//	4/4/2010 Scott Atwell			} catch (JAXBException e) {
+				} catch (Throwable e) {
 					getAtdl4jConfig().getAtdl4jUserMessageHandler().displayException( "Strategy Load Error",
-							"Error in Strategy: " + Atdl4jHelper.getStrategyUiRepOrName( strategy ), je );
+							"Error in Strategy: " + Atdl4jHelper.getStrategyUiRepOrName( strategy ), e );
 
 					// rollback changes
 					strategyParent.dispose();
 
 					// skip to next strategy
 					continue;
-				} /*catch (Exception e) {								
-					if (e.getMessage() != null)
-					{
-						throw new Exception("Application Error while Loading Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName( strategy ) + "\": " + e.getMessage());
-					}
-					else throw new Exception("Unknown Application Error while Loading Strategy \"" + Atdl4jHelper.getStrategyUiRepOrName( strategy ) + "\"");					
-				} */
+				} 
 
 			getAtdl4jConfig().getStrategyUIMap().put( strategy, ui );
 // 4/2/2010 Scott Atwell added

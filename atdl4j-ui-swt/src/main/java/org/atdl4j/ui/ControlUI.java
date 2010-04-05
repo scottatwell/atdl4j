@@ -42,15 +42,12 @@ public interface ControlUI<E extends Comparable<?>>
 	 */
 	public E getControlValueRaw();
 	
-// 2/10/2010 Scott Atwell not used		public String getControlValueAsString() throws JAXBException;
-	
 	public Comparable<?> getControlValueAsComparable();
 	
 	// Parameter value accessor methods
 	
 	public Object getParameterValue();
 	
-// 3/10/2010 Scott Atwell	public String getParameterValueAsString() throws JAXBException;
 	public String getParameterFixWireValue();
 	
 	public Comparable<?> getParameterValueAsComparable();
@@ -68,7 +65,6 @@ public interface ControlUI<E extends Comparable<?>>
 	
 	public Comparable<?> convertStringToControlComparable(String string);
 	
-// 3/10/2010 Scott Atwell	public Comparable<?> convertStringToParameterComparable(String string) throws JAXBException;
 	public Comparable<?> convertParameterStringToParameterComparable(String aParameterString );
 
 	// FIX methods

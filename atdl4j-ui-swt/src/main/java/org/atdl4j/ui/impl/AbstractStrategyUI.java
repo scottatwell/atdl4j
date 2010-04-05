@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
 import org.atdl4j.config.InputAndFilterData;
@@ -66,7 +64,7 @@ public abstract class AbstractStrategyUI
 // 2/9/2010 Atdl4jConfig has the getStrategies()	protected StrategiesT strategies;
 	
 	abstract	protected void buildControlMap( List<StrategyPanelT> aStrategyPanelList )
-		throws JAXBException;
+	;
 	
 	// -- Note invoking this method may result in object construction as a result of down-casting its own map of a specific templatized instance of ControlUI<?> --
 	abstract public Map<String, ControlUI<?>> getControlUIMap();
@@ -75,14 +73,14 @@ public abstract class AbstractStrategyUI
 	abstract public Map<String, ControlUI<?>> getControlUIWithParameterMap();
 
 	// -- Used by init() --
-	abstract protected void initBegin(Object parentContainer) throws JAXBException;
-//	abstract protected Map<String, ValidationRule> buildGlobalAndLocalRuleMap(StrategyT strategy, Map<String, ValidationRule> strategiesRules) throws JAXBException;
-	abstract protected void buildControlMap()	throws JAXBException;
-	abstract protected void createRadioGroups()	throws JAXBException;
-	abstract protected void buildControlWithParameterMap()	throws JAXBException;
-	abstract protected void attachGlobalStateRulesToControls()	throws JAXBException;
-	abstract protected void attachStateListenersToAllControls()	throws JAXBException;
-	abstract protected void initEnd() throws JAXBException;
+	abstract protected void initBegin(Object parentContainer);
+//	abstract protected Map<String, ValidationRule> buildGlobalAndLocalRuleMap(StrategyT strategy, Map<String, ValidationRule> strategiesRules);
+	abstract protected void buildControlMap();
+	abstract protected void createRadioGroups();
+	abstract protected void buildControlWithParameterMap();
+	abstract protected void attachGlobalStateRulesToControls();
+	abstract protected void attachStateListenersToAllControls();
+	abstract protected void initEnd();
 
 	abstract protected void addToControlMap( String aName, ControlUI aControlUI );
 	abstract protected void addToControlWithParameterMap( String aName, ControlUI aControlUI );
@@ -101,10 +99,8 @@ public abstract class AbstractStrategyUI
 	 * @param aAtdl4jConfig (contains getStrategies())
 	 * @param strategiesRules
 	 * @param parentContainer (should be swt.Composite)
-	 * @throws JAXBException
 	 */
 	public void init(StrategyT strategy, Atdl4jConfig aAtdl4jConfig, Map<String, ValidationRule> strategiesRules, Object parentContainer)
-			 throws JAXBException
 	{
 		setStrategy( strategy );
 		setAtdl4jConfig( aAtdl4jConfig );
@@ -233,10 +229,8 @@ public abstract class AbstractStrategyUI
 	/**
 	 * @param strategy
 	 * @return
-	 * @throws JAXBException
 	 */
 	protected Map<String, ParameterT> buildParameters(StrategyT strategy)
-		throws JAXBException
 	{
 		Map<String, ParameterT> tempParameters = new HashMap<String, ParameterT>();
 		
@@ -387,11 +381,11 @@ public abstract class AbstractStrategyUI
 			if ( parameter instanceof BooleanT )
 			{
 				if ( ( (BooleanT) parameter ).getTrueWireValue() != null )
-					throw new JAXBException( "Attribute \"trueWireValue\" on Boolean_t is deprecated."
+					throw new IllegalStateException( "Attribute \"trueWireValue\" on Boolean_t is deprecated."
 							+ " Please use \"checkedEnumRef\" on CheckBox_t or RadioButton_t instead." );
 
 				if ( ( (BooleanT) parameter ).getFalseWireValue() != null )
-					throw new JAXBException( "Attribute \"falseWireValue\" on Boolean_t is deprecated."
+					throw new IllegalStateException( "Attribute \"falseWireValue\" on Boolean_t is deprecated."
 							+ " Please use \"uncheckedEnumRef\" on CheckBox_t or RadioButton_t instead." );
 			}
 		}
@@ -404,10 +398,8 @@ public abstract class AbstractStrategyUI
 	 * @param strategy
 	 * @param strategiesRules
 	 * @return
-	 * @throws JAXBException
 	 */
 	protected Map<String, ValidationRule> buildGlobalAndLocalRuleMap(StrategyT strategy, Map<String, ValidationRule> strategiesRules)
-		throws JAXBException
 	{
 		Map<String, ValidationRule> tempRuleMap = new HashMap<String, ValidationRule>( strategiesRules );
 
@@ -465,7 +457,6 @@ public abstract class AbstractStrategyUI
 	}
 	
 	protected void checkForDuplicateControlIDs()
-		throws JAXBException
 	{
 // 2/10/2010 Scott Atwell added/amended
 		// -- Note getControlUIMap() constructs a new Map --
@@ -478,7 +469,7 @@ public abstract class AbstractStrategyUI
 			for ( ControlUI<?> widget2 : tempControlMapValues )
 			{
 				if ( widget != widget2 && widget.getControl().getID().equals( widget2.getControl().getID() ) )
-					throw new JAXBException( "Duplicate Control ID: \"" + widget.getControl().getID() + "\"" );
+					throw new IllegalStateException( "Duplicate Control ID: \"" + widget.getControl().getID() + "\"" );
 			}
 		}
 	}
@@ -503,7 +494,6 @@ public abstract class AbstractStrategyUI
 
 
 	protected void addHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
-//		throws JAXBException
 	{
 		if ( ( aInputAndFilterData != null )
 				&& ( aInputAndFilterData.getInputHiddenFieldNameValueMap() != null ) )
@@ -537,7 +527,6 @@ public abstract class AbstractStrategyUI
 	}
 
 	protected void clearHiddenFieldsForInputAndFilterData()
-//		throws JAXBException
 	{
 		for ( Map.Entry<String,ControlUI<?>> tempEntry : getControlUIMap().entrySet() )
 		{
@@ -550,7 +539,6 @@ public abstract class AbstractStrategyUI
 	}
 
 	protected void reloadHiddenFieldsForInputAndFilterData( InputAndFilterData aInputAndFilterData )
-//		throws JAXBException
 	{
 		clearHiddenFieldsForInputAndFilterData();
 		addHiddenFieldsForInputAndFilterData( aInputAndFilterData );
@@ -559,7 +547,6 @@ public abstract class AbstractStrategyUI
 	
 // 3/14/2010 Scott Atwell Johnny's rename and not const-specific	protected void addHiddenFieldsForConstParameterWithoutControl( Map<String, ParameterT> aParameterMap )
 	protected void addHiddenFieldsForParameterWithoutControl( Map<String, ParameterT> aParameterMap )
-//		throws JAXBException
 	{
 		if ( aParameterMap != null )
 		{
@@ -604,7 +591,7 @@ public abstract class AbstractStrategyUI
 
 	
 	
-	public void validate() throws ValidationException, JAXBException
+	public void validate() throws ValidationException
 	{
 		if ( getStrategyRuleset() != null )
 		{
@@ -634,14 +621,14 @@ public abstract class AbstractStrategyUI
 	}
 
 
-	public String getFIXMessage() throws JAXBException
+	public String getFIXMessage()
 	{
 		PlainFIXMessageBuilder builder = new PlainFIXMessageBuilder();
 		getFIXMessage( builder );
 		return builder.getMessage();
 	}
 
-	public void getFIXMessage(FIXMessageBuilder builder) throws JAXBException
+	public void getFIXMessage(FIXMessageBuilder builder)
 	{
 		builder.onStart();
 
@@ -699,7 +686,7 @@ public abstract class AbstractStrategyUI
 	// TODO: this doesn't know how to load custom repeating groups
 	// or standard repeating groups aside from Atdl4jConstants.TAG_NO_STRATEGY_PARAMETERS StrategyParameters
 	// TODO: would like to integrate with QuickFIX engine
-	public void setFIXMessage(String fixMessage) throws JAXBException
+	public void setFIXMessage(String fixMessage)
 	{
 
 		// TODO: need to reverse engineer state groups
@@ -773,7 +760,6 @@ public abstract class AbstractStrategyUI
 	 */
 	@Override
 	public void reinitStrategyPanel()
-//		throws JAXBException
 	{
 // 3/13/2010 Scott Atwell added to accept/incorporate changes specified via "OK" button on InputAndFilterDataPanel
 		reloadHiddenFieldsForInputAndFilterData( getAtdl4jConfig().getInputAndFilterData() );

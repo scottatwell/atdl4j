@@ -4,7 +4,6 @@
  */
 package org.atdl4j.data;
 
-import javax.xml.bind.JAXBException;
 
 /**
  * This class contains the data associated with the <code>FIXMessageParser</code>.
@@ -16,8 +15,7 @@ import javax.xml.bind.JAXBException;
 public class FIXMessageParser
 {
 	public static String extractFieldValueFromFIXMessage(String fixMessage, int fixTag) 
-		throws JAXBException {
-		
+	{
 		String[] fixParams = fixMessage.split("\\001");
 
 		for (int i = 0; i < fixParams.length; i++)
@@ -34,5 +32,4 @@ public class FIXMessageParser
 		
 		return null;
 	}
-
 }
