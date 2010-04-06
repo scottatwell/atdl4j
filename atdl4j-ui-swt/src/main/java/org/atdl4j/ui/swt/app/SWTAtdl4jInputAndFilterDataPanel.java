@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.atdl4j.config.Atdl4jConfig;
+import org.atdl4j.config.StrategyFilterInputData;
 import org.atdl4j.data.Atdl4jConstants;
 import org.atdl4j.ui.app.AbstractAtdl4jInputAndFilterDataPanel;
 import org.eclipse.swt.SWT;
@@ -184,7 +185,7 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		List<String> tempSecurityTypeList = new ArrayList<String>();
 		tempSecurityTypeList.add( "" ); // add empty string at top
 		tempSecurityTypeList.addAll( Arrays.asList( Atdl4jConstants.STRATEGY_FILTER_SECURITY_TYPES ) );
-		dropDownListStrategyFilterSecurityType.setItems( tempFixMsgTypeList.toArray( new String[0] ) );
+		dropDownListStrategyFilterSecurityType.setItems( tempSecurityTypeList.toArray( new String[0] ) );
 
 		dropDownListStrategyFilterSecurityType.setVisibleItemCount( DEFAULT_DROP_DOWN_VISIBLE_ITEM_COUNT );
 		dropDownListStrategyFilterSecurityType.setToolTipText( "Specify FIX (tag 167) Security Type value\nExample list provided." );
@@ -333,7 +334,7 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		tempIncrementPolicyGroup.setText( "Increment Policy" );
 		GridLayout tempIncrementPolicyGroupLayout = new GridLayout( 2, false );
 		tempIncrementPolicyGroup.setLayout(tempIncrementPolicyGroupLayout);
-		tempIncrementPolicyGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true ));
+		tempIncrementPolicyGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false ));
 		
 		Label tempLabelIncrementPolicyLotSize = new Label( tempIncrementPolicyGroup, SWT.NONE );
 		tempLabelIncrementPolicyLotSize.setText( "Lot Size:" );
@@ -356,6 +357,7 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	 */
 	public boolean extractAtdl4jConfigFromScreen()
 	{
+/*** 4/6/2010 Scott Atwell		
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterFixMsgType( getDropDownItemSelected( dropDownListStrategyFilterFixMsgType ) );
 		getAtdl4jConfig().getInputAndFilterData().setInputCxlReplaceMode( getCheckboxValue( checkboxInputCxlReplaceMode, null ).booleanValue() );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterRegion_name( getDropDownItemSelected( dropDownListStrategyFilterRegion ) );
@@ -368,7 +370,25 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterMarket_MICCode( getDropDownItemSelected( dropDownListStrategyFilterMICCode ) );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyFilterSecurityType_name( getDropDownItemSelected( dropDownListStrategyFilterSecurityType ) );
- 
+***/
+		StrategyFilterInputData tempStrategyFilterInputData = new StrategyFilterInputData();
+		tempStrategyFilterInputData.setFixMsgType( getDropDownItemSelected( dropDownListStrategyFilterFixMsgType ) );
+		tempStrategyFilterInputData.setRegion_name( getDropDownItemSelected( dropDownListStrategyFilterRegion ) );
+		tempStrategyFilterInputData.setCountry_CountryCode( getDropDownItemSelected( dropDownListStrategyFilterCountry ) );
+		if ( ( tempStrategyFilterInputData.getCountry_CountryCode() != null ) &&
+			  ( tempStrategyFilterInputData.getRegion_name() == null ) )
+		{
+			throw new IllegalArgumentException("Region is required when Country is specified.");
+		}
+		
+		tempStrategyFilterInputData.setMarket_MICCode( getDropDownItemSelected( dropDownListStrategyFilterMICCode ) );
+		tempStrategyFilterInputData.setSecurityType_name( getDropDownItemSelected( dropDownListStrategyFilterSecurityType ) );
+		
+		// -- Set the StrategyFilterInputData we just built --
+		getAtdl4jConfig().getInputAndFilterData().setStrategyFilterInputData( tempStrategyFilterInputData );
+
+		getAtdl4jConfig().getInputAndFilterData().setInputCxlReplaceMode( getCheckboxValue( checkboxInputCxlReplaceMode, null ).booleanValue() );
+		
 		getAtdl4jConfig().getInputAndFilterData().setInputSelectStrategyName( getTextValue( textSelectStrategyName ) );
 		getAtdl4jConfig().getInputAndFilterData().setApplyInputStrategyUiRepOrNameListAsFilter( getCheckboxValue( checkboxInputStrategyListAsFilter, Boolean.FALSE ) );
 		getAtdl4jConfig().getInputAndFilterData().setInputStrategyUiRepOrNameList( getTextList( textAreaStrategyNameFilterList ) );
@@ -398,13 +418,45 @@ public class SWTAtdl4jInputAndFilterDataPanel
 	{
 		if ( getAtdl4jConfig().getInputAndFilterData() != null )
 		{
+/*** 4/6/2010 Scott Atwell			
 			selectDropDownItem( dropDownListStrategyFilterFixMsgType, getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterFixMsgType() );
 			setCheckboxValue( checkboxInputCxlReplaceMode, getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode(), Boolean.FALSE );
 			selectDropDownItem( dropDownListStrategyFilterRegion, getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterRegion_name() );
 			selectDropDownItem( dropDownListStrategyFilterCountry, getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterCountry_CountryCode() );
 			selectDropDownItem( dropDownListStrategyFilterMICCode, getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterMarket_MICCode() );
 			selectDropDownItem( dropDownListStrategyFilterSecurityType, getAtdl4jConfig().getInputAndFilterData().getInputStrategyFilterSecurityType_name() );
+***/
+			StrategyFilterInputData tempStrategyFilterInputData = null;
+			if ( ( getAtdl4jConfig().getInputAndFilterData().getStrategyFilterInputDataList() != null ) &&
+				  ( getAtdl4jConfig().getInputAndFilterData().getStrategyFilterInputDataList().size() > 0 ) )
+			{
+				tempStrategyFilterInputData = getAtdl4jConfig().getInputAndFilterData().getStrategyFilterInputDataList().get( 0 );
+			}
+
+			String tempFixMsgType = null;
+			String tempRegion_name = null;
+			String tempCountry_CountryCode = null;
+			String tempMarket_MICCode = null;
+			String tempSecurityType_name = null;
 			
+			if ( tempStrategyFilterInputData != null )
+			{
+				tempFixMsgType = tempStrategyFilterInputData.getFixMsgType();
+				tempRegion_name = tempStrategyFilterInputData.getRegion_name();
+				tempCountry_CountryCode = tempStrategyFilterInputData.getCountry_CountryCode();
+				tempMarket_MICCode = tempStrategyFilterInputData.getMarket_MICCode();
+				tempSecurityType_name = tempStrategyFilterInputData.getSecurityType_name();
+			}
+
+			selectDropDownItem( dropDownListStrategyFilterFixMsgType, tempFixMsgType );
+			selectDropDownItem( dropDownListStrategyFilterRegion, tempRegion_name );
+			selectDropDownItem( dropDownListStrategyFilterCountry, tempCountry_CountryCode );
+			selectDropDownItem( dropDownListStrategyFilterMICCode, tempMarket_MICCode );
+			selectDropDownItem( dropDownListStrategyFilterSecurityType, tempSecurityType_name );
+
+
+			setCheckboxValue( checkboxInputCxlReplaceMode, getAtdl4jConfig().getInputAndFilterData().getInputCxlReplaceMode(), Boolean.FALSE );
+
 			setTextValue( textSelectStrategyName, getAtdl4jConfig().getInputAndFilterData().getInputSelectStrategyName() );
 			setCheckboxValue( checkboxInputStrategyListAsFilter, getAtdl4jConfig().getInputAndFilterData().getApplyInputStrategyUiRepOrNameListAsFilter(), Boolean.FALSE );
 			setTextList( textAreaStrategyNameFilterList, getAtdl4jConfig().getInputAndFilterData().getInputStrategyUiRepOrNameList() );
@@ -596,8 +648,13 @@ public class SWTAtdl4jInputAndFilterDataPanel
 		}
 		else
 		{
-			// -- Attempt to remove it if it exists --
-			getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap().remove( aFieldName );
+			if ( ( getAtdl4jConfig() != null ) && 
+				  ( getAtdl4jConfig().getInputAndFilterData() != null ) &&
+				  ( getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap() != null ) )
+			{
+				// -- Attempt to remove it if it exists --
+				getAtdl4jConfig().getInputAndFilterData().getInputHiddenFieldNameValueMap().remove( aFieldName );
+			}
 		}
 	}
 	
