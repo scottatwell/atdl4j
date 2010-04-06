@@ -66,7 +66,7 @@ public abstract class AbstractOperatorValidationRule
 				}
 				else
 				{
-					throw new ValidationException( target, "Value is not comparable [" + value1 + " class: " + (value1 != null ? value1.getClass() : "") + "]" );
+					throw new ValidationException( target, "Value is not comparable [" + (value1 != null ? (value1 + " class: " + value1.getClass()) : "value is null") + "]" );
 				}
 				break;
 
@@ -81,7 +81,7 @@ public abstract class AbstractOperatorValidationRule
 				}
 				else
 				{
-					throw new ValidationException( target, "Value is not comparable [" + value1 + " class: " + (value1 != null ? value1.getClass() : "") + "]" );
+					throw new ValidationException( target, "Value is not comparable [" + (value1 != null ? (value1 + " class: " + value1.getClass()) : "value is null") + "]" );
 				}
 				break;
 
@@ -96,7 +96,7 @@ public abstract class AbstractOperatorValidationRule
 				}
 				else
 				{
-					throw new ValidationException( target, "Value is not comparable [" + value1 + " class: " + (value1 != null ? value1.getClass() : "") + "]" );
+					throw new ValidationException( target, "Value is not comparable [" + (value1 != null ? (value1 + " class: " + value1.getClass()) : "value is null") + "]" );
 				}
 				break;
 
@@ -111,7 +111,7 @@ public abstract class AbstractOperatorValidationRule
 				}
 				else
 				{
-					throw new ValidationException( target, "Value is not comparable [" + value1 + " class: " + (value1 != null ? value1.getClass() : "") + "]" );
+					throw new ValidationException( target, "Value is not comparable [" + (value1 != null ? (value1 + " class: " + value1.getClass()) : "value is null") + "]" );
 				}
 				break;
 
