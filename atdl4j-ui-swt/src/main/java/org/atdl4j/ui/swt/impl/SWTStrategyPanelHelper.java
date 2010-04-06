@@ -199,7 +199,12 @@ public class SWTStrategyPanelHelper
 			GridLayout l = new GridLayout( 2, false );
 			return l;
 		}
-		return null;
+// 4/6/2010 Scott Atwell Added		
+		else
+		{
+			throw new IllegalStateException("ERROR StrategyPanel (" + panel.getTitle() + ") is missing orientation attribute." );
+		}
+//		return null;
 	}
 	
 	/**
